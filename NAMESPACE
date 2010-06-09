@@ -1,5 +1,6 @@
 export(smsn.mix, 
        im.smsn, 
        mix.hist,
+       mix.print,
        smsn.mix.search,
        rmix)
