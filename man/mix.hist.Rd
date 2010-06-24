@@ -1,11 +1,11 @@
 \name{mix.hist}
 \alias{mix.hist}
-\title{ Estimated densisties }
+\title{ Estimated densities }
 \description{
-Plot the histogram along with the estimated density.
+Plot the histogram along with the estimated density (univariate case, p=1).
 }
 \usage{
-mix.hist(y, model, breaks)
+mix.hist(y, model, breaks, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

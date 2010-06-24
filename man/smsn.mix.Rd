@@ -1,11 +1,11 @@
 \name{smsn.mix}
 \alias{smsn.mix}
-\title{ Fit finite mixture FM-SMSN distribution.}
+\title{ Fit univariate FM-SMSN distribution }
 
 \encoding{UTF-8}
 
 \description{
-Return EM algorithm output for FM-SMSN distributions.
+Return EM algorithm output for FM-SMSN distributions (univaritate case, p=1).
 }
 
 \usage{
@@ -17,14 +17,14 @@ smsn.mix(y,
 }
 \arguments{
   \item{y}{ the response vector }
-  \item{nu}{ the parameter of the scale variable (vector os scalar) of the SMSN family (hyperparameter). It is necessary to all distributions. For the "Skew.cn" must be a vector of length 2 and values in (0,1) }
+  \item{nu}{ the parameter of the scale variable (vector or scalar) of the SMSN family (kurtosis parameter). It is necessary to all distributions. For the "Skew.cn" must be a vector of length 2 and values in (0,1) }
   \item{mu}{ the vector of initial values (dimension g) for the location parameters }
   \item{sigma2}{ the vector of initial values (dimension g) for the scale parameters }
   \item{shape}{ the vector of initial values (dimension g) for the skewness parameters }
   \item{pii}{ the vector of initial values (dimension g) for the weights for each cluster. Must sum one! }
   \item{g}{ the number of cluster to be considered in fitting}
   \item{get.init}{ if TRUE, the initial values are generated via k-means}
-  \item{criteria}{ if TRUE, AIC, DIC and EDC will be calculated }
+  \item{criteria}{ if TRUE, AIC, DIC, EDC and ICL will be calculated }
   \item{group}{ if TRUE, the vector with the classification of the response is returned }
   \item{family}{ distribution famility to be used in fitting ("Skew.t", "Skew.nc", "Skew.slash", "Skew.normal", "Normal") }
   \item{error}{ the covergence maximum error }
@@ -33,7 +33,7 @@ smsn.mix(y,
 }
 
 \value{
-  Estimated values of the location, scale, skewness and degree of freedom.
+  Estimated values of the location, scale, skewness and kurtosis parameter.
 }
 
 \examples{
@@ -80,6 +80,7 @@ mix.print(Scn.analysis)
 }
 }
 
+
 \references{
   Rodrigo M. Basso, Víctor H. Lachos, Celso R. B. Cabral, Pulak Ghosh (2009). "Robust mixture modeling based on scale mixtures of skew-normal
   distributions". \emph{Computational Statistics and Data Analysis} (in press). doi: 10.1016/j.csda.2009.09.031
@@ -87,7 +88,7 @@ mix.print(Scn.analysis)
 
 \author{Marcos Prates \email{marcos.prates@uconn.edu}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
 
-\seealso{\code{\link{mix.hist}}, \code{\link{im.smsn}} and \code{\link{smsn.mix.search}}}
+\seealso{\code{\link{mix.hist}}, \code{\link{im.smsn}} and \code{\link{smsn.search}}}
 
 \keyword{interface}
 \keyword{models}

@@ -3,11 +3,13 @@
 
 mix.print <- function(model,digits=3, ...){
 
-if((class(model) != "Skew.t") && (class(model) != "Skew.cn") && (class(model) != "Skew.slash") && (class(model) != "Skew.normal") && (class(model) != "Normal")) stop(paste("Class of family",class(model),"not recognized.",sep=" "))
-
+  if((class(model) != "Skew.t") && (class(model) != "Skew.cn") && (class(model) != "Skew.slash") && (class(model) != "Skew.normal") && (class(model) != "Normal")) stop(paste("Class of family",class(model),"not recognized.",sep=" "))
+  if (is.list(model$mu)) stop("The mix.print function is only appropriate for the univariate analysis.\n")
+  
    sdmu <- NULL
    sdsigma <- NULL
    sdshape <- NULL
+   
 cat("\n Number of observations: ",model$n, "\n\n")
 
 if((class(model) != "Skew.normal") && (class(model) != "Normal"))	cat("\n Hyperparameter(nu): ",model$nu, "\n\n")
@@ -60,6 +62,7 @@ if(length(model$aic) != 0){
    	cat("\n AIC: ",model$aic,"\n")
    	cat("\n BIC: ",model$bic,"\n")
    	cat("\n EDC: ",model$edc,"\n")
+   	cat("\n ICL: ",model$icl,"\n")
 } 
    	cat("\n EM iterations: ",model$iter, "\n\n")
     invisible(model)

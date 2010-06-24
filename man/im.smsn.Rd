@@ -4,7 +4,7 @@
 
 \description{
 Calculate the information matrix of returned analysis based on the 
-model \code{family} choice.
+model \code{family} choice (univariate case, p=1).
 }
 \usage{
 im.smsn(y, model)

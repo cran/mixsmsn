@@ -123,6 +123,13 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         
       }
 
+    if (criteria == TRUE){
+       cl <- apply(tal, 1, which.max)
+       icl <- 0
+       for (j in 1:g) icl <- icl+sum(log(pii[j]*dt.ls(y[cl==j], mu[j], sigma2[j], shape[j], nu)))
+       #icl=-2*icl+4*g*log(n)
+    }
+
       #### grafico ajuste
       ##hist(y, breaks = 40,probability=T,col="grey")
       ##xx=seq(min(y),max(y),(max(y)-min(y))/1000)
@@ -208,6 +215,13 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         nu.old <- nu
         lk<-lk1
       }
+
+    if (criteria == TRUE){
+       cl <- apply(tal, 1, which.max)
+       icl <- 0
+       for (j in 1:g) icl <- icl+sum(log(pii[j]*dSNC(y[cl==j], mu[j], sigma2[j], shape[j], nu)))
+       #icl <- -2*icl+(4*g+1)*log(n)
+    }
      
       #### grafico ajuste
       ##hist(y, breaks = 40,probability=T,col="grey")
@@ -218,7 +232,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
   }
 
   if (family == "Skew.slash"){
-      print("The Skew.slash can take a long time to run.")
+      cat("\nThe Skew.slash can take a long time to run.\n")
       lk <- sum(log( d.mixedSS(y, pii, mu, sigma2, shape, nu) ))
       n <- length(y)
       delta <- Delta <- Gama <- rep(0,g)
@@ -304,6 +318,13 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         lk<-lk1
         #print(criterio)
       }
+
+    if (criteria == TRUE){
+       cl <- apply(tal, 1, which.max)
+       icl <- 0
+       for (j in 1:g) icl <- icl+sum(log(pii[j]*dSS(y[cl==j], mu[j], sigma2[j], shape[j], nu)))
+       #icl <- -2*icl+4*g*log(n)
+    }
       
       #### grafico ajuste
       ##hist(y, breaks = 40,probability=T,col="grey")
@@ -385,6 +406,14 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         lk<-lk1
 
       }
+
+    if (criteria == TRUE){
+       cl <- apply(tal, 1, which.max)
+       icl <- 0
+       for (j in 1:g) icl<-icl+sum(log(pii[j]*dSN(y[cl==j], mu[j], sigma2[j], shape[j])))
+       #icl <- -2*icl+(4*g-1)*log(n)
+    }
+
       #### grafico ajuste
       ##hist(y, breaks = 40,probability=T,col="grey")
       ##xx=seq(min(y),max(y),(max(y)-min(y))/1000)
@@ -457,7 +486,15 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         Delta.old <- Delta
         Gama.old <- Gama
         lk<-lk1
-      }     
+      }       
+
+    if (criteria == TRUE){
+       cl <- apply(tal, 1, which.max)
+       icl <- 0
+       for (j in 1:g) icl <- icl+sum(log(pii[j]*dSN(y[cl==j], mu[j], sigma2[j], shape[j])))
+       #icl <- -2*icl+(3*g-1)*log(n)
+    }
+
     #### grafico ajuste
     ##hist(y, breaks = 40,probability=T,col="grey")
     ##xx=seq(min(y),max(y),(max(y)-min(y))/1000)
@@ -472,7 +509,8 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
     aic <- -2*lk + 2*d
     bic <- -2*lk + log(n)*d
     edc <- -2*lk + 0.2*sqrt(n)*d
-    obj.out <- list(mu = mu, sigma2 = sigma2, shape = shape, pii = pii, nu = nu, aic = aic, bic = bic, edc = edc, iter = count, n = length(y), group = apply(tal, 1, which.max))#, im.sdev=NULL)
+    icl <- -2*icl + log(n)*d
+    obj.out <- list(mu = mu, sigma2 = sigma2, shape = shape, pii = pii, nu = nu, aic = aic, bic = bic, edc = edc, icl= icl, iter = count, n = length(y), group = cl)#, im.sdev=NULL)
   }
  else obj.out <- list(mu = mu, sigma2 = sigma2, shape = shape, pii = pii, nu = nu, iter = count, n = length(y), group = apply(tal, 1, which.max))#, im.sdev=NULL)
 # if (group == FALSE) obj.out <- obj.out[-(length(obj.out)-1)]

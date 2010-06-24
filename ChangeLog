@@ -1,7 +1,25 @@
-2010-06-13 (0.1-4) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+2010-06-24 (0.2-1) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
-	* first public release
+	* inclusion of icl selectin criterion 
+
+2010-06-19 (0.2-1) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+	* inclusion of the multivariate option for the 
+	  smsn.mix.search function
+
+2010-06-17 (0.2-0) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+	* inclusion of the multivariate analysis functions
+	* inclusion of the multivarate random generator
+	* inclusion of the contour function for bivariate
+	  analisys
+  * inclusion of faithful example
 
 2010-06-14 (0.1-5) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
 	* release the mix.print function to user
+
+2010-06-13 (0.1-4) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+	* first public release
+

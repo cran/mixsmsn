@@ -1,6 +1,9 @@
-export(smsn.mix, 
+export(smsn.mix,
+       smsn.mmix, 
        im.smsn, 
        mix.hist,
        mix.print,
-       smsn.mix.search,
-       rmix)
+       smsn.search,
+       rmix,
+       rmmix,
+       mix.contour)

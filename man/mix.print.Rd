@@ -1,7 +1,7 @@
 \name{mix.print}
 \alias{mix.print}
-\title{Printing a mix object}
-\description{Printing a \code{smsn.mix} object}
+\title{Printing mix object}
+\description{Printing a \code{smsn.mix} object (univariate case, p=1)}
 \usage{
 mix.print(model, digits = 3, ...)
 }

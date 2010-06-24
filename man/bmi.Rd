@@ -10,10 +10,10 @@ The data set has the measure of the Body Mass Index (bmi) for 2107 people.
   A data frame with 2107 observations of bmi
 }
 
-\encoding{UTF-8}
+\encoding{latin1}
 
 \source{
-Rodrigo M. Basso, Víctor H. Lachos, Celso R. B. Cabral, Pulak Ghosh (2009). "Robust mixture modeling based on scale mixtures of skew-normal
+Rodrigo M. Basso, Victor H. Lachos, Celso R. B. Cabral, Pulak Ghosh (2009). "Robust mixture modeling based on scale mixtures of skew-normal
 distributions". \emph{Computational Statistics and Data Analysis} (in press). doi: 10.1016/j.csda.2009.09.031
 }
 
@@ -47,7 +47,7 @@ mix.hist(y,bmi.analysis)
 bmi.im <-  im.smsn(y, bmi.analysis)
 
 ## Search for the best number of clusters from g=1 to g=5
-bmi.analysis <- smsn.mix.search(y, nu = 3, g.min = 1, g.max=5)
+bmi.analysis <- smsn.search(y, nu = 3, g.min = 1, g.max=5)
 mix.hist(y,bmi.analysis$best.model)
 }
 }
