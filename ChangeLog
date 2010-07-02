@@ -1,4 +1,13 @@
-2010-06-24 (0.2-1) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+2010-07-02 (0.2-3) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+	* inclusion of the unique gamma estimation
+	  parameter
+  * improved the EM algorithm for both univariate
+    and multivariate functions
+  * added the number of parameter calculation
+    when there is a unique gamma parameter
+
+2010-06-24 (0.2-2) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
 	* inclusion of icl selectin criterion 
 

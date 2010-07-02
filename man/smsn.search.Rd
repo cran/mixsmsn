@@ -10,7 +10,8 @@ distributions.}
 smsn.search(y, nu,
             g.min = 1, g.max = 3,
             family = "Skew.normal", criteria = "bic",
-            error = 0.0001, iter.max = 100, calc.im = FALSE)
+            error = 0.0001, iter.max = 100, 
+            calc.im = FALSE, uni.Gama = FALSE)
 }
 \arguments{
   \item{y}{ the response vector(matrix) }
@@ -22,6 +23,7 @@ smsn.search(y, nu,
   \item{error}{ the covergence maximum error }
   \item{iter.max}{ the maximum number of iterations of the EM algorithm }
   \item{calc.im}{ if TRUE, the infomation matrix is calculated and the starndard erros are reported (Only valid in the univariate case, p=1) }
+  \item{uni.Gama}{ if TRUE, the Gamma parameters are restricted to be the same for all clusters (Only valid in the multivariate case, p>1) }
 }
 
 \value{

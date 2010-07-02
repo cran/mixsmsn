@@ -99,8 +99,8 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           ### M-step: atualizar mu, Delta, Gama, sigma2 ###
           pii[j] <- (1/n)*sum(tal[,j])
           mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
-          Gama[j] <- sum(S1[,j]*(y - mu.old[j])^2 - 2*(y - mu.old[j])*Delta.old[j]*S2[,j] + Delta.old[j]^2*S3[,j]) / sum(tal[,j])
-          Delta[j] <- sum(S2[,j]*(y - mu.old[j])) / sum(S3[,j])
+          Delta[j] <- sum(S2[,j]*(y - mu[j])) / sum(S3[,j])
+          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])       
           sigma2[j] <- Gama[j] + Delta[j]^2
           shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
 
@@ -192,8 +192,8 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           ### M-step: atualizar mu, Delta, Gama, sigma2 ###
           pii[j] <- (1/n)*sum(tal[,j])
           mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
-          Gama[j] <- sum(S1[,j]*(y - mu.old[j])^2 - 2*(y - mu.old[j])*Delta.old[j]*S2[,j] + Delta.old[j]^2*S3[,j]) / sum(tal[,j])
-          Delta[j] <- sum(S2[,j]*(y - mu.old[j])) / sum(S3[,j])
+          Delta[j] <- sum(S2[,j]*(y - mu[j])) / sum(S3[,j])
+          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])
           sigma2[j] <- Gama[j] + Delta[j]^2
           shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
         }
@@ -295,8 +295,8 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           ### M-step: atualizar mu, Delta, Gama, sigma2 ###
           pii[j] <- (1/n)*sum(tal[,j])
           mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
-          Gama[j] <- sum(S1[,j]*(y - mu.old[j])^2 - 2*(y - mu.old[j])*Delta.old[j]*S2[,j] + Delta.old[j]^2*S3[,j]) / sum(tal[,j])
-          Delta[j] <- sum(S2[,j]*(y - mu.old[j])) / sum(S3[,j])
+          Delta[j] <- sum(S2[,j]*(y - mu[j])) / sum(S3[,j])
+          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])
           sigma2[j] <- Gama[j] + Delta[j]^2
           shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
         }
@@ -386,8 +386,8 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           ### M-step: atualizar mu, Delta, Gama, sigma2 ###
           pii[j] <- (1/n)*sum(tal[,j])
           mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
-          Gama[j] <- sum(S1[,j]*(y - mu.old[j])^2 - 2*(y - mu.old[j])*Delta.old[j]*S2[,j] + Delta.old[j]^2*S3[,j]) / sum(tal[,j])
-          Delta[j] <- sum(S2[,j]*(y - mu.old[j])) / sum(S3[,j])
+          Delta[j] <- sum(S2[,j]*(y - mu[j])) / sum(S3[,j])
+          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])
           sigma2[j] <- Gama[j] + Delta[j]^2
           shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
 
@@ -469,8 +469,8 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           ### M-step: atualizar mu, Delta, Gama, sigma2 ###
           pii[j] <- (1/n)*sum(tal[,j])
           mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
-          Gama[j] <- sum(S1[,j]*(y - mu.old[j])^2 - 2*(y - mu.old[j])*Delta.old[j]*S2[,j] + Delta.old[j]^2*S3[,j]) / sum(tal[,j])
-          Delta[j] <- 0
+          Delta[j] <- 0          
+          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])
           sigma2[j] <- Gama[j] + Delta[j]^2
           shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
         }

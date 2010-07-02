@@ -21,5 +21,5 @@ mix.hist(y, model, breaks, ...)
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ histogram }
+\keyword{ aplot }
 

@@ -22,5 +22,5 @@ rmmix(n, pii, family, arg)
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
-\keyword{ generator }
+\keyword{ methods }
 

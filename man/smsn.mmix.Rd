@@ -13,7 +13,7 @@ smsn.mmix(y, nu=1,
           mu = NULL, Sigma = NULL, shape = NULL, pii = NULL,
           g = NULL, get.init = TRUE, criteria = TRUE,
           group = FALSE, family = "Skew.normal", 
-          error = 0.0001, iter.max = 100)
+          error = 0.0001, iter.max = 100, uni.Gama = FALSE)
 }
 \arguments{
   \item{y}{ the response matrix (dimension nxp) }
@@ -29,6 +29,7 @@ smsn.mmix(y, nu=1,
   \item{family}{ distribution famility to be used in fitting ("Skew.t", "Skew.nc", "Skew.slash", "Skew.normal", "Normal") }
   \item{error}{ the covergence maximum error }
   \item{iter.max}{ the maximum number of iterations of the EM algorithm. Default = 100 }
+  \item{uni.Gama}{ if TRUE, the Gamma parameters are restricted to be the same for all clusters}
 }
 
 \value{
@@ -50,7 +51,7 @@ pii<-c(0.6,0.4)
 
 arg1 = list(mu=mu1, Sigma=Sigma1, shape=shape1, nu=nu1)
 arg2 = list(mu=mu2, Sigma=Sigma2, shape=shape2, nu=nu2)
-y <- rmmix(n= 300, p = pii, "Skew.t", list(arg1,arg2))
+y <- rmmix(n= 500, p = pii, "Skew.t", list(arg1,arg2))
 
 \dontrun{
 
@@ -69,6 +70,12 @@ mix.contour(y,Norm.analysis)
 Norm.analysis <- smsn.mmix(y, nu=3, g=2, get.init = TRUE, criteria = TRUE, 
                            group = TRUE, family = "Normal")
 mix.contour(y,Norm.analysis)
+
+## Normal fit with a unique Gamma
+Norm.analysis <- smsn.mmix(y, nu=3, g=2, get.init = TRUE, criteria = TRUE, 
+                           group = TRUE, family = "Normal", uni.Gama = TRUE)
+mix.contour(y,Norm.analysis)
+
 
 ## Skew Normal fit
 Snorm.analysis <- smsn.mmix(y, nu=3, g=2, get.init = TRUE, criteria = TRUE, 
