@@ -30,11 +30,17 @@ Norm.analysis <- smsn.mmix(faithful, nu=3, g=2, get.init = TRUE, criteria = TRUE
 mix.contour(faithful,Norm.analysis,x.min=1,x.max=1,y.min=15,y.max=10,
             levels = c(0.1, 0.015, 0.005, 0.0009, 0.00015))
 
+## Calculate the information matrix (when the calc.im option in smsn.mmix is set FALSE)
+Norm.im <-  imm.smsn(faithful, Norm.analysis)
+
 ## Skew-Normal
 Snorm.analysis <- smsn.mmix(faithful, nu=3, g=2, get.init = TRUE, criteria = TRUE, 
                            group = TRUE, family = "Skew.normal")
 mix.contour(faithful,Snorm.analysis,x.min=1,x.max=1,y.min=15,y.max=10,
             levels = c(0.1, 0.015, 0.005, 0.0009, 0.00015))
+
+## Calculate the information matrix (when the calc.im option in smsn.mmix is set FALSE)
+Snorm.im <-  imm.smsn(faithful, Snorm.analysis)
 
 ## Skew-t
 St.analysis <- smsn.mmix(faithful, nu=3, g=2, get.init = TRUE, criteria = TRUE, 
@@ -42,7 +48,10 @@ St.analysis <- smsn.mmix(faithful, nu=3, g=2, get.init = TRUE, criteria = TRUE,
 mix.contour(faithful,St.analysis,x.min=1,x.max=1,y.min=15,y.max=10,
             levels = c(0.1, 0.015, 0.005, 0.0009, 0.00015))
 
-## Passing initial values to MLE
+## Calculate the information matrix (when the calc.im option in smsn.mmix is set FALSE)
+St.im <-  imm.smsn(faithful, St.analysis)
+
+## Passing initial values to MLE and automaticaly calculate the information matrix
 mu1 <- c(5,77)
 Sigma1 <- matrix(c(0.18,0.60,0.60,41), 2,2)
 shape1 <- c(0.69,0.64)
@@ -59,7 +68,7 @@ shape <- list(shape1,shape2)
 
 Snorm.analysis <- smsn.mmix(faithful, nu=3, mu=mu, Sigma=Sigma, shape=shape, pii=pii,
                             g=2, get.init = FALSE, group = TRUE,
-                            family = "Skew.normal")
+                            family = "Skew.normal", calc.im=TRUE)
                             
 mix.contour(faithful,Snorm.analysis,x.min=1,x.max=1,y.min=15,y.max=10,
             levels = c(0.1, 0.015, 0.005, 0.0009, 0.00015))

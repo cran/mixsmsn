@@ -26,7 +26,7 @@ hist(y,breaks=40)
 
 ## Maximum likelihood estimaton (MLE) with generated values
 bmi.analysis <- smsn.mix(y, nu = 3, g = 2, get.init = TRUE, criteria = TRUE, 
-                         group = TRUE, calc.im=FALSE)
+                         group = TRUE, calc.im=TRUE)
 mix.hist(y,bmi.analysis)
 
 ## Passing initial values to MLE

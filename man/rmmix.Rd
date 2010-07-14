@@ -14,7 +14,8 @@ rmmix(n, pii, family, arg)
   \item{arg}{ a list of \code{g} lists with each list containing the necessary parameters of the selected \code{family} }
 }
 
-\examples{ ## see \code{\link{smsn.mmix}}}
+\examples{ ## see \code{\link{smsn.mmix}}
+}
 
 \author{Marcos Prates \email{marcos.prates@uconn.edu}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
 

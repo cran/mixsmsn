@@ -24,7 +24,8 @@ mix.contour(y, model,
   \item{...}{further arguments to \code{\link{contour}}}
 }
 
-\examples{ ## see \code{\link{smsn.mmix}}}
+\examples{ ## see \code{\link{smsn.mmix}}
+}
 
 \seealso{ \code{\link{smsn.mmix}}}
 

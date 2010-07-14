@@ -329,10 +329,10 @@ if(ncol(y) == 1){
   }
 }
 else{
-  for(i in 1:length(g)){
-     output[[g.size[i]]] <- smsn.mmix(y=y, nu=nu, g = g[i], get.init = TRUE, criteria = TRUE, group = TRUE, family = family, error = error, iter.max = iter.max, uni.Gama = uni.Gama)
-     crit[i] <- output[[g.size[i]]][[criteria]]
-  }
+    for(i in 1:length(g)){
+       output[[g.size[i]]] <- smsn.mmix(y=y, nu=nu, g = g[i], get.init = TRUE, criteria = TRUE, group = TRUE, family = family, error = error, iter.max = iter.max, uni.Gama = uni.Gama, calc.im = calc.im)
+       crit[i] <- output[[g.size[i]]][[criteria]]
+    }
 }
 best <- which(crit == min(crit))
 names(crit) <- g.size

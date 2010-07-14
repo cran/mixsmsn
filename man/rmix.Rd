@@ -14,7 +14,8 @@ rmix(n, pii, family, arg)
   \item{arg}{ a list with each entry containing a vector of size equal to the number of clusters of the necessary parameters from a \code{family} }
 }
 
-\examples{ ## see \code{\link{smsn.mix}}}
+\examples{ ## see \code{\link{smsn.mix}}
+}
 
 \author{Marcos Prates \email{marcos.prates@uconn.edu}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
 

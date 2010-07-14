@@ -13,7 +13,8 @@ smsn.mmix(y, nu=1,
           mu = NULL, Sigma = NULL, shape = NULL, pii = NULL,
           g = NULL, get.init = TRUE, criteria = TRUE,
           group = FALSE, family = "Skew.normal", 
-          error = 0.0001, iter.max = 100, uni.Gama = FALSE)
+          error = 0.0001, iter.max = 100, uni.Gama = FALSE,
+          calc.im=FALSE )
 }
 \arguments{
   \item{y}{ the response matrix (dimension nxp) }
@@ -30,6 +31,7 @@ smsn.mmix(y, nu=1,
   \item{error}{ the covergence maximum error }
   \item{iter.max}{ the maximum number of iterations of the EM algorithm. Default = 100 }
   \item{uni.Gama}{ if TRUE, the Gamma parameters are restricted to be the same for all clusters}
+  \item{calc.im}{ if TRUE, the Information Matrix is calculated and the starndard erros are reported }
 }
 
 \value{

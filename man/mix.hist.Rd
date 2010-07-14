@@ -15,7 +15,8 @@ mix.hist(y, model, breaks, ...)
   \item{...}{further arguments to \code{\link{hist}}}
 }
 
-\examples{ ## see \code{\link{bmi}} and \code{\link{smsn.mix}}}
+\examples{ ## see \code{\link{bmi}} and \code{\link{smsn.mix}}
+}
 
 \seealso{ \code{\link{smsn.mix}}}
 

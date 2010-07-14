@@ -22,7 +22,7 @@ smsn.search(y, nu,
   \item{criteria}{ the selection criteria method to be used ("aic", "bic", "edc", "icl") } 
   \item{error}{ the covergence maximum error }
   \item{iter.max}{ the maximum number of iterations of the EM algorithm }
-  \item{calc.im}{ if TRUE, the infomation matrix is calculated and the starndard erros are reported (Only valid in the univariate case, p=1) }
+  \item{calc.im}{ if TRUE, the infomation matrix is calculated and the starndard erros are reported }
   \item{uni.Gama}{ if TRUE, the Gamma parameters are restricted to be the same for all clusters (Only valid in the multivariate case, p>1) }
 }
 
@@ -30,7 +30,8 @@ smsn.search(y, nu,
   Estimated values of the location, scale, skewness and kurtosis parameter from the optimum number of clusters.
 }
 
-\examples{ ## see \code{\link{bmi}} and \code{\link{faithful}}}
+\examples{ ## see \code{\link{bmi}} and \code{\link{faithful}}
+}
 
 \author{Marcos Prates \email{marcos.prates@uconn.edu}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
 
