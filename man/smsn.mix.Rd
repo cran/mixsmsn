@@ -29,7 +29,7 @@ smsn.mix(y,
   \item{family}{ distribution famility to be used in fitting ("Skew.t", "Skew.nc", "Skew.slash", "Skew.normal", "Normal") }
   \item{error}{ the covergence maximum error }
   \item{iter.max}{ the maximum number of iterations of the EM algorithm. Default = 100 }
-  \item{calc.im}{ if TRUE, the infomation matrix is calculated and the standard errors are reported}
+  \item{calc.im}{ if TRUE, the information matrix is calculated and the standard errors are reported}
 }
 
 \value{

@@ -31,7 +31,7 @@ smsn.mmix(y, nu=1,
   \item{error}{ the covergence maximum error }
   \item{iter.max}{ the maximum number of iterations of the EM algorithm. Default = 100 }
   \item{uni.Gama}{ if TRUE, the Gamma parameters are restricted to be the same for all clusters}
-  \item{calc.im}{ if TRUE, the Information Matrix is calculated and the starndard erros are reported }
+  \item{calc.im}{ if TRUE, the information matrix is calculated and the starndard erros are reported }
 }
 
 \value{

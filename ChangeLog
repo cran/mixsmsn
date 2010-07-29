@@ -1,3 +1,10 @@
+2010-07-29 (0.2-6) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+	* fixed a bug in the smsn.mmix function
+	  when checking for the dimensionality of
+	  the response matrix
+
+
 2010-07-14 (0.2-5) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
 	* inclusion of the information matrix

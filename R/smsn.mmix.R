@@ -9,7 +9,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
   y <- as.matrix(y)
   dimnames(y) <- NULL
   if(!is.matrix(y)) stop("The response is not in a matrix format\n")
-  if(ncol(p) <= 1) stop("For the univariate case use the smsn.mix function\n")
+  if(ncol(y) <= 1) stop("For the univariate case use the smsn.mix function\n")
   if((family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.",sep=" "))
   if((length(g) == 0) && ((length(mu)==0) || (length(Sigma)==0) || (length(shape)==0) || (length(pii)==0)))  stop("The model is not specified correctly.\n")
   if(get.init == FALSE){
