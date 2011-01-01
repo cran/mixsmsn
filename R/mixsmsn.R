@@ -2,7 +2,8 @@
 ##########       Algorítmo EM para mistura            ###############
 #                   alterado em 26/08/08                            #
 
-smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, g = NULL, get.init = TRUE, criteria = TRUE, group = FALSE, family = "Skew.normal", error = 0.00001, iter.max = 100, calc.im = TRUE){
+smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, g = NULL, get.init = TRUE, criteria = TRUE, group = FALSE, 
+                     family = "Skew.normal", error = 0.00001, iter.max = 100, calc.im = TRUE, obs.prob= FALSE){
   #y: é o vetor de dados (amostra) de tamanho n
   #mu, sigma2, shape, pii: são os valores iniciais para o algorítmo EM. Cada um deles deve ser um vetor de tamanho g
   #                       (o algorítmo entende o número de componentes a ajustar baseado no tamanho desses vetores)
@@ -515,6 +516,16 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
  else obj.out <- list(mu = mu, sigma2 = sigma2, shape = shape, pii = pii, nu = nu, iter = count, n = length(y), group = apply(tal, 1, which.max))#, im.sdev=NULL)
 # if (group == FALSE) obj.out <- obj.out[-(length(obj.out)-1)]
  if (group == FALSE) obj.out <- obj.out[-(length(obj.out))]
+ if (obs.prob == TRUE){
+     nam <- c()
+     for (i in 1:ncol(tal)) nam <- c(nam,paste("Group ",i,sep=""))
+     dimnames(tal)[[2]] <- nam
+     obj.out$obs.prob <- tal
+     if((ncol(tal) - 1) > 1) obj.out$obs.prob[,ncol(tal)] <- 1 - rowSums(obj.out$obs.prob[,1:(ncol(tal)-1)])
+     else obj.out$obs.prob[,ncol(tal)] <- 1 - obj.out$obs.prob[,1]
+     obj.out$obs.prob[which(obj.out$obs.prob[,ncol(tal)] <0),ncol(tal)] <- 0.0000000000
+     obj.out$obs.prob <- round(obj.out$obs.prob,10)
+ }
  class(obj.out) <- family
 
  if(calc.im){

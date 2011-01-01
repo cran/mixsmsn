@@ -13,7 +13,7 @@ smsn.mix(y,
          nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL,
          g = NULL, get.init = TRUE,
          criteria = TRUE, group = FALSE, family = "Skew.normal",
-         error = 0.00001, iter.max = 100, calc.im = TRUE)
+         error = 0.00001, iter.max = 100, calc.im = TRUE, obs.prob = FALSE)
 }
 \arguments{
   \item{y}{ the response vector }
@@ -30,6 +30,7 @@ smsn.mix(y,
   \item{error}{ the covergence maximum error }
   \item{iter.max}{ the maximum number of iterations of the EM algorithm. Default = 100 }
   \item{calc.im}{ if TRUE, the information matrix is calculated and the standard errors are reported}
+  \item{obs.prob}{ if TRUE, the posterior probability of each observation belonging to one of the g groups is reported}
 }
 
 \value{

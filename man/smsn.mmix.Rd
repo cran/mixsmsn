@@ -14,7 +14,7 @@ smsn.mmix(y, nu=1,
           g = NULL, get.init = TRUE, criteria = TRUE,
           group = FALSE, family = "Skew.normal", 
           error = 0.0001, iter.max = 100, uni.Gama = FALSE,
-          calc.im=FALSE )
+          calc.im=FALSE, obs.prob = FALSE )
 }
 \arguments{
   \item{y}{ the response matrix (dimension nxp) }
@@ -32,6 +32,7 @@ smsn.mmix(y, nu=1,
   \item{iter.max}{ the maximum number of iterations of the EM algorithm. Default = 100 }
   \item{uni.Gama}{ if TRUE, the Gamma parameters are restricted to be the same for all clusters}
   \item{calc.im}{ if TRUE, the information matrix is calculated and the starndard erros are reported }
+  \item{obs.prob}{ if TRUE, the posterior probability of each observation belonging to one of the g groups is reported}  
 }
 
 \value{

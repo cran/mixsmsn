@@ -3,7 +3,8 @@
 ###########                           Alterações feitas em 03/05/2010 por Celso Rômulo              ################
 ###########                           Esta é a versão utilizada no artigo submetido ao CSDA         ################
 smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL, g = NULL, get.init = TRUE, criteria = TRUE,
-                      group = FALSE, family = "Skew.normal", error = 0.0001, iter.max = 100, uni.Gama = FALSE, calc.im=FALSE){
+                      group = FALSE, family = "Skew.normal", error = 0.0001, iter.max = 100, uni.Gama = FALSE, calc.im=FALSE,
+                      obs.prob= FALSE){
   #mu, Sigma, shape devem ser do tipo list(). O numero de entradas no list é o numero g de componentes de misturas
   #cada entrada do list deve ser de tamanho igual ao numero de colunas da matriz de dados y
   y <- as.matrix(y)
@@ -660,7 +661,18 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
      if(criteria == FALSE) obj.out <- list(mu = mu, Sigma = Sigma, shape = shape, pii = pii, nu = nu, iter = count, n = nrow(y), group =apply(tal, 1, which.max))
 
      if (group == FALSE) obj.out <- obj.out[-length(obj.out)]
-     obj.out$uni.Gama <- uni.Gama
+     obj.out$uni.Gama <- uni.Gama    
+     if (obs.prob == TRUE){
+     nam <- c()
+     for (i in 1:ncol(tal)) nam <- c(nam,paste("Group ",i,sep=""))
+     dimnames(tal)[[2]] <- nam
+     obj.out$obs.prob <- tal
+     if((ncol(tal) - 1) > 1) obj.out$obs.prob[,ncol(tal)] <- 1 - rowSums(obj.out$obs.prob[,1:(ncol(tal)-1)])
+     else obj.out$obs.prob[,ncol(tal)] <- 1 - obj.out$obs.prob[,1]
+     obj.out$obs.prob[which(obj.out$obs.prob[,ncol(tal)] <0),ncol(tal)] <- 0.0000000000
+     obj.out$obs.prob <- round(obj.out$obs.prob,10)
+ }
+
      class(obj.out) <- family
 
      if(calc.im){
