@@ -10,7 +10,7 @@ rmix(n, pii, family, arg)
 \arguments{
   \item{n}{ number of observations  }
   \item{pii}{ a vector of weights for the mixture (dimension of the number \code{g} of clusters). Must sum to one!}
-  \item{family}{ distribution family to be used in fitting ("Skew.t", "Skew.nc", "Skew.slash", "Skew.normal", "Normal") }
+  \item{family}{ distribution family to be used in fitting ("t", "Skew.t", "Skew.cn", "Skew.slash", "Skew.normal", "Normal") }
   \item{arg}{ a list with each entry containing a vector of size equal to the number of clusters of the necessary parameters from a \code{family} }
 }
 

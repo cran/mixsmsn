@@ -7,16 +7,17 @@
     #n: numero de amostras geradas
     #p: vetor de proporções das misturas (tamanho g)
     #arg: deve ser um tipo list com cada entrada contendo um vetor de tamanho g de agrumentos a ser passado para rF1
- if((family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.",sep=" "))
+ if((family != "t") && (family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.",sep=" "))
 
     if((family == "Normal") || (family == "Skew.normal") ) {
-                                                              rF1 <- gen.Skew.normal
-                                                              for (i in 1:length(arg)) if(length(arg[[i]]) != 4 && length(arg[[i]]) != 3) stop(paste("Number of arguments is not comformidable for argument ",i,".\n",sep=" "))
+                             rF1 <- gen.Skew.normal
+                             for (i in 1:length(arg)) if(length(arg[[i]]) != 4 && length(arg[[i]]) != 3) stop(paste("Number of arguments is not comformidable for argument ",i,".\n",sep=" "))
                                                            }
                                                            
-    if (family == "Skew.t"){
+    if ((family == "t") || (family == "Skew.t") ){
                              rF1 <- gen.Skew.t
                              for (i in 1:length(arg)) if(length(arg[[i]]) != 4) stop(paste("Number of arguments is not comformidable for argument ",i,".\n",sep=" "))
+                             if(family == "t") for (i in 1:length(arg)) arg[[i]][3] <- 0
                            }
     if (family == "Skew.cn"){
                               rF1 <- gen.Skew.cn
@@ -87,7 +88,7 @@
     #n: numero de amostras geradas
     #p: vetor de proporções das misturas (tamanho g)
     #arg: deve ser um tipo list com cada entrada contendo um vetor de tamanho g de agrumentos a ser passado para rF1
-    if((family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.",sep=" "))
+    if((family != "t") && (family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.",sep=" "))
 
     if (family == "Normal") {
                                 rF1 <- gen.SN.multi
@@ -100,9 +101,10 @@
                                    rF1 <- gen.SN.multi
                                    for (i in 1:length(arg)) if(length(arg[[i]]) != 4 && length(arg[[i]]) != 3) stop(paste("Number of arguments is not comformidable for argument ",i,".\n",sep=" "))
                                  }
-    if (family == "Skew.t"){
+    if ((family == "t") || (family == "Skew.t")){
                               rF1 <- gen.ST.multi
                               for (i in 1:length(arg)) if(length(arg[[i]]) != 4) stop(paste("Number of arguments is not comformidable for argument ",i,".\n",sep=" "))
+                              if(family == "t") for (i in 1:length(arg)) arg[[i]]$shape <- rep(0,length(arg[[i]]$shape))
                             }
     if (family == "Skew.cn"){
                                rF1 <- gen.SCN.multi

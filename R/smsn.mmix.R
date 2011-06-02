@@ -11,7 +11,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
   dimnames(y) <- NULL
   if(!is.matrix(y)) stop("The response is not in a matrix format\n")
   if(ncol(y) <= 1) stop("For the univariate case use the smsn.mix function\n")
-  if((family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.",sep=" "))
+  if((family != "t") && (family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.",sep=" "))
   if((length(g) == 0) && ((length(mu)==0) || (length(Sigma)==0) || (length(shape)==0) || (length(pii)==0)))  stop("The model is not specified correctly.\n")
   if(get.init == FALSE){
        g <- length(mu)
@@ -38,7 +38,8 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
       mu <- shape <- Sigma <- list()
       for (j in 1:g){
         mu[[j]] <- init$centers[j,]
-        shape[[j]] <- sign( apply( (y[init$cluster == j, ] - matrix(rep(mu[[j]], nrow(y[init$cluster == j, ])), nrow(y[init$cluster == j, ]), p, byrow = T  ) )^3, 2, sum ))
+        shape[[j]] <- sign( apply( (y[init$cluster == j, ] - matrix(rep(mu[[j]], nrow(y[init$cluster == j, ])), 
+                      nrow = nrow(y[init$cluster == j, ]), ncol=p, byrow = TRUE))^3, 2, sum))
         Sigma[[j]] <- var(y[init$cluster == j,])
         dimnames(Sigma[[j]]) <- NULL
         names(mu[[j]]) <- NULL
@@ -50,13 +51,120 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
       pii <- 1
       mu[[1]] <- colMeans(y)
       Sigma[[1]] <- var(y)
-      shape[[1]] <- sign( apply( (y - matrix(rep(mu[[1]], nrow(y)), nrow(y), p, byrow = T) )^3, 2, sum ))
+      shape[[1]] <- sign( apply( (y - matrix(rep(mu[[1]], nrow(y)), nrow(y), p, byrow = TRUE) )^3, 2, sum ))
       dimnames(Sigma[[1]]) <- NULL
       names(mu[[1]]) <- NULL
       names(shape[[1]]) <- NULL
     }
 
   }
+
+  if (family == "t"){
+      delta <- Delta <- Gama <- list()
+#      teta <- c()
+      for (k in 1:g){
+        Delta[[k]] <- shape[[k]] <- rep(0,p)
+        Gama[[k]] <- Sigma[[k]] - Delta[[k]]%*%t(Delta[[k]])
+#        teta <- c(teta, mu[[k]], Gama[[k]][upper.tri(Gama[[k]], diag = TRUE)], Delta[[k]])
+      }
+#      teta <- c(teta, pii, nu) #teta para nu desconhecido
+      if(uni.Gama){
+         Gama.uni <- Gama[[1]]
+         if(g > 1) for(k in 2:g) Gama.uni <- Gama.uni + Gama[[k]]
+         Gama.uni <- Gama.uni / g
+         for(k in 1:g) Gama[[k]] <- Gama.uni
+      }
+      
+      mu.old <- mu
+      Delta.old <- Delta
+      Gama.old <- Gama
+
+      criterio <- 1
+      count <- 0
+      lkante <- 1
+
+      while((criterio > error) && (count <= iter.max)){
+        count <- count + 1
+        tal <- matrix(0, n, g)
+        S1 <- matrix(0, n, g)
+        S2 <- matrix(0, n, g)
+        S3 <- matrix(0, n, g)
+        for (j in 1:g){
+          ### E-step: calculando ui, tui, tui2 ###
+          Dif <- y - matrix(rep(mu[[j]], n), n, p, byrow = TRUE)
+          Mtij2 <- as.numeric( 1/(1 + t(Delta[[j]])%*%solve(Gama[[j]])%*%Delta[[j]]) )
+          Mtij <- sqrt(Mtij2)
+          mutij <- apply(  matrix(rep( Mtij2*t(Delta[[j]])%*%solve(Gama[[j]]),n), n, p, byrow = TRUE ) * Dif, 1, sum)
+          A <- mutij / Mtij
+          dj <- mahalanobis(y, mu[[j]], Sigma[[j]])
+
+          E = (2*(nu)^(nu/2)*gamma((p+nu+1)/2)*((dj + nu + A^2))^(-(p+nu+1)/2)) / (gamma(nu/2)*(sqrt(pi))^(p+1)*sqrt(det(Sigma[[j]]))*dmvt.ls(y, mu[[j]], Sigma[[j]], shape[[j]] ,nu))
+          u = ((4*(nu)^(nu/2)*gamma((p+nu+2)/2)*(dj + nu)^(-(p+nu+2)/2)) / (gamma(nu/2)*sqrt(pi^p)*sqrt(det(Sigma[[j]]))*dmvt.ls(y, mu[[j]], Sigma[[j]], shape[[j]] ,nu)) )*pt(sqrt((p+nu+2)/(dj+nu))*A,p+nu+2)
+
+          d1 <- dmvt.ls(y, mu[[j]], Sigma[[j]], shape[[j]], nu)
+          if(length(which(d1 == 0)) > 0) d1[which(d1 == 0)] <- .Machine$double.xmin
+          d2 <- d.mixedmvST(y, pii, mu, Sigma, shape, nu)
+          if(length(which(d2 == 0)) > 0) d2[which(d2 == 0)] <- .Machine$double.xmin
+
+          tal[,j] <- d1*pii[j] / d2
+          S1[,j] <- tal[,j]*u
+          S2[,j] <- tal[,j]*(mutij*u + Mtij*E)
+          S3[,j] <- tal[,j]*(mutij^2*u + Mtij2 + Mtij*mutij*E)
+
+          ### M-step: atualizar mu, Delta, Gama, sigma2 ###
+          pii[j] <- (1/n)*sum(tal[,j])
+
+          mu[[j]] <- apply(S1[,j]*y - S2[,j] * matrix(rep(Delta.old[[j]], n), n, p, byrow = TRUE), 2, sum) / sum(S1[,j])
+          Dif <- y - matrix(rep(mu[[j]], n), n, p, byrow = TRUE)
+          Delta[[j]] <- apply(S2[,j]*Dif, 2, sum) / sum(S3[,j])
+          
+          sum2 <- matrix(0,p,p)
+          for (i in 1:n) sum2 <- sum2 + (S1[i,j]*(y[i,] - mu[[j]])%*%t(y[i,] - mu[[j]]) - S2[i,j]*Delta[[j]]%*%t(y[i,] - mu[[j]]) - S2[i,j]*(y[i,] - mu[[j]])%*%t(Delta[[j]])  + S3[i,j]*Delta[[j]]%*%t(Delta[[j]]))
+
+          Gama[[j]] <- sum2 / sum(tal[,j])
+          
+          if(!uni.Gama){
+             Sigma[[j]] <- Gama[[j]] + Delta[[j]]%*%t(Delta[[j]])
+             shape[[j]] <- (solve(matrix.sqrt(Sigma[[j]]))%*%Delta[[j]]) / as.numeric( (1 - t(Delta[[j]])%*%solve(Sigma[[j]])%*%Delta[[j]]) )^(1/2)
+          }
+        }
+        if(uni.Gama){
+           GS <- 0
+           for (j in 1:g) GS <- GS+kronecker(tal[,j],Gama[[j]])
+           Gama.uni <- t(rowSums(array(t(GS),dim=c(p,p,n)),dims=2))/n
+           for (j in 1:g){
+             Gama[[j]] <- Gama.uni
+             Sigma[[j]] <- Gama[[j]] + Delta[[j]]%*%t(Delta[[j]])
+             shape[[j]] <- (solve(matrix.sqrt(Sigma[[j]]))%*%Delta[[j]]) / as.numeric( (1 - t(Delta[[j]])%*%solve(Sigma[[j]])%*%Delta[[j]]) )^(1/2)
+           }
+        }
+        #aqui começam as alterações para estimar o valor de nu
+        logvero.ST <- function(nu) sum(log( d.mixedmvST(y, pii, mu, Sigma, shape, nu) ))
+        nu <- optimize(logvero.ST, c(0,100), tol = 0.000001, maximum = TRUE)$maximum
+
+        pii[g] <- 1 - (sum(pii) - pii[g])
+
+#        param <- teta
+#        teta <- c()
+#        for (k in 1:g) teta <- c(teta, mu[[k]], Gama[[k]][upper.tri(Gama[[k]], diag = TRUE)], Delta[[k]])
+#        teta <- c(teta, pii, nu) #teta para nu desconhecido
+        lk <- sum(log( d.mixedmvST(y, pii, mu, Sigma, shape, nu) ))
+        criterio <- abs((lk/lkante)-1)
+
+        lkante <- lk
+        mu.old <- mu
+        Delta.old <- Delta
+        Gama.old <- Gama
+      }
+    if (criteria == TRUE){
+       cl <- apply(tal, 1, which.max)
+       icl <- 0
+       for (j in 1:g) icl <- icl+sum(log(pii[j]*dmvt.ls(y[cl==j,], mu[[j]], Sigma[[j]], shape[[j]], nu)))
+       #icl=-2*icl+4*g*log(n)
+    }
+
+  }
+
 
   if (family == "Skew.t"){
       delta <- Delta <- Gama <- list()
@@ -114,7 +222,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
           ### M-step: atualizar mu, Delta, Gama, sigma2 ###
           pii[j] <- (1/n)*sum(tal[,j])
 
-          mu[[j]] <- apply(S1[,j]*y - S2[,j] * matrix(rep(Delta.old[[j]], n), n, p, byrow = T), 2, sum) / sum(S1[,j])
+          mu[[j]] <- apply(S1[,j]*y - S2[,j] * matrix(rep(Delta.old[[j]], n), n, p, byrow = TRUE), 2, sum) / sum(S1[,j])
           Dif <- y - matrix(rep(mu[[j]], n), n, p, byrow = TRUE)
           Delta[[j]] <- apply(S2[,j]*Dif, 2, sum) / sum(S3[,j])
           
@@ -222,7 +330,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
           ### M-step: atualizar mu, Delta, Gama, sigma2 ###
           pii[j] <- (1/n)*sum(tal[,j])
           
-          mu[[j]] <- apply(S1[,j]*y - S2[,j] * matrix(rep(Delta.old[[j]], n), n, p, byrow = T), 2, sum) / sum(S1[,j])
+          mu[[j]] <- apply(S1[,j]*y - S2[,j] * matrix(rep(Delta.old[[j]], n), n, p, byrow = TRUE), 2, sum) / sum(S1[,j])
           Dif <- y - matrix(rep(mu[[j]], n), n, p, byrow = TRUE)
           Delta[[j]] <- apply(S2[,j]*Dif, 2, sum) / sum(S3[,j])
           
@@ -276,7 +384,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
 
 
     if (family == "Skew.slash"){
-      cat("\nThe Skew.slash take a long time to run.\n")
+      cat("\nThe Skew.slash takes a long time to run.\n")
       delta <- Delta <- Gama <- list()
 #      teta <- c()
       for (k in 1:g){
@@ -365,7 +473,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
           ### M-step: atualizar mu, Delta, Gama, sigma2 ###
           pii[j] <- (1/n)*sum(tal[,j])
  
-          mu[[j]] <- apply(S1[,j]*y - S2[,j] * matrix(rep(Delta.old[[j]], n), n, p, byrow = T), 2, sum) / sum(S1[,j])
+          mu[[j]] <- apply(S1[,j]*y - S2[,j] * matrix(rep(Delta.old[[j]], n), n, p, byrow = TRUE), 2, sum) / sum(S1[,j])
           Dif <- y - matrix(rep(mu[[j]], n), n, p, byrow = TRUE)
           Delta[[j]] <- apply(S2[,j]*Dif, 2, sum) / sum(S3[,j])
           
@@ -491,7 +599,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
           ### M-step: atualizar mu, Delta, Gama, sigma2 ###
           pii[j] <- (1/n)*sum(tal[,j])
 
-          mu[[j]] <- apply(S1[,j]*y - S2[,j] * matrix(rep(Delta.old[[j]], n), n, p, byrow = T), 2, sum) / sum(S1[,j])
+          mu[[j]] <- apply(S1[,j]*y - S2[,j] * matrix(rep(Delta.old[[j]], n), n, p, byrow = TRUE), 2, sum) / sum(S1[,j])
           Dif <- y - matrix(rep(mu[[j]], n), n, p, byrow = TRUE)
           Delta[[j]] <- apply(S2[,j]*Dif, 2, sum) / sum(S3[,j])
           
@@ -596,7 +704,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
           ### M-step: atualizar mu, Delta, Gama, sigma2 ###
           pii[j] <- (1/n)*sum(tal[,j])
           
-          mu[[j]] <- apply(S1[,j]*y - S2[,j] * matrix(rep(Delta.old[[j]], n), n, p, byrow = T), 2, sum) / sum(S1[,j])
+          mu[[j]] <- apply(S1[,j]*y - S2[,j] * matrix(rep(Delta.old[[j]], n), n, p, byrow = TRUE), 2, sum) / sum(S1[,j])
           Dif <- y - matrix(rep(mu[[j]], n), n, p, byrow = TRUE)
           Delta[[j]] <- rep(0,p)
           
@@ -650,8 +758,8 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
   }
 
      if(criteria == TRUE){
-        if(uni.Gama) d <- g*2*p + length(Sigma[[1]][upper.tri(Sigma[[1]], diag = T)]) + 1 + (g-1) #mu + shape + Sigma + nu + pi
-        if(!uni.Gama) d <- g*(2*p + length(Sigma[[1]][upper.tri(Sigma[[1]], diag = T)]) ) + 1 + (g-1) #mu + shape + Sigma + nu + pi
+        if(uni.Gama) d <- g*2*p + length(Sigma[[1]][upper.tri(Sigma[[1]], diag = TRUE)]) + 1 + (g-1) #mu + shape + Sigma + nu + pi
+        if(!uni.Gama) d <- g*(2*p + length(Sigma[[1]][upper.tri(Sigma[[1]], diag = TRUE)]) ) + 1 + (g-1) #mu + shape + Sigma + nu + pi
         aic <- -2*lk + 2*d
         bic <- -2*lk + log(n)*d
         edc <- -2*lk + 0.2*sqrt(n)*d

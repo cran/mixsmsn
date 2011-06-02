@@ -17,7 +17,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
   #                                       - Normal: Misturas de Normais
   #error: define o critério de parada do algorítmo.
  
-  if((family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.\n",sep=" "))
+  if((family != "t") && (family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.\n",sep=" "))
   if((length(g) == 0) && ((length(mu)==0) || (length(sigma2)==0) || (length(shape)==0) || (length(pii)==0)))  stop("The model is not specified correctly.\n")
   if(get.init == FALSE){
        g <- length(mu)
@@ -49,9 +49,98 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
    }
   }
 
+  if (family == "t"){
+      shape <- rep(0,g)
+      lk <- sum(log(d.mixedST(y, pii, mu, sigma2, shape, nu) ))
+      n <- length(y)
+      delta <- Delta <- Gama <- rep(0,g)
+      for (k in 1:g){
+        delta[k] <- 0 ##shape[k] / (sqrt(1 + shape[k]^2))
+        Delta[k] <- 0 ##sqrt(sigma2[k])*delta[k]
+        Gama[k] <- sigma2[k] - Delta[k]^2
+      }
+
+      teta <- c(mu, Delta, Gama, pii, nu)
+      mu.old <- mu
+      Delta.old <- Delta
+      Gama.old <- Gama
+
+      criterio <- 1
+      count <- 0
+
+      while((criterio > error) && (count <= iter.max)){
+        count <- count + 1
+ ##       print(count)
+        tal <- matrix(0, n, g)
+        S1 <- matrix(0, n, g)
+        S2 <- matrix(0, n, g)
+        S3 <- matrix(0, n, g)
+        for (j in 1:g){
+          ### E-step: calculando ui, tui, tui2 ###
+          dj <- ((y - mu[j])/sqrt(sigma2[j]))^2
+          Mtij2 <- 1/(1 + (Delta[j]^2)*(Gama[j]^(-1)))
+          Mtij <- sqrt(Mtij2)
+          mutij <- Mtij2*Delta[j]*(Gama[j]^(-1))*(y - mu[j])
+          A <- mutij / Mtij
+
+          E=(2*(nu)^(nu/2)*gamma((2+nu)/2)*((dj + nu + A^2))^(-(2+nu)/2)) / (gamma(nu/2)*pi*sqrt(sigma2[j])*dt.ls(y, mu[j], sigma2[j],shape[j] ,nu))
+          u= ((4*(nu)^(nu/2)*gamma((3+nu)/2)*(dj + nu)^(-(nu+3)/2)) / (gamma(nu/2)*sqrt(pi)*sqrt(sigma2[j])*dt.ls(y, mu[j], sigma2[j],shape[j] ,nu)) )*pt(sqrt((3+nu)/(dj+nu))*A,3+nu)
+
+          d1 <- dt.ls(y, mu[j], sigma2[j], shape[j], nu)
+          if(length(which(d1 == 0)) > 0) d1[which(d1 == 0)] <- .Machine$double.xmin
+          d2 <-d.mixedST(y, pii, mu, sigma2, shape, nu)
+          if(length(which(d2 == 0)) > 0) d2[which(d2 == 0)] <- .Machine$double.xmin
+
+          tal[,j] <- d1*pii[j] / d2
+          S1[,j] <- tal[,j]*u
+          S2[,j] <- tal[,j]*(mutij*u + Mtij*E)
+          S3[,j] <- tal[,j]*(mutij^2*u + Mtij2 + Mtij*mutij*E)
+
+
+          ### M-step: atualizar mu, Delta, Gama, sigma2 ###
+          pii[j] <- (1/n)*sum(tal[,j])
+          mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
+          Delta[j] <- sum(S2[,j]*(y - mu[j])) / sum(S3[,j])
+          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])       
+          sigma2[j] <- Gama[j] + Delta[j]^2
+          shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
+
+        }
+        #aqui começam as alterações para estimar o valor de nu
+        logvero.ST <- function(nu) sum(log(d.mixedST(y, pii, mu, sigma2, shape, nu)))
+        nu <- optimize(logvero.ST, c(0,100), tol = 0.000001, maximum = TRUE)$maximum
+        lk1 <- sum(log( d.mixedST(y, pii, mu, sigma2, shape, nu) ))
+        pii[g] <- 1 - (sum(pii) - pii[g])
+
+        param <- teta
+        teta <- c(mu, Delta, Gama, pii, nu)
+        #criterio <- sqrt((teta-param)%*%(teta-param))
+        criterio <- abs(lk1/lk-1)
+
+        mu.old <- mu
+        Delta.old <- Delta
+        Gama.old <- Gama
+        lk<-lk1
+        
+      }
+
+    if (criteria == TRUE){
+       cl <- apply(tal, 1, which.max)
+       icl <- 0
+       for (j in 1:g) icl <- icl+sum(log(pii[j]*dt.ls(y[cl==j], mu[j], sigma2[j], shape[j], nu)))
+       #icl=-2*icl+4*g*log(n)
+    }
+
+      #### grafico ajuste
+      ##hist(y, breaks = 40,probability=T,col="grey")
+      ##xx=seq(min(y),max(y),(max(y)-min(y))/1000)
+      ##lines(xx,d.mixedST(xx, pii, mu, sigma2, shape, nu),col="red")
+      ######################
+  }
+
 
   if (family == "Skew.t"){
-    lk <- sum(log(d.mixedST(y, pii, mu, sigma2, shape, nu) ))
+      lk <- sum(log(d.mixedST(y, pii, mu, sigma2, shape, nu) ))
       n <- length(y)
       delta <- Delta <- Gama <- rep(0,g)
       for (k in 1:g){

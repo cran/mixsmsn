@@ -27,7 +27,7 @@ smsn.mmix(y, nu=1,
   \item{get.init}{ if TRUE, the initial values are generated via k-means}
   \item{criteria}{ if TRUE, log-likelihood (logLik), AIC, DIC, EDC and ICL will be calculated }
   \item{group}{ if TRUE, the vector with the classification of the response is returned }
-  \item{family}{ distribution famility to be used in fitting ("Skew.t", "Skew.nc", "Skew.slash", "Skew.normal", "Normal") }
+  \item{family}{ distribution famility to be used in fitting ("t", "Skew.t", "Skew.cn", "Skew.slash", "Skew.normal", "Normal") }
   \item{error}{ the covergence maximum error }
   \item{iter.max}{ the maximum number of iterations of the EM algorithm. Default = 100 }
   \item{uni.Gama}{ if TRUE, the Gamma parameters are restricted to be the same for all clusters}
