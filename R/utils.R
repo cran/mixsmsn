@@ -47,29 +47,24 @@ im.smsn <- function(y, model){
         di <- as.numeric(mahalanobis(yi, mu[j], Sigma[j]))
 
         #derivadinhas
-        Dr <- matrix.sqrt(Sigma[j])
-        Dadj <- 1
-        dir.dmu <- -2*solve(Sigma[j])%*%(y[i,] - mu[j])
-        dAir.dmu <- -solve(Dr)%*%lambda[j]
-        #dAir.dlambda <- solve(Dr)%*%(y[i,] - mu[j])
-
+        Dr <- as.numeric(matrix.sqrt(Sigma[[j]]))
+        Dadj <- 1/(2*Dr)
+        dir.dmu <- (-2*(y[i,] - mu[j]))/Sigma[j]
+        dAir.dmu <- -lambda[j]/Dr
 
         #para os elementos de sigma
-        D11 <- matrix(c(1), 1,1)
-        ddet.ds11 <- -(1/det(Dr)^2)*Dadj
-        dir.ds11 <- - t(y[i,] - mu[j])%*%solve(Dr)%*%(D11%*%solve(Dr) + solve(Dr)%*%D11)%*%solve(Dr)%*%(y[i,] - mu[j])
-        dAir.ds11 <- - t(lambda[j])%*%solve(Dr)%*%D11%*%solve(Dr)%*%(y[i,] - mu[j])
+        ddet.ds11 <- -(1/Dr^2)*Dadj
+        dir.ds11 <-  - (y[i,] - mu[j])^2/Dr^4
+        dAir.ds11 <- -(0.5* lambda[j]*(y[i,] - mu[j]))/Dr^3
 
-        dPsi.dmu <- ((2*det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*( dAir.dmu * I.phi((p+1)/2, Ai, di, nu) - (1/2)*dir.dmu*I.Phi((p/2)+1, Ai, di, nu) )
-        #dPsi.dlambda <- ((2*det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*dAir.dlambda*I.phi((p+1)/2, Ai, di, nu)
-        dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(p/2, Ai, di, nu) - (1/2)*dir.ds11*det(as.matrix(Sigma[j]))^(-1/2)*I.Phi(p/2+1, Ai, di, nu) + det(as.matrix(Sigma[j]))^(-1/2)*dAir.ds11*I.phi((p+1)/2, Ai, di, nu) )
+        dPsi.dmu <- 2/sqrt(2*pi*Sigma[j])*( dAir.dmu * I.phi((p+1)/2, Ai, di, nu) - (1/2)*dir.dmu*I.Phi((p/2)+1, Ai, di, nu) )
+        dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(p/2, Ai, di, nu) - (1/2)*dir.ds11/sqrt(Sigma[j])*I.Phi(p/2+1, Ai, di, nu) + dAir.ds11/sqrt(Sigma[j])*I.phi((p+1)/2, Ai, di, nu) )
 
         ui <- rgamma(10000, shape = nu/2, rate = nu/2)
         resto <- mean(ui^(p/2)*log(ui)*exp(-ui*di/2)*pnorm(ui^(1/2)*Ai))
         dPsi.dnu <- dPsi.dnu + pii[j]*((det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*((log(nu/2)+1-digamma(nu/2))*I.Phi(p/2, Ai, di, nu) - I.Phi((p+2)/2, Ai, di, nu) + resto)
 
         Simu <- as.vector((pii[j]/ d.mixedST(yi, pii, mu, Sigma, lambda, nu) )*dPsi.dmu)
-        #Silambda <- as.vector((pii[j]/ d.mixedST(yi, pii, mu, Sigma, lambda, nu) )*dPsi.dlambda )
         Ssigma11 <- (pii[j]/ d.mixedST(yi, pii, mu, Sigma, lambda, nu) )*dPsi.dsigma11
         Sipi <- (1/d.mixedST(yi, pii, mu, Sigma, lambda, nu))*( dt.ls(yi, mu[j], Sigma[j], lambda[j], nu) - dt.ls(yi, mu[g], Sigma[g], lambda[g], nu))
 
@@ -103,25 +98,20 @@ im.smsn <- function(y, model){
         di <- as.numeric(mahalanobis(yi, mu[j], Sigma[j]))
 
         #derivadinhas
-        Dr <- matrix.sqrt(Sigma[j])
-        Dadj <- 1
-        dir.dmu <- -2*solve(Sigma[j])%*%(y[i,] - mu[j])
-        dAir.dmu <- -solve(Dr)%*%lambda[j]
-        dAir.dlambda <- solve(Dr)%*%(y[i,] - mu[j])
-
+        Dr <- as.numeric(matrix.sqrt(Sigma[[j]]))
+        Dadj <- 1/(2*Dr)
+        dir.dmu <- (-2*(y[i,] - mu[j]))/Sigma[j]
+        dAir.dmu <- -lambda[j]/Dr
+        dAir.dlambda <- (y[i,] - mu[j])/Dr
 
         #para os elementos de sigma
-        D11 <- matrix(c(1), 1,1)
-        #ddet.ds11 <- -(1/det(Dr)^2)*Dadj
-        ddet.ds11 <- -(1/det(Dr)^4)*Dadj
-        #dir.ds11 <- - t(y[i,] - mu[j])%*%solve(Dr)%*%(D11%*%solve(Dr) + solve(Dr)%*%D11)%*%solve(Dr)%*%(y[i,] - mu[j])
-        dir.ds11 <-  t(y[i,] - mu[j])%*%solve(Dr)%*%(D11%*%solve(Dr) + solve(Dr)%*%D11)%*%solve(Dr)%*%(y[i,] - mu[j])
-        #dAir.ds11 <- - t(lambda[j])%*%solve(Dr)%*%D11%*%solve(Dr)%*%(y[i,] - mu[j])
-        dAir.ds11 <- - t(lambda[j])%*%solve(sqrt(Dr))%*%D11%*%solve(sqrt(Dr))%*%(y[i,] - mu[j])
+        ddet.ds11 <- -(1/Dr^2)*Dadj
+        dir.ds11 <-  - (y[i,] - mu[j])^2/Dr^4
+        dAir.ds11 <- -(0.5* lambda[j]*(y[i,] - mu[j]))/Dr^3
 
-        dPsi.dmu <- ((2*det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*( dAir.dmu * I.phi((p+1)/2, Ai, di, nu) - (1/2)*dir.dmu*I.Phi((p/2)+1, Ai, di, nu) )
-        dPsi.dlambda <- ((2*det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*dAir.dlambda*I.phi((p+1)/2, Ai, di, nu)
-        dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(p/2, Ai, di, nu) - (1/2)*dir.ds11*det(as.matrix(Sigma[j]))^(-1/2)*I.Phi(p/2+1, Ai, di, nu) + det(as.matrix(Sigma[j]))^(-1/2)*dAir.ds11*I.phi((p+1)/2, Ai, di, nu) )
+        dPsi.dmu <- 2/sqrt(2*pi*Sigma[j])*( dAir.dmu * I.phi((p+1)/2, Ai, di, nu) - (1/2)*dir.dmu*I.Phi((p/2)+1, Ai, di, nu) )
+        dPsi.dlambda <- (2/sqrt(2*pi*Sigma[j]))*dAir.dlambda*I.phi((p+1)/2, Ai, di, nu)
+        dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(p/2, Ai, di, nu) - (1/2)*dir.ds11/sqrt(Sigma[j])*I.Phi(p/2+1, Ai, di, nu) + dAir.ds11/sqrt(Sigma[j])*I.phi((p+1)/2, Ai, di, nu) )
 
         ui <- rgamma(10000, shape = nu/2, rate = nu/2)
         resto <- mean(ui^(p/2)*log(ui)*exp(-ui*di/2)*pnorm(ui^(1/2)*Ai))
@@ -162,21 +152,20 @@ im.smsn <- function(y, model){
         di <- as.numeric(mahalanobis(yi, mu[j], Sigma[j]))
 
         #derivadinhas
-        Dr <- matrix.sqrt(Sigma[[j]])
-        Dadj <- 1
-        dir.dmu <- -2*solve(Sigma[j])%*%(y[i,] - mu[j])
-        dAir.dmu <- -solve(Dr)%*%lambda[j]
-        dAir.dlambda <- solve(Dr)%*%(y[i,] - mu[j])
+        Dr <- as.numeric(matrix.sqrt(Sigma[[j]]))
+        Dadj <- 1/(2*Dr)
+        dir.dmu <- (-2*(y[i,] - mu[j]))/Sigma[j]
+        dAir.dmu <- -lambda[j]/Dr
+        dAir.dlambda <- (y[i,] - mu[j])/Dr
 
         #para os elementos de sigma
-        D11 <- matrix(c(1), 1,1)
-        ddet.ds11 <- -(1/det(Dr)^2)*Dadj
-        dir.ds11 <- - t(y[i,] - mu[j])%*%solve(Dr)%*%(D11%*%solve(Dr) + solve(Dr)%*%D11)%*%solve(Dr)%*%(y[i,] - mu[j])
-        dAir.ds11 <- - t(lambda[j])%*%solve(Dr)%*%D11%*%solve(Dr)%*%(y[i,] - mu[j])
+        ddet.ds11 <- -(1/Dr^2)*Dadj
+        dir.ds11 <-  - (y[i,] - mu[j])^2/Dr^4
+        dAir.ds11 <- -(0.5* lambda[j]*(y[i,] - mu[j]))/Dr^3
 
-        dPsi.dmu <- ((2*det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*( dAir.dmu * I.phi((p+1)/2, Ai, di, nu) - (1/2)*dir.dmu*I.Phi((p/2)+1, Ai, di, nu) )
-        dPsi.dlambda <- ((2*det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*dAir.dlambda*I.phi((p+1)/2, Ai, di, nu)
-        dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(p/2, Ai, di, nu) - (1/2)*dir.ds11*det(as.matrix(Sigma[j]))^(-1/2)*I.Phi(p/2+1, Ai, di, nu) + det(as.matrix(Sigma[j]))^(-1/2)*dAir.ds11*I.phi((p+1)/2, Ai, di, nu) )
+        dPsi.dmu <- 2/sqrt(2*pi*Sigma[j])*( dAir.dmu * I.phi((p+1)/2, Ai, di, nu) - (1/2)*dir.dmu*I.Phi((p/2)+1, Ai, di, nu) )
+        dPsi.dlambda <- (2/sqrt(2*pi*Sigma[j]))*dAir.dlambda*I.phi((p+1)/2, Ai, di, nu)
+        dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(p/2, Ai, di, nu) - (1/2)*dir.ds11/sqrt(Sigma[j])*I.Phi(p/2+1, Ai, di, nu) + dAir.ds11/sqrt(Sigma[j])*I.phi((p+1)/2, Ai, di, nu) )
         dPsi.dnu1 <- dPsi.dnu1 + pii[j]*2*(dmvnorm(yi, mu[j], nu[2]^(-1)*as.matrix(Sigma[j]))*pnorm(nu[2]^(1/2)*Ai) - dmvnorm(yi, mu[j], as.matrix(Sigma[j]))*pnorm(Ai) )
         dPsi.dnu2 <- dPsi.dnu1 + pii[j]*((nu[1]*det(as.matrix(Sigma[j]))^(-1/2)*nu[2]^(p/2))/(2*pi)^(p/2))*exp(-nu[2]*di/2)*(p*nu[2]^(-1)*pnorm(nu[2]^(1/2)*Ai) + dnorm(nu[2]^(1/2)*Ai)*Ai*nu[2]^(-1/2) - pnorm(nu[2]^(1/2)*Ai)*di )
 
@@ -225,21 +214,20 @@ im.smsn <- function(y, model){
         di <- as.numeric(mahalanobis(yi, mu[j], Sigma[j]))
 
         #derivadinhas
-        Dr <- matrix.sqrt(Sigma[j])
-        Dadj <- 1
-        dir.dmu <- -2*solve(Sigma[j])%*%(y[i,] - mu[j])
-        dAir.dmu <- -solve(Dr)%*%lambda[j]
-        dAir.dlambda <- solve(Dr)%*%(y[i,] - mu[j])
+        Dr <- as.numeric(matrix.sqrt(Sigma[[j]]))
+        Dadj <- 1/(2*Dr)
+        dir.dmu <- (-2*(y[i,] - mu[j]))/Sigma[j]
+        dAir.dmu <- -lambda[j]/Dr
+        dAir.dlambda <- (y[i,] - mu[j])/Dr
 
         #para os elementos de sigma
-        D11 <- matrix(c(1), 1,1)
-        ddet.ds11 <- -(1/det(Dr)^2)*Dadj
-        dir.ds11 <- - t(y[i,] - mu[j])%*%solve(Dr)%*%(D11%*%solve(Dr) + solve(Dr)%*%D11)%*%solve(Dr)%*%(y[i,] - mu[j])
-        dAir.ds11 <- - t(lambda[j])%*%solve(Dr)%*%D11%*%solve(Dr)%*%(y[i,] - mu[j])
+        ddet.ds11 <- -(1/Dr^2)*Dadj
+        dir.ds11 <-  - (y[i,] - mu[j])^2/Dr^4
+        dAir.ds11 <- -(0.5* lambda[j]*(y[i,] - mu[j]))/Dr^3
 
-        dPsi.dmu <- ((2*det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*( dAir.dmu * I.phi((p+1)/2, Ai, di, nu) - (1/2)*dir.dmu*I.Phi((p/2)+1, Ai, di, nu) )
-        dPsi.dlambda <- ((2*det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*dAir.dlambda*I.phi((p+1)/2, Ai, di, nu)
-        dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(p/2, Ai, di, nu) - (1/2)*dir.ds11*det(as.matrix(Sigma[j]))^(-1/2)*I.Phi(p/2+1, Ai, di, nu) + det(as.matrix(Sigma[j]))^(-1/2)*dAir.ds11*I.phi((p+1)/2, Ai, di, nu) )
+        dPsi.dmu <- 2/sqrt(2*pi*Sigma[j])*( dAir.dmu * I.phi((p+1)/2, Ai, di, nu) - (1/2)*dir.dmu*I.Phi((p/2)+1, Ai, di, nu) )
+        dPsi.dlambda <- (2/sqrt(2*pi*Sigma[j]))*dAir.dlambda*I.phi((p+1)/2, Ai, di, nu)
+        dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(p/2, Ai, di, nu) - (1/2)*dir.ds11/sqrt(Sigma[j])*I.Phi(p/2+1, Ai, di, nu) + dAir.ds11/sqrt(Sigma[j])*I.phi((p+1)/2, Ai, di, nu) )
 
         #f <- function(u) 2*u^(nu - 1)*(1 + nu*log(u))*dnorm(yi,mu[j],sqrt(Sigma[j]/u))*pnorm(u^(1/2)*lambda[j]*(Sigma[j]^(-1/2))*(yi-mu[j]))
         u <- runif(5000)
@@ -277,24 +265,25 @@ im.smsn <- function(y, model){
         di <- as.numeric(mahalanobis(yi, mu[j], Sigma[j]))
 
         #derivadinhas
-        Dr <- matrix.sqrt(Sigma[[j]])
-        Dadj <- 1
-        dir.dmu <- -2*solve(Sigma[j])%*%(y[i,] - mu[j])
-        dAir.dmu <- -solve(Dr)%*%lambda[j]
-        dAir.dlambda <- solve(Dr)%*%(y[i,] - mu[j])
+        Dr <- as.numeric(matrix.sqrt(Sigma[[j]]))
+        Dadj <- 1/(2*Dr)
+        dir.dmu <- (-2*(y[i,] - mu[j]))/Sigma[j]
+        dAir.dmu <- -lambda[j]/Dr
+        dAir.dlambda <- (y[i,] - mu[j])/Dr
 
         #para os elementos de sigma
-        D11 <- matrix(c(1), 1,1)
-        #ddet.ds11 <- -(1/det(Dr)^2)*Dadj
-        ddet.ds11 <- -0.5*(1/det(Dr)^6)*Dadj
+        ddet.ds11 <- -(1/Dr^2)*Dadj
+        #ddet.ds11 <- -0.5*(1/det(Dr)^6)*Dadj
+        #ddet.ds11 <- -0.5*(1/det(Dr)^3)
         #dir.ds11 <- - t(y[i,] - mu[j])%*%solve(Dr)%*%(D11%*%solve(Dr) + solve(Dr)%*%D11)%*%solve(Dr)%*%(y[i,] - mu[j])
-        dir.ds11 <-  - t(y[i,] - mu[j])%*%solve(Dr)^4%*%(y[i,] - mu[j])
+        dir.ds11 <-  - (y[i,] - mu[j])^2/Dr^4
         #dAir.ds11 <- - t(lambda[j])%*%solve(Dr)%*%D11%*%solve(Dr)%*%(y[i,] - mu[j])
-        dAir.ds11 <- -0.5* t(lambda[j])%*%solve(Dr)^3%*%(y[i,] - mu[j])
+        dAir.ds11 <- -(0.5* lambda[j]*(y[i,] - mu[j]))/Dr^3
 
-        dPsi.dmu <- ((2*det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*( dAir.dmu * I.phi(Ai=Ai, di=di) - (1/2)*dir.dmu*I.Phi(Ai=Ai, di=di) )
-        dPsi.dlambda <- ((2*det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*dAir.dlambda*I.phi(Ai=Ai, di=di)
-        dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(Ai=Ai, di=di) - (1/2)*dir.ds11*det(as.matrix(Sigma[j]))^(-1/2)*I.Phi(Ai=Ai, di=di) + det(as.matrix(Sigma[j]))^(-1/2)*dAir.ds11*I.phi(Ai=Ai, di=di) )
+        dPsi.dmu <- 2/sqrt(2*pi*Sigma[j])*( dAir.dmu * I.phi(Ai=Ai, di=di) - (1/2)*dir.dmu*I.Phi(Ai=Ai, di=di) )
+        dPsi.dlambda <- (2/sqrt(2*pi*Sigma[j]))*dAir.dlambda*I.phi(Ai=Ai, di=di)
+        dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(Ai=Ai, di=di) - (1/2)*dir.ds11/sqrt(Sigma[j])*I.Phi(Ai=Ai, di=di) + dAir.ds11/sqrt(Sigma[j])*I.phi(Ai=Ai, di=di) )
+        #dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(Ai=Ai, di=di) - dir.ds11*I.Phi(Ai=Ai, di=di) + 2*dAir.ds11*I.phi(Ai=Ai, di=di) )
 
         Simu <- as.vector((pii[j]/ d.mixedSN(yi, pii, mu, Sigma, lambda) )*dPsi.dmu)
         Silambda <- as.vector((pii[j]/ d.mixedSN(yi, pii, mu, Sigma, lambda) )*dPsi.dlambda )
@@ -327,21 +316,20 @@ im.smsn <- function(y, model){
         di <- as.numeric(mahalanobis(yi, mu[j], Sigma[j]))
 
         #derivadinhas
-        Dr <- matrix.sqrt(Sigma[j])
-        Dadj <- 1
-        dir.dmu <- -2*solve(Sigma[j])%*%(y[i,] - mu[j])
-        dAir.dmu <- -solve(Dr)%*%lambda[j]
-        #dAir.dlambda <- solve(Dr)%*%(y[i,] - mu[[j]])
+        Dr <- as.numeric(matrix.sqrt(Sigma[[j]]))
+        Dadj <- 1/(2*Dr)
+        dir.dmu <- (-2*(y[i,] - mu[j]))/Sigma[j]
+        dAir.dmu <- -lambda[j]/Dr
+        #dAir.dlambda <- (y[i,] - mu[j])/Dr
 
         #para os elementos de sigma
-        D11 <- matrix(c(1), 1,1)
-        ddet.ds11 <- -(1/det(Dr)^2)*Dadj
-        dir.ds11 <- - t(y[i,] - mu[j])%*%solve(Dr)%*%(D11%*%solve(Dr) + solve(Dr)%*%D11)%*%solve(Dr)%*%(y[i,] - mu[j])
-        dAir.ds11 <- - t(lambda[j])%*%solve(Dr)%*%D11%*%solve(Dr)%*%(y[i,] - mu[j])
+        ddet.ds11 <- -(1/Dr^2)*Dadj
+        dir.ds11 <-  - (y[i,] - mu[j])^2/Dr^4
+        dAir.ds11 <- -(0.5* lambda[j]*(y[i,] - mu[j]))/Dr^3
 
-        dPsi.dmu <- ((2*det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*( dAir.dmu * I.phi(di = di) - (1/2)*dir.dmu*I.Phi(di = di) )
-        dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(di = di) - (1/2)*dir.ds11*det(as.matrix(Sigma[j]))^(-1/2)*I.Phi(di = di) + det(as.matrix(Sigma[j]))^(-1/2)*dAir.ds11*I.phi(di = di) )
-
+        dPsi.dmu <- 2/sqrt(2*pi*Sigma[j])*( dAir.dmu * I.phi(di=di) - (1/2)*dir.dmu*I.Phi(di=di) )
+        dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(di=di) - (1/2)*dir.ds11/sqrt(Sigma[j])*I.Phi(di=di) + dAir.ds11/sqrt(Sigma[j])*I.phi(di=di) )
+        
         Simu <- as.vector((pii[j]/ d.mixedSN(yi, pii, mu, Sigma, lambda) )*dPsi.dmu)
         Ssigma11 <- (pii[j]/ d.mixedSN(yi, pii, mu, Sigma, lambda) )*dPsi.dsigma11
         Sipi <- (1/d.mixedSN(yi, pii, mu, Sigma, lambda))*( dSN(yi, mu[j], Sigma[j], lambda[j]) - dSN(yi, mu[g], Sigma[g], lambda[g]))
@@ -353,7 +341,7 @@ im.smsn <- function(y, model){
       soma <- soma + S%*%t(S)
 ##      soma2 <- soma2 + S
       }
-      for (i in 1:g) nam.gr <- c(nam.gr,paste("mu",i,sep=""),paste("sigma",i,sep=""),paste("p",i,sep=""))
+      for (i in 1:g) nam.gr <- c(nam.gr,paste("mu",i,sep=""),paste("sigma2",i,,sep=""),paste("p",i,sep=""))
       nam.gr <- nam.gr[-length(nam.gr)]
 
   }

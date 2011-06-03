@@ -16,7 +16,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
   #                                       - SN: Ajusta por misturas de Skew Normal
   #                                       - Normal: Misturas de Normais
   #error: define o critério de parada do algorítmo.
- 
+  if(ncol(as.matrix(y)) > 1) stop("This function is only for univariate response y!") 
   if((family != "t") && (family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.\n",sep=" "))
   if((length(g) == 0) && ((length(mu)==0) || (length(sigma2)==0) || (length(shape)==0) || (length(pii)==0)))  stop("The model is not specified correctly.\n")
   if(get.init == FALSE){
@@ -650,7 +650,8 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
  if (obs.prob == TRUE){
      nam <- c()
      for (i in 1:ncol(tal)) nam <- c(nam,paste("Group ",i,sep=""))
-     dimnames(tal)[[2]] <- nam
+     if(ncol(tal) == 1) dimnames(tal)[[2]] <- list(nam)
+     if(ncol(tal) > 1) dimnames(tal)[[2]] <- nam
      obj.out$obs.prob <- tal
      if((ncol(tal) - 1) > 1) obj.out$obs.prob[,ncol(tal)] <- 1 - rowSums(obj.out$obs.prob[,1:(ncol(tal)-1)])
      else obj.out$obs.prob[,ncol(tal)] <- 1 - obj.out$obs.prob[,1]

@@ -12,7 +12,7 @@
     if((family == "Normal") || (family == "Skew.normal") ) {
                              rF1 <- gen.Skew.normal
                              for (i in 1:length(arg)) if(length(arg[[i]]) != 4 && length(arg[[i]]) != 3) stop(paste("Number of arguments is not comformidable for argument ",i,".\n",sep=" "))
-                                                           }
+                             if(family == "Normal") for (i in 1:length(arg)) arg[[i]][3] <- 0                              }
                                                            
     if ((family == "t") || (family == "Skew.t") ){
                              rF1 <- gen.Skew.t
@@ -84,6 +84,7 @@
 ##########      Fun��es para numeros aleat�rios     ############
 
   rmmix <- function(n, pii, family, arg) {
+  require(mvtnorm)
     #Função para gerar misturas de g populações
     #n: numero de amostras geradas
     #p: vetor de proporções das misturas (tamanho g)

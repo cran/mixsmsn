@@ -37,6 +37,8 @@ smsn.mmix(y, nu=1,
 
 \value{
   Estimated values of the location, scale, skewness and kurtosis parameter.
+  Note: The scale parameters estimated are relative to the entries of 
+  the squae root matrix of Sigma.
 }
 
 \examples{

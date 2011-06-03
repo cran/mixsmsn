@@ -1,3 +1,16 @@
+2011-11-08 (1.0-0) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+  * FIRST STABLE VERSION
+  * Fix smsn.mmix to return the estimates of \Sigma^{1/2}
+  * Fix smsn.mmix to return the sd of \Sigma^{1/2}
+	* Fix a calculation error in imm.smsn()
+
+2011-10-12 (0.3-3) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+	* Fix a calculation error in im.smsn()
+  * Fix a calculation error in imm.smsn()
+  * Fix a generation problem for Normal distribution in rmix()
+  
 2011-10-12 (0.3-2) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
 	* Fix a compatibility check in smsn.mmix()

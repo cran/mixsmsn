@@ -15,7 +15,11 @@ imm.smsn(y, model)
 }
 
 \value{
-  Estimate the Information Matrix of the parameters..
+  Estimate the Information Matrix of the parameters.
+  Note: In the Information Matrix the scale parameters 
+        estimates are relative to the entries of square 
+        root matrix of Sigma.
+
 }
 
 \examples{ ## see \code{\link{faithful}}

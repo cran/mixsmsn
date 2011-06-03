@@ -824,6 +824,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
  }
 
      class(obj.out) <- family
+     for(i in 1:length(obj.out$Sigma)) obj.out$Sigma[[i]] <- matrix.sqrt(obj.out$Sigma[[i]])    
 
      if(calc.im){
         IM <-  imm.smsn(as.matrix(y), obj.out)
@@ -831,6 +832,6 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
         obj.out$imm.sdev = sdev
      }
      class(obj.out) <- family
-     
+ 
  obj.out
 } #aqui  termina
