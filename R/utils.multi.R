@@ -2,10 +2,10 @@
 #     algoritmo para graficar os contornos
 
 mix.contour <- function(y, model, slice = 100, ncontour = 10, x.min=1, x.max=1, y.min=1,y.max=1, ...){
-   # Essa função só serve para graficar os contornos de misturas finitas de SMSN BIVARIADO!!!
+   # Essa funcao so serve para graficar os contornos de misturas finitas de SMSN BIVARIADO!!!
    # dat: o cosliceunto de dat a ser plotado no R^2
-   # model: deve ser um objeto resultante da função EMmulti.MIXSNI
-   # slice e ncountor são parametros passados para a função countor
+   # model: deve ser um objeto resultante da funcao EMmulti.MIXSNI
+   # slice e ncountor sao parametros passados para a funcao countor
    # ?contour para detalhes
    dat <- y
    y <- NULL
@@ -153,7 +153,7 @@ mix.contour <- function(y, model, slice = 100, ncontour = 10, x.min=1, x.max=1, 
 }
 
 ###########################################################
-####### Matriz dee informação caso multivariado ###########
+####### Matriz de informacao caso multivariado  ###########
 adjoint <- function(A) det(A)*solve(A)
 deriv.der <- function(A,B,C) det(A)*sum(B * t(C))
 
@@ -184,7 +184,7 @@ imm.smsn <- function(y, model){
     I.phi <- function(w=0,Ai=NULL,di,nu=0) as.numeric(((2^w*nu^(nu/2))/(sqrt(2*pi)*gamma(nu/2)))*(1/(di + Ai^2 + nu))^((nu + 2*w)/2)*gamma((nu + 2*w)/2))
     
     for (i in 1:n){
-      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      S <- c() # vetor com todas as derivadas em relacao a cada parametro desconhecido do modelo
       dPsi.dnu <- 0
       yi <- matrix(y[i,], 1, p)#2)
       for (j in 1:g){
@@ -285,7 +285,7 @@ imm.smsn <- function(y, model){
     I.phi <- function(w=0,Ai=NULL,di,nu=0) as.numeric(((2^w*nu^(nu/2))/(sqrt(2*pi)*gamma(nu/2)))*(1/(di + Ai^2 + nu))^((nu + 2*w)/2)*gamma((nu + 2*w)/2))
     
     for (i in 1:n){
-      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      S <- c() # vetor com todas as derivadas em relacao a cada parametro desconhecido do modelo
       dPsi.dnu <- 0
       yi <- matrix(y[i,], 1, p)#2)
       for (j in 1:g){
@@ -383,7 +383,7 @@ imm.smsn <- function(y, model){
     I.phi <- function(w=0,Ai=NULL,di,nu=0) as.numeric( nu[1]*nu[2]^(w - 0.5)*dnorm(sqrt(di + Ai^2), 0, sqrt(1/nu[2])) + (1 - nu[1])*dnorm(sqrt(di + Ai^2))   )
 
     for (i in 1:n){
-      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      S <- c() # vetor com todas as derivadas em relacao a cada parametro desconhecido do modelo
       dPsi.dnu1 <- dPsi.dnu2 <- 0
       yi <- matrix(y[i,], 1, p)#2)
       for (j in 1:g){
@@ -495,7 +495,7 @@ imm.smsn <- function(y, model){
     }
 
     for (i in 1:n){
-      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      S <- c() # vetor com todas as derivadas em relacao a cada parametro desconhecido do modelo
       dPsi.dnu <- 0
       yi <- matrix(y[i,], 1, p)#2)
       for (j in 1:g){
@@ -594,7 +594,7 @@ imm.smsn <- function(y, model){
     I.phi <- function(w=0,Ai=NULL,di,nu=0) as.numeric( exp(-di/2)*dnorm(Ai) )
 
     for (i in 1:n){
-      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      S <- c() # vetor com todas as derivadas em relacao a cada parametro desconhecido do modelo
       yi <- matrix(y[i,], 1, p)#2)
       for (j in 1:g){
         Dr <- matrix.sqrt(Sigma[[j]])
@@ -686,7 +686,7 @@ imm.smsn <- function(y, model){
     I.phi <- function(w=0,Ai=NULL,di,nu=0) as.numeric( exp(-di/2)*dnorm(0) )
 
     for (i in 1:n){
-      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      S <- c() # vetor com todas as derivadas em relacao a cada parametro desconhecido do modelo
       yi <- matrix(y[i,], 1, p)#2)
       for (j in 1:g){
         Dr <- matrix.sqrt(Sigma[[j]])

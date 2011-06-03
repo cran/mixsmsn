@@ -21,8 +21,8 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
   if((length(g) == 0) && ((length(mu)==0) || (length(sigma2)==0) || (length(shape)==0) || (length(pii)==0)))  stop("The model is not specified correctly.\n")
   if(get.init == FALSE){
        g <- length(mu)
-       if((length(mu) != length(sigma2)) || (length(mu) != length(shape)) || (length(mu) != length(pii))) stop("The size of the initial values are not compatibles.\n")
-
+       if((length(mu) != length(sigma2)) || (length(mu) != length(pii))) stop("The size of the initial values are not compatibles.\n")
+       if((family == "Skew.t" || family == "Skew.cn" || family == "Skew.slash" || family == "Skew.normal") & (length(mu) != length(shape))) stop("The size of the initial values are not compatibles.\n")
        if(sum(pii) != 1) stop("probability of pii does not sum to 1.\n")
   }  
   if((length(g)!= 0) && (g < 1)) stop("g must be greater than 0.\n")
@@ -30,17 +30,17 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
   if (get.init == TRUE){
     if(length(g) == 0) stop("g is not specified correctly.\n")
 
-    iter.max <- 10
+    k.iter.max <- 50
     n.start <- 1
     algorithm <- "Hartigan-Wong"
     if(length(kmeans.param) > 0){
-       if(length(kmeans.param$iter.max) > 0 ) iter.max <- kmeans.param$iter.max
+       if(length(kmeans.param$iter.max) > 0 ) k.iter.max <- kmeans.param$iter.max
        if(length(kmeans.param$n.start) > 0 ) n.start <- kmeans.param$n.start
        if(length(kmeans.param$algorithm) > 0 ) algorithm <- kmeans.param$algorithm
     }
 
     if(g > 1){
-      init <- kmeans(y,g,iter.max,n.start,algorithm)
+      init <- kmeans(y,g,k.iter.max,n.start,algorithm)
       pii <- init$size/length(y)
       mu <- as.vector(init$centers)
       sigma2 <- init$withinss/init$size
@@ -557,9 +557,11 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
   }
   
   if (family == "Normal"){
-   lk <- sum(log( d.mixedSN(y, pii, mu, sigma2, rep(0,g)) ))
+      shape <- rep(0,g) 
+      lk <- sum(log( d.mixedSN(y, pii, mu, sigma2, shape) ))
       n <- length(y)
       delta <- Delta <- Gama <- rep(0,g)
+
       for (k in 1:g){
         delta[k] <- 0 ##shape[k] / (sqrt(1 + shape[k]^2))
         Delta[k] <- 0 ##sqrt(sigma2[k])*delta[k]

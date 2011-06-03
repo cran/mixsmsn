@@ -1,11 +1,11 @@
 ##############################################################################################
-###########     ALGORÍTMO EM MULTIVARIADO PARA MISTURAS DE DISTRI SMSN        ################
-###########                           Alterações feitas em 03/05/2010 por Celso Rômulo              ################
-###########                           Esta é a versão utilizada no artigo submetido ao CSDA         ################
+###########     ALGORITMO EM MULTIVARIADO PARA MISTURAS DE DISTRI SMSN        ################
+###########     Alteracoes feitas em 03/05/2010 por Celso Romulo              ################
+###########     Esta eh a versao utilizada no artigo submetido ao CSDA         ################
 smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL, g = NULL, get.init = TRUE, criteria = TRUE,
                       group = FALSE, family = "Skew.normal", error = 0.0001, iter.max = 100, uni.Gama = FALSE, calc.im=FALSE,
                       obs.prob= FALSE, kmeans.param = NULL){
-  #mu, Sigma, shape devem ser do tipo list(). O numero de entradas no list é o numero g de componentes de misturas
+  #mu, Sigma, shape devem ser do tipo list(). O numero de entradas no list eh o numero g de componentes de misturas
   #cada entrada do list deve ser de tamanho igual ao numero de colunas da matriz de dados y
   y <- as.matrix(y)
   dimnames(y) <- NULL
@@ -15,7 +15,8 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
   if((length(g) == 0) && ((length(mu)==0) || (length(Sigma)==0) || (length(shape)==0) || (length(pii)==0)))  stop("The model is not specified correctly.\n")
   if(get.init == FALSE){
        g <- length(mu)
-       if((length(mu) != length(Sigma)) || (length(mu) != length(shape)) || (length(mu) != length(pii))) stop("The size of the initial values are not compatibles.\n")
+       if((length(mu) != length(Sigma)) || (length(mu) != length(pii))) stop("The size of the initial values are not compatibles.\n")
+       if((family == "Skew.t" || family == "Skew.cn" || family == "Skew.slash" || family == "Skew.normal") & (length(mu) != length(shape))) stop("The size of the initial values are not compatibles.\n")
 
        if(sum(pii) != 1) stop("probability of pii does not sum to 1.\n")
        for (j in 1:g){
@@ -32,17 +33,17 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
   if (get.init == TRUE){
     if(length(g) == 0) stop("g is not specified correctly.\n")
 
-    iter.max <- 10
+    k.iter.max <- 50
     n.start <- 1
     algorithm <- "Hartigan-Wong"
     if(length(kmeans.param) > 0){
-       if(length(kmeans.param$iter.max) > 0 ) iter.max <- kmeans.param$iter.max
+       if(length(kmeans.param$iter.max) > 0 ) k.iter.max <- kmeans.param$iter.max
        if(length(kmeans.param$n.start) > 0 ) n.start <- kmeans.param$n.start
        if(length(kmeans.param$algorithm) > 0 ) algorithm <- kmeans.param$algorithm
     }
    
     if(g > 1){
-      init <- kmeans(y,g,iter.max,n.start,algorithm)
+      init <- kmeans(y,g,k.iter.max,n.start,algorithm)
       pii <- init$size/length(y)
       mu <- shape <- Sigma <- list()
       for (j in 1:g){
@@ -147,7 +148,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
              shape[[j]] <- rep(0,p)
            }
         }
-        #aqui começam as alterações para estimar o valor de nu
+        #aqui comecam as alteracoes para estimar o valor de nu
         logvero.ST <- function(nu) sum(log( d.mixedmvST(y, pii, mu, Sigma, shape, nu) ))
         nu <- optimize(logvero.ST, c(0,100), tol = 0.000001, maximum = TRUE)$maximum
 
@@ -262,7 +263,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
              shape[[j]] <- (solve(matrix.sqrt(Sigma[[j]]))%*%Delta[[j]]) / as.numeric( (1 - t(Delta[[j]])%*%solve(Sigma[[j]])%*%Delta[[j]]) )^(1/2)
            }
         }
-        #aqui começam as alterações para estimar o valor de nu
+        #aqui comecam as alteracoes para estimar o valor de nu
         logvero.ST <- function(nu) sum(log( d.mixedmvST(y, pii, mu, Sigma, shape, nu) ))
         nu <- optimize(logvero.ST, c(0,100), tol = 0.000001, maximum = TRUE)$maximum
 
@@ -377,7 +378,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
              shape[[j]] <- (solve(matrix.sqrt(Sigma[[j]]))%*%Delta[[j]]) / as.numeric( (1 - t(Delta[[j]])%*%solve(Sigma[[j]])%*%Delta[[j]]) )^(1/2)
            }
         }
-        #aqui começam as alterações para estimar o valor de nu
+        #aqui comecam as alteracoes para estimar o valor de nu
         logvero.SNC <- function(nu) sum(log( d.mixedmvSNC(y, pii, mu, Sigma, shape, nu) ))
         nu <- optim(nu.old, logvero.SNC, control = list(fnscale = -1), method = "L-BFGS-B", lower = rep(0.01, 2), upper = rep(0.99,2))$par
 
@@ -466,7 +467,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
 
           u <- E <- c()
 #===========================================================================================================
-# Usando integração de Monte Carlo para calcular kappa_1
+# Usando integracao de Monte Carlo para calcular kappa_1
 #          for(i in 1:n){
 #            U <- runif(2500)
 #            V <- pgamma(1,(2*nu + 3)/2, dj[i]/2)*U
@@ -477,7 +478,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
 #          }
 #============================================================================================================
 #===========================================================================================================
-# Usando integração numérica para calcular kappa_1 (Introduzido por Celso Rômulo)
+# Usando integracao numerica para calcular kappa_1 (Introduzido por Celso Romulo)
           for(i in 1:n){
             faux <- function(u) u^(nu+p/2)*exp(-u*dj[i]/2)*pnorm(u^(1/2)*A[i])
             aux22 <- integrate(faux,0,1)$value
@@ -535,7 +536,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
              shape[[j]] <- (solve(matrix.sqrt(Sigma[[j]]))%*%Delta[[j]]) / as.numeric( (1 - t(Delta[[j]])%*%solve(Sigma[[j]])%*%Delta[[j]]) )^(1/2)
            }
         }
-        #aqui começam as alterações para estimar o valor de nu
+        #aqui comecam as alteracoes para estimar o valor de nu
 #===============================================
 # Ative se desejar estimar nu
         logvero.SS <- function(nu) sum(log( d.mixedmvSS(y, pii, mu, Sigma, shape, nu) ))

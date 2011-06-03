@@ -1,3 +1,13 @@
+2013-05-03 (1.0-8) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+  *fixed same name for k-means iter.max and mixsmsn
+   fixed quality tests in smsn.mix and smsn.mmix
+
+2013-05-03 (1.0-7) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+  *fixed the calculation in the number
+  of parameters for the selection criteria
+
 2013-03-19 (1.0-6) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
   *fixed the calculation in the number
