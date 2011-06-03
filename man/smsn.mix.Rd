@@ -92,6 +92,13 @@ Scn.analysis <- smsn.mix(y, nu = c(0.3,0.3), g = 3, get.init = TRUE, criteria = 
 mix.hist(y,Scn.analysis)
 mix.print(Scn.analysis)
 mix.dens(y,Scn.analysis)
+
+par(mfrow=c(1,1))
+mix.dens(y,Norm.analysis)
+mix.lines(y,Snorm.analysis,col="green")
+mix.lines(y,t.analysis,col="red")
+mix.lines(y,St.analysis,col="blue")
+mix.lines(y,Scn.analysis,col="grey")
 }
 }
 
