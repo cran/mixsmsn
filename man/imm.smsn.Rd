@@ -20,7 +20,7 @@ imm.smsn(y, model)
 
 \examples{ ## see \code{\link{faithful}}
 }
-\author{Marcos Prates \email{marcos.prates@uconn.edu}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
+\author{Marcos Prates \email{marcosop@ime.unicamp.br}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
 
 \seealso{ \code{\link{smsn.mmix}}}
 

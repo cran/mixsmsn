@@ -89,11 +89,11 @@ mix.print(Scn.analysis)
 
 
 \references{
-  Rodrigo M. Basso, Víctor H. Lachos, Celso R. B. Cabral, Pulak Ghosh (2009). "Robust mixture modeling based on scale mixtures of skew-normal
-  distributions". \emph{Computational Statistics and Data Analysis} (in press). doi: 10.1016/j.csda.2009.09.031
+  Rodrigo M. Basso, Victor H. Lachos, Celso R. B. Cabral, Pulak Ghosh (2010). "Robust mixture modeling based on scale mixtures of skew-normal
+  distributions". \emph{Computational Statistics and Data Analysis}, 54, 2926-2941. doi: 10.1016/j.csda.2009.09.031
 }
 
-\author{Marcos Prates \email{marcos.prates@uconn.edu}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
+\author{Marcos Prates \email{marcosop@ime.unicamp.br}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
 
 \seealso{\code{\link{mix.hist}}, \code{\link{im.smsn}} and \code{\link{smsn.search}}}
 

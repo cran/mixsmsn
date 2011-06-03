@@ -108,10 +108,13 @@ mix.contour(y,Sslash.analysis)
 }
 }
 
-%\references{
-%}
+\references{
+  Cabral, C. R. B., Lachos, V. H. and Prates, M. O. (2012). "Multivariate Mixture Modeling Using Skew-Normal Independent 
+  Distributions". \emph{Computational Statistics & Data Analysis}, 56, 126-142, doi:10.1016/j.csda.2011.06.026.
+}
 
-\author{Marcos Prates \email{marcos.prates@uconn.edu}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
+
+\author{Marcos Prates \email{marcosop@ime.unicamp.br}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
 
 \seealso{\code{\link{mix.contour}},  \code{\link{rmmix}} and \code{\link{smsn.search}}}
 
