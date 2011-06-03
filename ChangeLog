@@ -1,4 +1,8 @@
-2011-11-08 (1.0-0) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+2011-02-14 (1.0-2) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+  * New email address for the maintainer
+
+2011-11-08 (1.0-1) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
   * Added a parameter in our method for the user to 
     be able to specify the parameter of the kmeans()

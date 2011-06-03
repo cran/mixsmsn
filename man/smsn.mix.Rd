@@ -27,7 +27,7 @@ smsn.mix(y,
   \item{get.init}{ if TRUE, the initial values are generated via k-means}
   \item{criteria}{ if TRUE, AIC, DIC, EDC and ICL will be calculated }
   \item{group}{ if TRUE, the vector with the classification of the response is returned }
-  \item{family}{ distribution famility to be used in fitting ("t", "Skew.t", "Skew.cn", "Skew.slash", "Skew.normal", "Normal") }
+  \item{family}{ distribution family to be used in fitting ("t", "Skew.t", "Skew.cn", "Skew.slash", "Skew.normal", "Normal") }
   \item{error}{ the covergence maximum error }
   \item{iter.max}{ the maximum number of iterations of the EM algorithm. Default = 100 }
   \item{calc.im}{ if TRUE, the information matrix is calculated and the standard errors are reported}
@@ -96,7 +96,7 @@ mix.print(Scn.analysis)
   distributions". \emph{Computational Statistics and Data Analysis}, 54, 2926-2941. doi: 10.1016/j.csda.2009.09.031
 }
 
-\author{Marcos Prates \email{marcosop@ime.unicamp.br}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
+\author{Marcos Prates \email{marcosop@est.ufmg.br}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
 
 \seealso{\code{\link{mix.hist}}, \code{\link{im.smsn}} and \code{\link{smsn.search}}}
 

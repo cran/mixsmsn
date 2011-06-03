@@ -35,7 +35,7 @@ smsn.search(y, nu,
 \examples{ ## see \code{\link{bmi}} and \code{\link{faithful}}
 }
 
-\author{Marcos Prates \email{marcosop@ime.unicamp.br}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
+\author{Marcos Prates \email{marcosop@est.ufmg.br}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
 
 \seealso{\code{\link{smsn.mix}} and \code{\link{smsn.mmix}}}
 

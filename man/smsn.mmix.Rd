@@ -118,7 +118,7 @@ mix.contour(y,Sslash.analysis)
 }
 
 
-\author{Marcos Prates \email{marcosop@ime.unicamp.br}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
+\author{Marcos Prates \email{marcosop@est.ufmg.br}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
 
 \seealso{\code{\link{mix.contour}},  \code{\link{rmmix}} and \code{\link{smsn.search}}}
 
