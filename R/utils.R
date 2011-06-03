@@ -357,7 +357,7 @@ im.smsn <- function(y, model){
 
 #####################################################################
 #########         Procura o melhor fitting         ###############
-smsn.search <- function(y, nu, g.min = 1, g.max = 3, family = "Skew.normal", criteria = "bic", error = 0.0001, iter.max = 100, calc.im = FALSE, uni.Gama = FALSE)
+smsn.search <- function(y, nu, g.min = 1, g.max = 3, family = "Skew.normal", criteria = "bic", error = 0.0001, iter.max = 100, calc.im = FALSE, uni.Gama = FALSE, kmeans.param = NULL)
 {
  y <- as.matrix(y)
  if( g.min > g.max) stop("The number g.min should be less than g.max.\n")
@@ -378,13 +378,13 @@ crit <- rep(0,length(g))
 
 if(ncol(y) == 1){
   for(i in 1:length(g)){
-     output[[g.size[i]]] <- smsn.mix(y=y, nu=nu, g = g[i], get.init = TRUE, criteria = TRUE, group = TRUE, family = family, error = error, iter.max = iter.max, calc.im = calc.im)
+     output[[g.size[i]]] <- smsn.mix(y=y, nu=nu, g = g[i], get.init = TRUE, criteria = TRUE, group = TRUE, family = family, error = error, iter.max = iter.max, calc.im = calc.im, kmeans.param)
      crit[i] <- output[[g.size[i]]][[criteria]]
   }
 }
 else{
     for(i in 1:length(g)){
-       output[[g.size[i]]] <- smsn.mmix(y=y, nu=nu, g = g[i], get.init = TRUE, criteria = TRUE, group = TRUE, family = family, error = error, iter.max = iter.max, uni.Gama = uni.Gama, calc.im = calc.im)
+       output[[g.size[i]]] <- smsn.mmix(y=y, nu=nu, g = g[i], get.init = TRUE, criteria = TRUE, group = TRUE, family = family, error = error, iter.max = iter.max, uni.Gama = uni.Gama, calc.im = calc.im, kmeans.param)
        crit[i] <- output[[g.size[i]]][[criteria]]
     }
 }

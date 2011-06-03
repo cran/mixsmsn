@@ -4,7 +4,7 @@
 ###########                           Esta é a versão utilizada no artigo submetido ao CSDA         ################
 smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL, g = NULL, get.init = TRUE, criteria = TRUE,
                       group = FALSE, family = "Skew.normal", error = 0.0001, iter.max = 100, uni.Gama = FALSE, calc.im=FALSE,
-                      obs.prob= FALSE){
+                      obs.prob= FALSE, kmeans.param = NULL){
   #mu, Sigma, shape devem ser do tipo list(). O numero de entradas no list é o numero g de componentes de misturas
   #cada entrada do list deve ser de tamanho igual ao numero de colunas da matriz de dados y
   y <- as.matrix(y)
@@ -31,9 +31,18 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
 
   if (get.init == TRUE){
     if(length(g) == 0) stop("g is not specified correctly.\n")
+
+    iter.max <- 10
+    n.start <- 1
+    algorithm <- "Hartigan-Wong"
+    if(length(kmeans.param) > 0){
+       if(length(kmeans.param$iter.max) > 0 ) iter.max <- kmeans.param$iter.max
+       if(length(kmeans.param$n.start) > 0 ) n.start <- kmeans.param$n.start
+       if(length(kmeans.param$algorithm) > 0 ) algorithm <- kmeans.param$algorithm
+    }
    
     if(g > 1){
-      init <- kmeans(y,g)
+      init <- kmeans(y,g,iter.max,n.start,algorithm)
       pii <- init$size/length(y)
       mu <- shape <- Sigma <- list()
       for (j in 1:g){

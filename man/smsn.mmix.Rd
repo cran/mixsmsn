@@ -14,7 +14,7 @@ smsn.mmix(y, nu=1,
           g = NULL, get.init = TRUE, criteria = TRUE,
           group = FALSE, family = "Skew.normal", 
           error = 0.0001, iter.max = 100, uni.Gama = FALSE,
-          calc.im=FALSE, obs.prob = FALSE )
+          calc.im=FALSE, obs.prob = FALSE, kmeans.param = NULL)
 }
 \arguments{
   \item{y}{ the response matrix (dimension nxp) }
@@ -33,6 +33,8 @@ smsn.mmix(y, nu=1,
   \item{uni.Gama}{ if TRUE, the Gamma parameters are restricted to be the same for all clusters}
   \item{calc.im}{ if TRUE, the information matrix is calculated and the starndard erros are reported }
   \item{obs.prob}{ if TRUE, the posterior probability of each observation belonging to one of the g groups is reported}  
+  \item{kmeans.param}{ a list with alternative parameters for the kmeans function when generating initial values, 
+                      list(iter.max = 10, n.start = 1, algorithm = "Hartigan-Wong")}
 }
 
 \value{

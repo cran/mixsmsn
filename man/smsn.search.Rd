@@ -11,7 +11,7 @@ smsn.search(y, nu,
             g.min = 1, g.max = 3,
             family = "Skew.normal", criteria = "bic",
             error = 0.0001, iter.max = 100, 
-            calc.im = FALSE, uni.Gama = FALSE)
+            calc.im = FALSE, uni.Gama = FALSE, kmeans.param = NULL)
 }
 \arguments{
   \item{y}{ the response vector(matrix) }
@@ -24,6 +24,8 @@ smsn.search(y, nu,
   \item{iter.max}{ the maximum number of iterations of the EM algorithm }
   \item{calc.im}{ if TRUE, the infomation matrix is calculated and the starndard erros are reported }
   \item{uni.Gama}{ if TRUE, the Gamma parameters are restricted to be the same for all clusters (Only valid in the multivariate case, p>1) }
+  \item{kmeans.param}{ a list with alternative parameters for the kmeans function when generating initial values, 
+                      list(iter.max = 10, n.start = 1, algorithm = "Hartigan-Wong")}
 }
 
 \value{

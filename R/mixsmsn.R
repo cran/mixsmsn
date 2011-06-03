@@ -3,7 +3,7 @@
 #                   alterado em 26/08/08                            #
 
 smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, g = NULL, get.init = TRUE, criteria = TRUE, group = FALSE, 
-                     family = "Skew.normal", error = 0.00001, iter.max = 100, calc.im = TRUE, obs.prob= FALSE){
+                     family = "Skew.normal", error = 0.00001, iter.max = 100, calc.im = TRUE, obs.prob= FALSE, kmeans.param = NULL){
   #y: é o vetor de dados (amostra) de tamanho n
   #mu, sigma2, shape, pii: são os valores iniciais para o algorítmo EM. Cada um deles deve ser um vetor de tamanho g
   #                       (o algorítmo entende o número de componentes a ajustar baseado no tamanho desses vetores)
@@ -29,8 +29,18 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
 
   if (get.init == TRUE){
     if(length(g) == 0) stop("g is not specified correctly.\n")
+
+    iter.max <- 10
+    n.start <- 1
+    algorithm <- "Hartigan-Wong"
+    if(length(kmeans.param) > 0){
+       if(length(kmeans.param$iter.max) > 0 ) iter.max <- kmeans.param$iter.max
+       if(length(kmeans.param$n.start) > 0 ) n.start <- kmeans.param$n.start
+       if(length(kmeans.param$algorithm) > 0 ) algorithm <- kmeans.param$algorithm
+    }
+
     if(g > 1){
-      init <- kmeans(y,g)
+      init <- kmeans(y,g,iter.max,n.start,algorithm)
       pii <- init$size/length(y)
       mu <- as.vector(init$centers)
       sigma2 <- init$withinss/init$size

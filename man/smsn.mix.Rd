@@ -13,7 +13,8 @@ smsn.mix(y,
          nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL,
          g = NULL, get.init = TRUE,
          criteria = TRUE, group = FALSE, family = "Skew.normal",
-         error = 0.00001, iter.max = 100, calc.im = TRUE, obs.prob = FALSE)
+         error = 0.00001, iter.max = 100, calc.im = TRUE, obs.prob = FALSE,
+         kmeans.param = NULL)
 }
 \arguments{
   \item{y}{ the response vector }
@@ -31,6 +32,8 @@ smsn.mix(y,
   \item{iter.max}{ the maximum number of iterations of the EM algorithm. Default = 100 }
   \item{calc.im}{ if TRUE, the information matrix is calculated and the standard errors are reported}
   \item{obs.prob}{ if TRUE, the posterior probability of each observation belonging to one of the g groups is reported}
+  \item{kmeans.param}{ a list with alternative parameters for the kmeans function when generating initial values, 
+                      list(iter.max = 10, n.start = 1, algorithm = "Hartigan-Wong")}
 }
 
 \value{
