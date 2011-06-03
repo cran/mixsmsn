@@ -1,3 +1,7 @@
+2013-01-22 (1.0-4) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+  * added a density and log-density plot
+
 2012-10-25 (1.0-3) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
   * Fix the rmix function to generated the contaminated normal

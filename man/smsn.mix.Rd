@@ -57,43 +57,48 @@ arg3 = c(mu3, sigma2.3, lambda3, nu)
 y <- rmix(n=1000, p=pii, family="Skew.t", arg=list(arg1,arg2,arg3))
 
 \dontrun{
-par(mfrow=c(2,2))
+par(mfrow=c(1,2))
 ## Normal fit
 Norm.analysis <- smsn.mix(y, nu = 3, g = 3, get.init = TRUE, criteria = TRUE, 
                           group = TRUE, family = "Normal", calc.im=FALSE)
 mix.hist(y,Norm.analysis)
 mix.print(Norm.analysis)
+mix.dens(y,Norm.analysis)
 
 ## Skew Normal fit
 Snorm.analysis <- smsn.mix(y, nu = 3, g = 3, get.init = TRUE, criteria = TRUE, 
                            group = TRUE, family = "Skew.normal", calc.im=FALSE)
 mix.hist(y,Snorm.analysis)
 mix.print(Snorm.analysis)
+mix.dens(y,Snorm.analysis)
 
 ## t fit
 t.analysis <- smsn.mix(y, nu = 3, g = 3, get.init = TRUE, criteria = TRUE, 
                         group = TRUE, family = "t", calc.im=FALSE)
 mix.hist(y,t.analysis)
 mix.print(t.analysis)
+mix.dens(y,t.analysis)
 
 ## Skew t fit
 St.analysis <- smsn.mix(y, nu = 3, g = 3, get.init = TRUE, criteria = TRUE, 
                         group = TRUE, family = "Skew.t", calc.im=FALSE)
 mix.hist(y,St.analysis)
 mix.print(St.analysis)
+mix.dens(y,St.analysis)
 
 ## Skew Contaminated Normal fit
 Scn.analysis <- smsn.mix(y, nu = c(0.3,0.3), g = 3, get.init = TRUE, criteria = TRUE, 
                          group = TRUE, family = "Skew.cn", calc.im=FALSE)
 mix.hist(y,Scn.analysis)
 mix.print(Scn.analysis)
+mix.dens(y,Scn.analysis)
 }
 }
 
 
 \references{
   Rodrigo M. Basso, Victor H. Lachos, Celso R. B. Cabral, Pulak Ghosh (2010). "Robust mixture modeling based on scale mixtures of skew-normal
-  distributions". \emph{Computational Statistics and Data Analysis}, 54, 2926-2941. doi: 10.1016/j.csda.2009.09.031
+  distributions". Computational Statistics and Data Analysis, 54, 2926-2941. doi: 10.1016/j.csda.2009.09.031
 }
 
 \author{Marcos Prates \email{marcosop@est.ufmg.br}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}
