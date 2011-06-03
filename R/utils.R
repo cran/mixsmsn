@@ -341,7 +341,7 @@ im.smsn <- function(y, model){
       soma <- soma + S%*%t(S)
 ##      soma2 <- soma2 + S
       }
-      for (i in 1:g) nam.gr <- c(nam.gr,paste("mu",i,sep=""),paste("sigma2",i,,sep=""),paste("p",i,sep=""))
+      for (i in 1:g) nam.gr <- c(nam.gr,paste("mu",i,sep=""),paste("sigma",i,,sep=""),paste("p",i,sep=""))
       nam.gr <- nam.gr[-length(nam.gr)]
 
   }

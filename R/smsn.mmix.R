@@ -809,8 +809,14 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
   }
 
      if(criteria == TRUE){
-        if(uni.Gama) d <- g*2*p + length(Sigma[[1]][upper.tri(Sigma[[1]], diag = TRUE)]) + 1 + (g-1) #mu + shape + Sigma + nu + pi
-        if(!uni.Gama) d <- g*(2*p + length(Sigma[[1]][upper.tri(Sigma[[1]], diag = TRUE)]) ) + 1 + (g-1) #mu + shape + Sigma + nu + pi
+        if(uni.Gama){
+           if((family != "t") | (family != "Normal")) d <- g*p + length(Sigma[[1]][upper.tri(Sigma[[1]], diag = TRUE)]) + (g-1) #mu + Sigma + pi       
+           else d <- g*2*p + length(Sigma[[1]][upper.tri(Sigma[[1]], diag = TRUE)]) + (g-1) #mu + shape + Sigma + pi       
+        }
+        else{
+          if((family != "t") | (family != "Normal")) d <- g*(p + length(Sigma[[1]][upper.tri(Sigma[[1]], diag = TRUE)]) ) + (g-1) #mu + shape + Sigma + pi
+          else d <- g*(2*p + length(Sigma[[1]][upper.tri(Sigma[[1]], diag = TRUE)]) ) + (g-1) #mu + shape + Sigma + pi
+        }
         aic <- -2*lk + 2*d
         bic <- -2*lk + log(n)*d
         edc <- -2*lk + 0.2*sqrt(n)*d

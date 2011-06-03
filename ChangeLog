@@ -1,4 +1,11 @@
-2013-01-23 (1.0-4) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+2013-03-19 (1.0-6) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+  *fixed the calculation in the number
+  of parameters for the selection criteria
+
+  *fixed naming for normal family in utils.R
+
+2013-01-23 (1.0-5) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
   * added a lines plot
 

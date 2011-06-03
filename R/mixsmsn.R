@@ -647,7 +647,8 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
 
 
   if (criteria == TRUE){       
-    d <- g*2 + (g-1) #mu + Sigma + pi
+    if((family != "t") | (family != "Normal")) d <- g*2 + (g-1) #mu + Sigma + pi
+    else d <- g*3 + (g-1) #mu + Sigma + pi
     aic <- -2*lk + 2*d
     bic <- -2*lk + log(n)*d
     edc <- -2*lk + 0.2*sqrt(n)*d
