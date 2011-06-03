@@ -106,6 +106,9 @@ mix.lines(y,Scn.analysis,col="grey")
 \references{
   Rodrigo M. Basso, Victor H. Lachos, Celso R. B. Cabral, Pulak Ghosh (2010). "Robust mixture modeling based on scale mixtures of skew-normal
   distributions". Computational Statistics and Data Analysis, 54, 2926-2941. doi: 10.1016/j.csda.2009.09.031
+
+  Marcos Oliveira Prates, Celso Romulo Barbosa Cabral, Victor Hugo Lachos (2013)."mixsmsn: Fitting Finite Mixture of Scale Mixture of 
+         Skew-Normal Distributions". Journal of Statistical Software, 54(12), 1-20., URL http://www.jstatsoft.org/v54/i12/.
 }
 
 \author{Marcos Prates \email{marcosop@est.ufmg.br}, Victor Lachos \email{hlachos@ime.unicamp.br} and Celso Cabral \email{celsoromulo@gmail.com}}

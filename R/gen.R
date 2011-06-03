@@ -85,7 +85,7 @@
 ##########      Fun��es para numeros aleat�rios     ############
 
   rmmix <- function(n, pii, family, arg) {
-  require(mvtnorm)
+  ##require(mvtnorm)
     #Função para gerar misturas de g populações
     #n: numero de amostras geradas
     #p: vetor de proporções das misturas (tamanho g)

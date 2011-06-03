@@ -80,4 +80,10 @@ mix.contour(faithful,faithful.analysis$best.model,x.min=1,x.max=1,
             0.00015)) 
 }
 }
+
+\references{
+  Marcos Oliveira Prates, Celso Romulo Barbosa Cabral, Victor Hugo Lachos (2013)."mixsmsn: Fitting Finite Mixture of Scale Mixture of 
+         Skew-Normal Distributions". Journal of Statistical Software, 54(12), 1-20., URL http://www.jstatsoft.org/v54/i12/.
+}
+
 \keyword{datasets}

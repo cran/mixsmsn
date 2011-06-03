@@ -1,0 +1,21 @@
+citHeader("To cite mixsmsn in publications use:")
+
+citEntry(entry = "Article",
+  title        = "{mixsmsn}: Fitting Finite Mixture of Scale Mixture of Skew-Normal Distributions",
+  author       = personList(as.person("Marcos Oliveira Prates"),
+                   as.person("Celso R{\\^o}mulo Barbosa Cabral"),
+                   as.person("V{\\'i}ctor Hugo Lachos")),
+  journal      = "Journal of Statistical Software",
+  year         = "2013",
+  volume       = "54",
+  number       = "12",
+  pages        = "1--20",
+  url          = "http://www.jstatsoft.org/v54/i12/",
+
+  textVersion  =
+  paste("Marcos Oliveira Prates, Celso Romulo Barbosa Cabral, Victor Hugo Lachos (2013).",
+        "mixsmsn: Fitting Finite Mixture of Scale Mixture of Skew-Normal Distributions.",
+        "Journal of Statistical Software, 54(12), 1-20.",
+        "URL http://www.jstatsoft.org/v54/i12/.")
+)
+
