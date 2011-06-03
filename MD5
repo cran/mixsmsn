@@ -1,13 +1,13 @@
 e662ccb1e4f564b8d07cc86824210295 *ChangeLog
-ec2fb2120488eb851b5be4d926d646aa *DESCRIPTION
+706c1bb034b76211ac0ea9eb4dd1b1ed *DESCRIPTION
 a89355e1d1e5291d09d7f55f1e5dfad0 *NAMESPACE
 24ac1ba33a2ea98856777eb41f90a746 *R/dens.R
 789863c71b3d3b36eb5a640a4a9a497f *R/gen.R
 bb4bd499ba6dab7229bc3f4b7bd8c094 *R/mix.dens.R
 0a0093b6b78b2b40dba564987bbc1066 *R/mix.hist.R
 5cd58f588fc98ff68fb3d220a0e9ff65 *R/mix.print.R
-4c3c432b3b62b960091ba1b6d4b04f29 *R/mixsmsn.R
-5eb369a310b5e14929ea32934a1746af *R/smsn.mmix.R
+f4a4c0e3d9dd431b5335007497053b85 *R/mixsmsn.R
+bdc82b7e718f550484d1620ab7499fc3 *R/smsn.mmix.R
 d7ab883ee2ef725aae22de1d7332c8df *R/utils.R
 ca05b801d9f60c59426cdd5617b911b8 *R/utils.multi.R
 32e0693a663a846acb32afa68dc57525 *data/bmi.txt.gz
