@@ -21,7 +21,7 @@
                            }
     if (family == "Skew.cn"){
                               rF1 <- gen.Skew.cn
-                              for (i in 1:length(arg)) if(length(arg[[i]]) != 5) stop(paste("Number of arguments is not comformidable for argument ",i,".\n",sep=" "))
+                              for (i in 1:length(arg)) if(length(arg[[i]]) != 4) stop(paste("Number of arguments is not comformidable for argument ",i,".\n",sep=" "))
                             }
     if (family == "Skew.slash") {
                                  rF1 <- gen.Skew.slash
@@ -62,7 +62,8 @@
     #Função para gerar Skew Normal Contaminada
     #n: qtd de valores a ser gerado
     #mu, sigma2, shape: locação, escala e assimetria, respectivamente
-    rmix(n, nu[1], gen.Skew.normal, list(c(mu,sigma2/nu[2],shape), c(mu,sigma2,shape)))
+    #rmix(n, nu[1], gen.Skew.normal, list(c(mu,sigma2/nu[2],shape), c(mu,sigma2,shape)))
+    rmix(n, c(nu[1],1-nu[1]), "Skew.normal", list(c(mu,sigma2/nu[2],shape), c(mu,sigma2,shape)))
   }
 
 

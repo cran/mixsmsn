@@ -1,3 +1,7 @@
+2012-10-25 (1.0-3) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+  * Fix the rmix function to generated the contaminated normal
+
 2011-02-14 (1.0-2) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
   * New email address for the maintainer
