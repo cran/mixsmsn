@@ -100,10 +100,10 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           ### M-step: atualizar mu, Delta, Gama, sigma2 ###
           pii[j] <- (1/n)*sum(tal[,j])
           mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
-          Delta[j] <- sum(S2[,j]*(y - mu[j])) / sum(S3[,j])
+          Delta[j] <- 0
           Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])       
           sigma2[j] <- Gama[j] + Delta[j]^2
-          shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
+          shape[j] <- 0
 
         }
         #aqui começam as alterações para estimar o valor de nu
@@ -562,7 +562,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           Delta[j] <- 0          
           Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])
           sigma2[j] <- Gama[j] + Delta[j]^2
-          shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
+          shape[j] <- 0
         }
         
         pii[g] <- 1 - (sum(pii) - pii[g])

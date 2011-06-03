@@ -116,7 +116,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
 
           mu[[j]] <- apply(S1[,j]*y - S2[,j] * matrix(rep(Delta.old[[j]], n), n, p, byrow = TRUE), 2, sum) / sum(S1[,j])
           Dif <- y - matrix(rep(mu[[j]], n), n, p, byrow = TRUE)
-          Delta[[j]] <- apply(S2[,j]*Dif, 2, sum) / sum(S3[,j])
+          Delta[[j]] <- rep(0,p)
           
           sum2 <- matrix(0,p,p)
           for (i in 1:n) sum2 <- sum2 + (S1[i,j]*(y[i,] - mu[[j]])%*%t(y[i,] - mu[[j]]) - S2[i,j]*Delta[[j]]%*%t(y[i,] - mu[[j]]) - S2[i,j]*(y[i,] - mu[[j]])%*%t(Delta[[j]])  + S3[i,j]*Delta[[j]]%*%t(Delta[[j]]))
@@ -125,7 +125,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
           
           if(!uni.Gama){
              Sigma[[j]] <- Gama[[j]] + Delta[[j]]%*%t(Delta[[j]])
-             shape[[j]] <- (solve(matrix.sqrt(Sigma[[j]]))%*%Delta[[j]]) / as.numeric( (1 - t(Delta[[j]])%*%solve(Sigma[[j]])%*%Delta[[j]]) )^(1/2)
+             shape[[j]] <- rep(0,p)
           }
         }
         if(uni.Gama){
@@ -135,7 +135,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
            for (j in 1:g){
              Gama[[j]] <- Gama.uni
              Sigma[[j]] <- Gama[[j]] + Delta[[j]]%*%t(Delta[[j]])
-             shape[[j]] <- (solve(matrix.sqrt(Sigma[[j]]))%*%Delta[[j]]) / as.numeric( (1 - t(Delta[[j]])%*%solve(Sigma[[j]])%*%Delta[[j]]) )^(1/2)
+             shape[[j]] <- rep(0,p)
            }
         }
         #aqui começam as alterações para estimar o valor de nu

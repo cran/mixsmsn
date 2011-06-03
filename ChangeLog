@@ -1,3 +1,9 @@
+2011-06-03 (0.2-9) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+	* Fix bugs in the student-t implementation
+	* Added the calculation of the information 
+    matrix for the student-t distribution 
+
 2011-06-02 (0.2-8) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
 	* Included the student-t distribution 

@@ -14,7 +14,7 @@ matrix.sqrt <- function(A) {
 #########         Matriz de Info - Univariado         ###############
 
 im.smsn <- function(y, model){
-  if((class(model) != "Skew.t") && (class(model) != "Skew.cn") && (class(model) != "Skew.slash") && (class(model) != "Skew.normal") && (class(model) != "Normal")) stop(paste("Family",class(model),"not recognized.\n",sep=" "))
+  if((class(model) != "t") && (class(model) != "Skew.t") && (class(model) != "Skew.cn") && (class(model) != "Skew.slash") && (class(model) != "Skew.normal") && (class(model) != "Normal")) stop(paste("Family",class(model),"not recognized.\n",sep=" "))
   y <- as.matrix(y)
   n <- nrow(y)
   p <- ncol(y)
@@ -31,6 +31,62 @@ im.smsn <- function(y, model){
   lambda <- model$shape
   pii <- model$pii
   nu <- model$nu
+
+  if (class(model) == "t"){
+    soma <- soma2 <- 0
+
+    I.Phi <- function(w=0, Ai=0, di=0, nu=0) as.numeric((( 2^w*nu^(nu/2)*gamma(w + nu/2))/(gamma(nu/2)*(nu + di)^(nu/2 + w)))*pt( ((Ai)/(di + nu)^(0.5))*sqrt(2*w + nu), 2*w + nu))
+    I.phi <- function(w=0, Ai=0, di=0, nu=0) as.numeric(((2^w*nu^(nu/2))/(sqrt(2*pi)*gamma(nu/2)))*(1/(di + Ai^2 + nu))^((nu + 2*w)/2)*gamma((nu + 2*w)/2))
+
+    for (i in 1:n){
+      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      dPsi.dnu <- 0
+      for (j in 1:g){
+        yi <- matrix(y[i,], 1,1)
+        Ai <- as.numeric(t(lambda[j])%*%solve(matrix.sqrt(Sigma[j]))%*%(y[i,] - mu[j]))
+        di <- as.numeric(mahalanobis(yi, mu[j], Sigma[j]))
+
+        #derivadinhas
+        Dr <- matrix.sqrt(Sigma[j])
+        Dadj <- 1
+        dir.dmu <- -2*solve(Sigma[j])%*%(y[i,] - mu[j])
+        dAir.dmu <- -solve(Dr)%*%lambda[j]
+        #dAir.dlambda <- solve(Dr)%*%(y[i,] - mu[j])
+
+
+        #para os elementos de sigma
+        D11 <- matrix(c(1), 1,1)
+        ddet.ds11 <- -(1/det(Dr)^2)*Dadj
+        dir.ds11 <- - t(y[i,] - mu[j])%*%solve(Dr)%*%(D11%*%solve(Dr) + solve(Dr)%*%D11)%*%solve(Dr)%*%(y[i,] - mu[j])
+        dAir.ds11 <- - t(lambda[j])%*%solve(Dr)%*%D11%*%solve(Dr)%*%(y[i,] - mu[j])
+
+        dPsi.dmu <- ((2*det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*( dAir.dmu * I.phi((p+1)/2, Ai, di, nu) - (1/2)*dir.dmu*I.Phi((p/2)+1, Ai, di, nu) )
+        #dPsi.dlambda <- ((2*det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*dAir.dlambda*I.phi((p+1)/2, Ai, di, nu)
+        dPsi.dsigma11 <- (2/(2*pi)^(p/2))*( ddet.ds11*I.Phi(p/2, Ai, di, nu) - (1/2)*dir.ds11*det(as.matrix(Sigma[j]))^(-1/2)*I.Phi(p/2+1, Ai, di, nu) + det(as.matrix(Sigma[j]))^(-1/2)*dAir.ds11*I.phi((p+1)/2, Ai, di, nu) )
+
+        ui <- rgamma(10000, shape = nu/2, rate = nu/2)
+        resto <- mean(ui^(p/2)*log(ui)*exp(-ui*di/2)*pnorm(ui^(1/2)*Ai))
+        dPsi.dnu <- dPsi.dnu + pii[j]*((det(as.matrix(Sigma[j]))^(-1/2))/(2*pi)^(p/2))*((log(nu/2)+1-digamma(nu/2))*I.Phi(p/2, Ai, di, nu) - I.Phi((p+2)/2, Ai, di, nu) + resto)
+
+        Simu <- as.vector((pii[j]/ d.mixedST(yi, pii, mu, Sigma, lambda, nu) )*dPsi.dmu)
+        #Silambda <- as.vector((pii[j]/ d.mixedST(yi, pii, mu, Sigma, lambda, nu) )*dPsi.dlambda )
+        Ssigma11 <- (pii[j]/ d.mixedST(yi, pii, mu, Sigma, lambda, nu) )*dPsi.dsigma11
+        Sipi <- (1/d.mixedST(yi, pii, mu, Sigma, lambda, nu))*( dt.ls(yi, mu[j], Sigma[j], lambda[j], nu) - dt.ls(yi, mu[g], Sigma[g], lambda[g], nu))
+
+        S <- c(S, Simu, Ssigma11, Sipi)
+
+      }
+      S <- S[-length(S)]
+      Sinu <- (1/d.mixedST(yi, pii, mu, Sigma, lambda, nu))*dPsi.dnu
+      S <- c(S, Sinu)
+
+      soma <- soma + S%*%t(S)
+##      soma2 <- soma2 + S
+    }
+      for (i in 1:g) nam.gr <- c(nam.gr,paste("mu",i,sep=""),paste("sigma",i,sep=""),paste("p",i,sep=""))
+      nam.gr <- nam.gr[-length(nam.gr)]
+      nam.nu <- c("nu")
+  }
 
   if (class(model) == "Skew.t"){
     soma <- soma2 <- 0
@@ -297,6 +353,9 @@ im.smsn <- function(y, model){
 
   dimnames(soma)[[1]] <- c(nam.gr,nam.nu)
   dimnames(soma)[[2]] <- c(nam.gr,nam.nu)
+  if(class(model) == "t"){
+     
+  }
   ##return(list(soma, soma2))
   return(list(IM=soma))
 }

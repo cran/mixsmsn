@@ -85,6 +85,11 @@ Snorm.analysis <- smsn.mmix(y, nu=3, g=2, get.init = TRUE, criteria = TRUE,
                             group = TRUE, family = "Skew.normal")
 mix.contour(y,Snorm.analysis)
 
+## t fit
+t.analysis <- smsn.mmix(y, nu=3, g=2, get.init = TRUE, criteria = TRUE, 
+                         group = TRUE, family = "t")
+mix.contour(y,t.analysis)
+
 ## Skew t fit
 St.analysis <- smsn.mmix(y, nu=3, g=2, get.init = TRUE, criteria = TRUE, 
                          group = TRUE, family = "Skew.t")

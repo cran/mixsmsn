@@ -13,7 +13,7 @@ mix.contour <- function(y, model, slice = 100, ncontour = 10, x.min=1, x.max=1, 
    p <- ncol(dat)
 
    if(p != 2) stop("The mix.contour function is only appropriate for the bivariate analysis.\n")
-   if((class(model) != "Skew.t") && (class(model) != "Skew.cn") && (class(model) != "Skew.slash") && (class(model) != "Skew.normal") && (class(model) != "Normal")) stop(paste("Family",class(model),"not recognized.",sep=" "))
+   if((class(model) != "t") && (class(model) != "Skew.t") && (class(model) != "Skew.cn") && (class(model) != "Skew.slash") && (class(model) != "Skew.normal") && (class(model) != "Normal")) stop(paste("Family",class(model),"not recognized.",sep=" "))
    if(length(model$group) == 0) stop("The groups were not save in the model.\n")
    if ((x.min < 0) || (x.max < 0) || (y.min < 0) || (y.max < 0)) stop("All limits must be non negative.\n")
    g <- length(model$pii)
@@ -50,6 +50,32 @@ mix.contour <- function(y, model, slice = 100, ncontour = 10, x.min=1, x.max=1, 
       y <- seq(min(dat[,2])-y.min,max(dat[,2])+y.max, length = slice)  
       f <- matrix(0,slice,slice)
       for (i in 1:slice) for (j in 1:slice) f[i,j] <-  mixed.SN(x[i], y[j], model$pii, model$mu, model$Sigma, model$shape)
+      #contour(x, y, f, nlevels = 5, levels = c(0.1, 0.015, 0.005, 0.0009, 0.00015))
+      contour(x, y, f, , nlevels = ncontour, ...)
+      #contour(x, y, f, , levels = c(0.3,0.15, 0.075,0.0375,0.01875)) # Swiss
+      points(dat[,1], dat[,2], col = (model$group+1))
+   }
+
+   if (class(model) == "t"){
+      mixed.ST <- function(x, y, pii, mu, Sigma, lambda, nu) {
+#        n <- nrow(dat)
+#        p <- ncol(dat)
+        dens <- 0
+        for (j in 1:g) {
+          lambda[[j]] <- rep(0,length(lambda[[j]]))
+          denst <- (gamma((p+nu)/2)/(gamma(nu/2)*pi^(p/2)))*nu^(-p/2)*det(Sigma[[j]])^(-1/2)*(1 + mahalanobis(cbind(x,y), mu[[j]], Sigma[[j]])/nu)^(-(p+nu)/2)
+          dens <- dens + pii[j] * 2*(denst)*pt(sqrt((p + nu)/(mahalanobis(cbind(x,y), mu[[j]], Sigma[[j]]) + nu))*t(lambda[[j]])%*%solve(matrix.sqrt(Sigma[[j]]))%*%(c(x,y) - mu[[j]]), df = nu + p)
+        }
+        dens
+      }
+      #x <- seq(min(dat[,1])-1,max(dat[,1])+1, length = slice)
+      #y <- seq(min(dat[,2])-15,max(dat[,2])+10, length = slice)
+      #x <- seq(min(dat[,1])-1,max(dat[,1])+1, length = slice)     # Swiss
+      #y <- seq(min(dat[,2])-1,max(dat[,2])+1, length = slice)     # Swiss
+      x <- seq(min(dat[,1])-x.min,max(dat[,1])+x.max, length = slice)    
+      y <- seq(min(dat[,2])-y.min,max(dat[,2])+y.max, length = slice)  
+      f <- matrix(0,slice,slice)
+      for (i in 1:slice) for (j in 1:slice) f[i,j] <-  mixed.ST(x[i], y[j], model$pii, model$mu, model$Sigma, model$shape, model$nu)
       #contour(x, y, f, nlevels = 5, levels = c(0.1, 0.015, 0.005, 0.0009, 0.00015))
       contour(x, y, f, , nlevels = ncontour, ...)
       #contour(x, y, f, , levels = c(0.3,0.15, 0.075,0.0375,0.01875)) # Swiss
@@ -131,7 +157,7 @@ mix.contour <- function(y, model, slice = 100, ncontour = 10, x.min=1, x.max=1, 
 adjoint <- function(A) det(A)*solve(A)
 
 imm.smsn <- function(y, model){
-  if((class(model) != "Skew.t") && (class(model) != "Skew.cn") && (class(model) != "Skew.slash") && (class(model) != "Skew.normal") && (class(model) != "Normal")) stop(paste("Family",class(model),"not recognized.",sep=" "))
+  if((class(model) != "t") && (class(model) != "Skew.t") && (class(model) != "Skew.cn") && (class(model) != "Skew.slash") && (class(model) != "Skew.normal") && (class(model) != "Normal")) stop(paste("Family",class(model),"not recognized.",sep=" "))
   if (ncol(y) <= 1) stop(paste("The dimension of y (p) is: ", ncol(y),". We need p >= 2.",sep=" "))
   if (model$uni.Gama) stop("Sorry. The information matrix cannot be calculated when the uni.Gama was used!")
   y <- as.matrix(y)
@@ -147,6 +173,104 @@ imm.smsn <- function(y, model){
   lambda <- model$shape
   pii <- model$pii
   nu <- model$nu
+
+  if (class(model) == "t"){
+    soma <- soma2 <- 0
+    
+    I.Phi <- function(w=0,Ai=NULL,di,nu=0) as.numeric((( 2^w*nu^(nu/2)*gamma(w + nu/2))/(gamma(nu/2)*(nu + di)^(nu/2 + w)))*pt( ((Ai)/(di + nu)^(0.5))*sqrt(2*w + nu), 2*w + nu))
+    I.phi <- function(w=0,Ai=NULL,di,nu=0) as.numeric(((2^w*nu^(nu/2))/(sqrt(2*pi)*gamma(nu/2)))*(1/(di + Ai^2 + nu))^((nu + 2*w)/2)*gamma((nu + 2*w)/2))
+    
+    for (i in 1:n){
+      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      dPsi.dnu <- 0
+      yi <- matrix(y[i,], 1, p)#2)
+      for (j in 1:g){
+        Ai <- as.numeric(t(lambda[[j]])%*%solve(matrix.sqrt(Sigma[[j]]))%*%(y[i,] - mu[[j]]))
+        di <- as.numeric(mahalanobis(yi, mu[[j]], Sigma[[j]]))
+        
+
+        #derivadinhas
+        Dr <- matrix.sqrt(Sigma[[j]])
+        Dadj <- (adjoint(Dr))
+        dir.dmu <- -2*solve(Sigma[[j]])%*%(y[i,] - mu[[j]])
+        dAir.dmu <- -solve(Dr)%*%lambda[[j]]
+        #dAir.dlambda <- solve(Dr)%*%(y[i,] - mu[[j]])
+      
+        dPsi.dmu <- ((2*det(Sigma[[j]])^(-1/2))/(2*pi)^(p/2))*( dAir.dmu * I.phi((p+1)/2, Ai, di, nu) - (1/2)*dir.dmu*I.Phi((p/2)+1, Ai, di, nu) )
+        #dPsi.dlambda <- ((2*det(Sigma[[j]])^(-1/2))/(2*pi)^(p/2))*dAir.dlambda*I.phi((p+1)/2, Ai, di, nu)
+
+        #para os elementos de sigma                      
+        l <- m <- 1
+        for(k in 1:((p+1)*p/2)) {
+           Vis <- FALSE
+           D <- matrix(rep(0,p*p),p,p)
+           D[l,m] <- D[m,l] <- 1
+
+           ddet.ds <- -(1/det(Dr)^2)*Dadj[l,m]
+           dir.ds <- - t(y[i,] - mu[[j]])%*%solve(Dr)%*%(D%*%solve(Dr) + solve(Dr)%*%D)%*%solve(Dr)%*%(y[i,] - mu[[j]])
+           dAir.ds <- - t(lambda[[j]])%*%solve(Dr)%*%D%*%solve(Dr)%*%(y[i,] - mu[[j]])
+
+           dPsi.dsigma <- (2/(2*pi)^(p/2))*( ddet.ds*I.Phi(p/2, Ai, di, nu) - (1/2)*dir.ds*det(Sigma[[j]])^(-1/2)*I.Phi(p/2+1, Ai, di, nu) + det(Sigma[[j]])^(-1/2)*dAir.ds*I.phi((p+1)/2, Ai, di, nu) )           
+           Ssigma[k] <- (pii[j]/ d.mixedmvST(yi, pii, mu, Sigma, lambda, nu) )*dPsi.dsigma
+
+           if(((l*m - p*floor((l*m)/p)) == 0) && (l != m)) {
+              l <- l+1
+              m <- l
+              Vis <- TRUE
+           }
+           if(!Vis) m <- m+1
+        }
+
+
+        ui <- rgamma(10000, shape = nu/2, rate = nu/2)
+        resto <- mean(ui^(p/2)*log(ui)*exp(-ui*di/2)*pnorm(ui^(1/2)*Ai))
+        dPsi.dnu <- dPsi.dnu + pii[j]*((det(Sigma[[j]])^(-1/2))/(2*pi)^(p/2))*((log(nu/2)+1-digamma(nu/2))*I.Phi(p/2, Ai, di, nu) - I.Phi((p+2)/2, Ai, di, nu) + resto)
+
+        Simu <- as.vector((pii[j]/ d.mixedmvST(yi, pii, mu, Sigma, lambda, nu) )*dPsi.dmu)
+        #Silambda <- as.vector((pii[j]/ d.mixedmvST(yi, pii, mu, Sigma, lambda, nu) )*dPsi.dlambda )
+
+      
+        S <- c(S, Simu, Ssigma)
+      }
+      Sinu <- (1/d.mixedmvST(yi, pii, mu, Sigma, lambda, nu))*dPsi.dnu
+      if(g>1){
+        for(j in 1:(g-1)) Sipi[j] <- (1/d.mixedmvST(yi, pii, mu, Sigma, lambda, nu))*( dmvt.ls(yi, mu[[j]], Sigma[[j]], lambda[[j]], nu) - dmvt.ls(yi, mu[[g]], Sigma[[g]], lambda[[g]], nu))        
+        S <- c(S, Sipi, Sinu)
+      }
+      if(g == 1) S <- c(S, Sinu)
+      soma <- soma + S%*%t(S)
+ #     soma2 <- soma2 + S
+    }
+    NAME <- piiN <- c()
+    for(i in 1:g){
+        SigmaN <- muN <- shapeN <- c()
+        for (k in 1:p){
+           muN <- c(muN,paste("mu",i,"_",k,sep=""))
+           #shapeN <- c(shapeN,"RETIRA");#c(shapeN,paste("shape",i,"_",k,sep=""))
+        }
+        l <- m <- 1
+        for(k in 1:((p+1)*p/2)) {
+           Vis <- FALSE
+           SigmaN <- c(SigmaN,paste("Sigma",i,"_",l,m,sep=""))
+           if(((l*m - p*floor((l*m)/p)) == 0) && (l != m)) {
+              l <- l+1
+              m <- l
+              Vis <- TRUE
+           }
+           if(!Vis) m <- m+1
+        }
+       NAME <- c(NAME,muN,shapeN,SigmaN)
+    }
+    
+    for(i in 1:(g-1)){
+       piiN <- c(piiN, paste("pii",i,sep=""))
+       NAME <- c(NAME,piiN,"nu")
+    }
+    if( g==1) NAME <- c(NAME,"nu")
+    dimnames(soma)[[1]] <- NAME
+    dimnames(soma)[[2]] <- NAME   
+
+  }
   
   if (class(model) == "Skew.t"){
     soma <- soma2 <- 0

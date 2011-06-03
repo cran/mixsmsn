@@ -67,6 +67,12 @@ Snorm.analysis <- smsn.mix(y, nu = 3, g = 3, get.init = TRUE, criteria = TRUE,
 mix.hist(y,Snorm.analysis)
 mix.print(Snorm.analysis)
 
+## t fit
+t.analysis <- smsn.mix(y, nu = 3, g = 3, get.init = TRUE, criteria = TRUE, 
+                        group = TRUE, family = "t", calc.im=FALSE)
+mix.hist(y,t.analysis)
+mix.print(t.analysis)
+
 ## Skew t fit
 St.analysis <- smsn.mix(y, nu = 3, g = 3, get.init = TRUE, criteria = TRUE, 
                         group = TRUE, family = "Skew.t", calc.im=FALSE)
