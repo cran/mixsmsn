@@ -112,6 +112,13 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         lk1 <- sum(log( d.mixedST(y, pii, mu, sigma2, shape, nu) ))
         pii[g] <- 1 - (sum(pii) - pii[g])
 
+        zero.pos <- NULL
+        zero.pos <- which(pii == 0)
+        if(length(zero.pos) != 0){
+          pii[zero.pos] <- 1e-10
+          pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
+        }
+
         param <- teta
         teta <- c(mu, Delta, Gama, pii, nu)
         #criterio <- sqrt((teta-param)%*%(teta-param))
@@ -200,6 +207,13 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         nu <- optimize(logvero.ST, c(0,100), tol = 0.000001, maximum = TRUE)$maximum
         lk1 <- sum(log( d.mixedST(y, pii, mu, sigma2, shape, nu) ))
         pii[g] <- 1 - (sum(pii) - pii[g])
+
+        zero.pos <- NULL
+        zero.pos <- which(pii == 0)
+        if(length(zero.pos) != 0){
+          pii[zero.pos] <- 1e-10
+          pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
+        }
 
         param <- teta
         teta <- c(mu, Delta, Gama, pii, nu)
@@ -293,6 +307,13 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         nu <- optim(nu.old, logvero.SNC, control = list(fnscale = -1), method = "L-BFGS-B", lower = rep(0.01, 2), upper = rep(0.99,2))$par
 
         pii[g] <- 1 - (sum(pii) - pii[g])
+
+        zero.pos <- NULL
+        zero.pos <- which(pii == 0)
+        if(length(zero.pos) != 0){
+          pii[zero.pos] <- 1e-10
+          pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
+        }
 
         param <- teta
         teta <- c(mu, Delta, Gama, pii, nu)
@@ -396,6 +417,13 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         lk1 <- sum(log( d.mixedSS(y, pii, mu, sigma2, shape, nu) ))
         pii[g] <- 1 - (sum(pii) - pii[g])
 
+        zero.pos <- NULL
+        zero.pos <- which(pii == 0)
+        if(length(zero.pos) != 0){
+          pii[zero.pos] <- 1e-10
+          pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
+        }
+
         param <- teta
         teta <- c(mu, Delta, Gama, pii, nu)
         #teta <- c(mu, Delta, Gama, pii)
@@ -484,6 +512,13 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         }
         pii[g] <- 1 - (sum(pii) - pii[g])
 
+        zero.pos <- NULL
+        zero.pos <- which(pii == 0)
+        if(length(zero.pos) != 0){
+          pii[zero.pos] <- 1e-10
+          pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
+        }
+
         param <- teta
         teta <- c(mu, Delta, Gama, pii)
         lk1 <- sum(log( d.mixedSN(y, pii, mu, sigma2, shape) ))
@@ -566,7 +601,14 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         }
         
         pii[g] <- 1 - (sum(pii) - pii[g])
-
+        
+        zero.pos <- NULL
+        zero.pos <- which(pii == 0)
+        if(length(zero.pos) != 0){
+          pii[zero.pos] <- 1e-10
+          pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
+        }
+             
         param <- teta
         teta <- c(mu, Delta, Gama, pii)
         lk1 <- sum(log(d.mixedSN(y, pii, mu, sigma2, shape)))

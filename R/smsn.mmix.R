@@ -15,7 +15,7 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
   if((length(g) == 0) && ((length(mu)==0) || (length(Sigma)==0) || (length(shape)==0) || (length(pii)==0)))  stop("The model is not specified correctly.\n")
   if(get.init == FALSE){
        g <- length(mu)
-       if((length(mu) != g) || (length(mu) != length(Sigma)) || (length(mu) != length(shape)) || (length(mu) != length(pii))) stop("The size of the initial values are not compatibles.\n")
+       if((length(mu) != length(diag(Sigma))) || (length(mu) != length(shape)) || (length(mu) != length(pii))) stop("The size of the initial values are not compatibles.\n")
 
        if(sum(pii) != 1) stop("probability of pii does not sum to 1.\n")
        for (j in 1:g){
@@ -144,6 +144,13 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
 
         pii[g] <- 1 - (sum(pii) - pii[g])
 
+        zero.pos <- NULL
+        zero.pos <- which(pii == 0)
+        if(length(zero.pos) != 0){
+          pii[zero.pos] <- 1e-10
+          pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
+        }
+
 #        param <- teta
 #        teta <- c()
 #        for (k in 1:g) teta <- c(teta, mu[[k]], Gama[[k]][upper.tri(Gama[[k]], diag = TRUE)], Delta[[k]])
@@ -252,6 +259,13 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
 
         pii[g] <- 1 - (sum(pii) - pii[g])
 
+        zero.pos <- NULL
+        zero.pos <- which(pii == 0)
+        if(length(zero.pos) != 0){
+          pii[zero.pos] <- 1e-10
+          pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
+        }
+
 #        param <- teta
 #        teta <- c()
 #        for (k in 1:g) teta <- c(teta, mu[[k]], Gama[[k]][upper.tri(Gama[[k]], diag = TRUE)], Delta[[k]])
@@ -359,6 +373,13 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
         nu <- optim(nu.old, logvero.SNC, control = list(fnscale = -1), method = "L-BFGS-B", lower = rep(0.01, 2), upper = rep(0.99,2))$par
 
         pii[g] <- 1 - (sum(pii) - pii[g])
+
+        zero.pos <- NULL
+        zero.pos <- which(pii == 0)
+        if(length(zero.pos) != 0){
+          pii[zero.pos] <- 1e-10
+          pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
+        }
 
 ##        param <- teta
 ##        teta <- c()
@@ -513,6 +534,13 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
 
         pii[g] <- 1 - (sum(pii) - pii[g])
 
+        zero.pos <- NULL
+        zero.pos <- which(pii == 0)
+        if(length(zero.pos) != 0){
+          pii[zero.pos] <- 1e-10
+          pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
+        }
+
 #        param <- teta
 #        teta <- c()
 #        for (k in 1:g) teta <- c(teta, mu[[k]], Gama[[k]][upper.tri(Gama[[k]], diag = TRUE)], Delta[[k]])
@@ -626,6 +654,13 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
         #print("saiu do for g")
         pii[g] <- 1 - (sum(pii) - pii[g])
 
+        zero.pos <- NULL
+        zero.pos <- which(pii == 0)
+        if(length(zero.pos) != 0){
+          pii[zero.pos] <- 1e-10
+          pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
+        }
+
 #        param <- teta
 #        teta <- c()
 #        for (k in 1:g) teta <- c(teta, mu[[k]], Gama[[k]][upper.tri(Gama[[k]], diag = TRUE)], Delta[[k]])
@@ -731,6 +766,13 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
         }
 
         pii[g] <- 1 - (sum(pii) - pii[g])
+
+        zero.pos <- NULL
+        zero.pos <- which(pii == 0)
+        if(length(zero.pos) != 0){
+          pii[zero.pos] <- 1e-10
+          pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
+        }
 
 #        param <- teta
 #        teta <- c()

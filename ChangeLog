@@ -1,3 +1,8 @@
+2011-06-20 (0.3-1) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+	* Fix numerical bugs in the calculation of pii
+    for smsn.mix and smsn.mmix functions
+
 2011-06-17 (0.3-0) Marcos Prates <marcos.prates@yahoo.com>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
 	* Fix bugs with the smsn.mmix restrictions

@@ -18,7 +18,7 @@ smsn.search(y, nu,
   \item{nu}{ the parameter of the scale variable (vector or scalar) of the SMSN family (kurtosis parameter). It is necessary to all distributions. For the "Skew.cn" must be a vector of length 2 and values in (0,1) }
   \item{g.min}{ the minimum number of cluster to be modeled }
   \item{g.max}{ the maximum number of cluster to be modeled }
-  \item{family}{ distribution famility to be used in fitting ("Skew.t", "Skew.nc", "Skew.slash", "Skew.normal", "Normal") }
+  \item{family}{ distribution famility to be used in fitting ("t", "Skew.t", "Skew.nc", "Skew.slash", "Skew.normal", "Normal") }
   \item{criteria}{ the selection criteria method to be used ("aic", "bic", "edc", "icl") } 
   \item{error}{ the covergence maximum error }
   \item{iter.max}{ the maximum number of iterations of the EM algorithm }
