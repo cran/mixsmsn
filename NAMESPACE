@@ -1,3 +1,11 @@
+importFrom(mvtnorm, dmvnorm, rmvnorm)
+
+importFrom("graphics", "contour", "hist", "lines", "plot", "points",
+           "title")
+importFrom("stats", "dgamma", "dnorm", "dt", "integrate", "kmeans",
+           "mahalanobis", "optim", "optimize", "pgamma", "pnorm", "pt",
+           "qgamma", "rgamma", "rnorm", "runif", "var")
+
 export(smsn.mix,
        smsn.mmix, 
        im.smsn, 

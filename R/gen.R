@@ -1,11 +1,11 @@
 ##################################################################
-##########     Funções para gerar SNI e mistura       ############
+##########     Funcoes para gerar SNI e mistura       ############
 
 
   rmix <- function(n, pii, family, arg) {
-    #Função para gerar misturas de g populações
+    #Funcao para gerar misturas de g populacoes
     #n: numero de amostras geradas
-    #p: vetor de proporções das misturas (tamanho g)
+    #p: vetor de proporcoes das misturas (tamanho g)
     #arg: deve ser um tipo list com cada entrada contendo um vetor de tamanho g de agrumentos a ser passado para rF1
  if((family != "t") && (family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.",sep=" "))
 
@@ -21,7 +21,7 @@
                            }
     if (family == "Skew.cn"){
                               rF1 <- gen.Skew.cn
-                              for (i in 1:length(arg)) if(length(arg[[i]]) != 4) stop(paste("Number of arguments is not comformidable for argument ",i,".\n",sep=" "))
+                              for (i in 1:length(arg)) if(length(arg[[i]]) != 5) stop(paste("Number of arguments is not comformidable for argument ",i,".\n",sep=" "))
                             }
     if (family == "Skew.slash") {
                                  rF1 <- gen.Skew.slash
@@ -42,53 +42,53 @@
 
 
   gen.Skew.normal <- function(n, mu, sigma2, shape, nu=NULL){
-    #Função para gerar valores aleatórios de uma Skew-Normal
+    #Funcao para gerar valores aleatorios de uma Skew-Normal
     #n: qtd de valores a ser gerado
-    #mu, sigma2, shape: locação, escala e assimetria, respectivamente
+    #mu, sigma2, shape: locacao, escala e assimetria, respectivamente
     delta <- shape / sqrt(1 + shape^2)
     y <- mu*rep(1,n) + sqrt(sigma2)*(delta*abs(rnorm(n)) + (1 - delta^2)^(1/2)*rnorm(n))
     return(y)
   }
 
   gen.Skew.t <- function(n, mu, sigma2, shape, nu ){
-    #Função para gerar Skew-t
+    #Funcao para gerar Skew-t
     #n: qtd de valores a ser gerado
-    #mu, sigma2, shape: locação, escala e assimetria, respectivamente
+    #mu, sigma2, shape: locacao, escala e assimetria, respectivamente
     y <- mu + (rgamma(n, nu/2, nu/2))^(-1/2)*gen.Skew.normal(n, 0, sigma2, shape)
   }
 
 
-  gen.Skew.cn <- function(n, mu, sigma2, shape, nu){
-    #Função para gerar Skew Normal Contaminada
+  gen.Skew.cn <- function(n, mu, sigma2, shape, nu1, nu2){
+    #Funcao para gerar Skew Normal Contaminada
     #n: qtd de valores a ser gerado
-    #mu, sigma2, shape: locação, escala e assimetria, respectivamente
+    #mu, sigma2, shape: locacao, escala e assimetria, respectivamente
     #rmix(n, nu[1], gen.Skew.normal, list(c(mu,sigma2/nu[2],shape), c(mu,sigma2,shape)))
-    rmix(n, c(nu[1],1-nu[1]), "Skew.normal", list(c(mu,sigma2/nu[2],shape), c(mu,sigma2,shape)))
+    rmix(n, c(nu1,1-nu1), "Skew.normal", list(c(mu,sigma2/nu2,shape), c(mu,sigma2,shape)))
   }
 
 
   gen.Skew.slash <- function(n, mu, sigma2, shape, nu){
-    # Função para gerar Skew Slash
+    # Funcao para gerar Skew Slash
     #n: qtd de valores a ser gerado
-    #mu, sigma2, shape: locação, escala e assimetria, respectivamente
+    #mu, sigma2, shape: locacao, escala e assimetria, respectivamente
     u1 <- runif(n)
-    u2 <- u1^(1/(nu))   # formula 10 do artigo e método da inversão
+    u2 <- u1^(1/(nu))   # formula 10 do artigo e metodo da inversao
     ys <- mu + (u2)^(-1/2)*gen.Skew.normal(n, 0, sigma2, shape)
     return(ys)
   }
 
 
-##########  FIM   Funções para gerar SNI e mistura     ###########
+##########  FIM   Funcoes para gerar SNI e mistura     ###########
 ##################################################################
 
 ################################################################
-##########      Fun��es para numeros aleat�rios     ############
+##########      Funcoes para numeros aleatorios     ############
 
   rmmix <- function(n, pii, family, arg) {
   ##require(mvtnorm)
-    #Função para gerar misturas de g populações
+    #Funcao para gerar misturas de g populacoes
     #n: numero de amostras geradas
-    #p: vetor de proporções das misturas (tamanho g)
+    #p: vetor de proporcoes das misturas (tamanho g)
     #arg: deve ser um tipo list com cada entrada contendo um vetor de tamanho g de agrumentos a ser passado para rF1
     if((family != "t") && (family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.",sep=" "))
 
@@ -155,7 +155,7 @@
 
   gen.SS.multi  <- function(n, mu, Sigma, shape, nu){
     u1 <- runif(n)
-    u2 <- u1^(1/(nu))   # formula 10 do artigo e m�todo da invers�o
+    u2 <- u1^(1/(nu))   # formula 10 do artigo e metodo da inversao
     ys <- mu + (u2)^(-1/2)*gen.SN.multi(n, c(0,0), Sigma, shape)
     return(ys)
   }

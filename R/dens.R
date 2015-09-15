@@ -1,7 +1,7 @@
 ################################################################
 ##########          Densidades das SNI              ############
 
-## Densidade/CDF da SN com loca√ß√£o escala #######
+## Densidade/CDF da SN com locacao escala #######
 dSN <- function(y, mu = 0, sigma2 = 1, shape=1){
   dens <- 2*dnorm(y, mu, sqrt(sigma2))*pnorm(shape*((y - mu)/sqrt(sigma2)))
   return(dens)
@@ -9,7 +9,7 @@ dSN <- function(y, mu = 0, sigma2 = 1, shape=1){
 
 
 
-## Densidade/CDF da ST com loca√ß√£o escala #######
+## Densidade/CDF da ST com locacao escala #######
 dt.ls <- function(x, loc = 0, sigma2 = 1,shape=1, nu = 4){
   d <- (x - loc)/sqrt(sigma2)
   dens <- 2*dt(d, df = nu)*pt(sqrt((1+nu)/(d^2+nu))*d*shape,1+nu)/sqrt(sigma2)
@@ -38,8 +38,8 @@ dSS <- function(y, mu, sigma2, shape,nu){
 
 ###########    Densidades das Misturas de SNI   ##################
   d.mixedSN <- function(x, pi1, mu, sigma2, shape){
-    # x: √© o vetor de dados
-    # outros parametros devem ser do tipo vetor c() de dimens√£o g (qtd de misturas)
+    # x: eh o vetor de dados
+    # outros parametros devem ser do tipo vetor c() de dimensao g (qtd de misturas)
     g <- length(pi1)
     dens <- 0
     for (j in 1:g) dens <- dens + pi1[j]*dSN(x, mu[j], sigma2[j], shape[j])
@@ -47,8 +47,8 @@ dSS <- function(y, mu, sigma2, shape,nu){
   }
   
   d.mixedST <- function(x, pi1, mu, sigma2, shape, nu){
-    # x: √© o vetor de dados
-    # outros parametros devem ser do tipo vetor c() de dimens√£o g (qtd de misturas)
+    # x: eh o vetor de dados
+    # outros parametros devem ser do tipo vetor c() de dimensao g (qtd de misturas)
     g <- length(pi1)
     dens <- 0
     for (j in 1:g) dens <- dens + pi1[j]*dt.ls(x, mu[j], sigma2[j], shape[j], nu)
@@ -56,8 +56,8 @@ dSS <- function(y, mu, sigma2, shape,nu){
   }
 
   d.mixedSNC <- function(x, pi1, mu, sigma2, shape, nu){
-    # x: √© o vetor de dados
-    # outros parametros devem ser do tipo vetor c() de dimens√£o g (qtd de misturas)
+    # x: eh o vetor de dados
+    # outros parametros devem ser do tipo vetor c() de dimensao g (qtd de misturas)
     g <- length(pi1)
     dens <- 0
     for (j in 1:g) dens <- dens + pi1[j]*dSNC(x, mu[j], sigma2[j], shape[j], nu)
@@ -65,8 +65,8 @@ dSS <- function(y, mu, sigma2, shape,nu){
   }
 
   d.mixedSS <- function(x, pi1, mu, sigma2, shape, nu){
-    # x: √© o vetor de dados
-    # outros parametros devem ser do tipo vetor c() de dimens√£o g (qtd de misturas)
+    # x: eh o vetor de dados
+    # outros parametros devem ser do tipo vetor c() de dimensao g (qtd de misturas)
     g <- length(pi1)
     dens <- 0
     for (j in 1:g) dens <- dens + pi1[j]*dSS(x, mu[j], sigma2[j], shape[j], nu)
@@ -78,30 +78,30 @@ dSS <- function(y, mu, sigma2, shape,nu){
 
 
 #######################################################################
-########      AlgorÌtmo EM e funÁıes MULTIVARIADAS         ############
+########      Algoritmo EM e funcoes MULTIVARIADAS         ############
 #######################################################################
 
 #______________________________________________________________________________________________
 ################################################################
 ##########          Densidades das SNI              ############
-#pacote necess·rio
+#pacote necessario
 ##require(mvtnorm)
 ##require(mnormt)
 
-matrix.sqrt <- function(A) {
-  sva <- svd(A)
-  if (min(sva$d)>=0)
-    Asqrt <- t(sva$v %*% (t(sva$u) * sqrt(sva$d)))
-  else
-    stop("Matrix square root is not defined")
-  return(Asqrt)
-}
+#matrix.sqrt <- function(A) {
+#  sva <- svd(A)
+#  if (min(sva$d)>=0)
+#    Asqrt <- t(sva$v %*% (t(sva$u) * sqrt(sva$d)))
+#  else
+#    stop("Matrix square root is not defined")
+#  return(Asqrt)
+#}
 
 
-## Densidade/CDF da SN com locaÁ„o escala #######
+## Densidade/CDF da SN com locacao escala #######
 dmvSN <- function(y, mu, Sigma, lambda){
-  #y: deve ser uma matrix onde cada linha tem um vetor de dados multivariados de dimens„o ncol(y) = p. nrow(y) = tamanho da amostra
-  #mu, lambda: devem ser do tipo vetor de mesma dimens„o igual a ncol(y) = p
+  #y: deve ser uma matrix onde cada linha tem um vetor de dados multivariados de dimensao ncol(y) = p. nrow(y) = tamanho da amostra
+  #mu, lambda: devem ser do tipo vetor de mesma dimensao igual a ncol(y) = p
   #Sigma: Matrix p x p
   n <- nrow(y)
   p <- ncol(y)
@@ -110,10 +110,10 @@ dmvSN <- function(y, mu, Sigma, lambda){
 }
 
 
-## Densidade/CDF da ST com locaÁ„o escala #######
+## Densidade/CDF da ST com locacao escala #######
 dmvt.ls <- function(y, mu, Sigma, lambda, nu){
-  #y: deve ser uma matrix onde cada linha tem um vetor de dados multivariados de dimens„o ncol(y) = p. nrow(y) = tamanho da amostra
-  #mu, lambda: devem ser do tipo vetor de mesma dimens„o igual a ncol(y) = p
+  #y: deve ser uma matrix onde cada linha tem um vetor de dados multivariados de dimensao ncol(y) = p. nrow(y) = tamanho da amostra
+  #mu, lambda: devem ser do tipo vetor de mesma dimensao igual a ncol(y) = p
   #Sigma: Matrix p x p
   n <- nrow(y)
   p <- ncol(y)
@@ -125,8 +125,8 @@ dmvt.ls <- function(y, mu, Sigma, lambda, nu){
 
 ## Densidade/CDF da Skew Normal Contaminada #######
 dmvSNC <- function(y, mu, Sigma, lambda, nu){
-  #y: deve ser uma matrix onde cada linha tem um vetor de dados multivariados de dimens„o ncol(y) = p. nrow(y) = tamanho da amostra
-  #mu, lambda: devem ser do tipo vetor de mesma dimens„o igual a ncol(y) = p
+  #y: deve ser uma matrix onde cada linha tem um vetor de dados multivariados de dimensao ncol(y) = p. nrow(y) = tamanho da amostra
+  #mu, lambda: devem ser do tipo vetor de mesma dimensao igual a ncol(y) = p
   #Sigma: Matrix p x p
   n <- nrow(y)
   p <- ncol(y)
@@ -136,8 +136,8 @@ dmvSNC <- function(y, mu, Sigma, lambda, nu){
 
 
 dmvSS <- function(y, mu, Sigma, lambda, nu){
-  #y: deve ser uma matrix onde cada linha tem um vetor de dados multivariados de dimens„o ncol(y) = p. nrow(y) = tamanho da amostra
-  #mu, lambda: devem ser do tipo vetor de mesma dimens„o igual a ncol(y) = p
+  #y: deve ser uma matrix onde cada linha tem um vetor de dados multivariados de dimensao ncol(y) = p. nrow(y) = tamanho da amostra
+  #mu, lambda: devem ser do tipo vetor de mesma dimensao igual a ncol(y) = p
   #Sigma: Matrix p x p
   if (is.matrix(y)) {
     n <- nrow(y)
@@ -166,11 +166,11 @@ dmvSS <- function(y, mu, Sigma, lambda, nu){
 
 ###########    Densidades das Misturas de SNI   ##################
   d.mixedmvSN <- function(y, pi1, mu, Sigma, lambda){
-    #y: È a matriz de dados
-    #pi1: deve ser do tipo vetor de dimens„o g
-    #mu: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimens„o p
+    #y: eh a matriz de dados
+    #pi1: deve ser do tipo vetor de dimensao g
+    #mu: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimensao p
     #Sigma: deve ser do tipo list com g entradas. Cada entrada do list deve ser uma matriz p x p
-    #lambda: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimens„o p
+    #lambda: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimensao p
     g <- length(pi1)
     dens <- 0
     for (j in 1:g) dens <- dens + pi1[j]*dmvSN(y, mu[[j]], Sigma[[j]], lambda[[j]])
@@ -178,12 +178,12 @@ dmvSS <- function(y, mu, Sigma, lambda, nu){
   }
 
   d.mixedmvST <- function(y, pi1, mu, Sigma, lambda, nu){
-    # y: È a matriz de dados
-    #pi1: deve ser do tipo vetor de dimens„o g
-    #mu: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimens„o p
+    # y: eh a matriz de dados
+    #pi1: deve ser do tipo vetor de dimensao g
+    #mu: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimensao p
     #Sigma: deve ser do tipo list com g entradas. Cada entrada do list deve ser uma matriz p x p
-    #lambda: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimens„o p
-    #nu: È um numero
+    #lambda: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimensao p
+    #nu: eh um numero
     g <- length(pi1)
     dens <- 0
     for (j in 1:g) dens <- dens + pi1[j]*dmvt.ls(y, mu[[j]], Sigma[[j]], lambda[[j]], nu)
@@ -191,12 +191,12 @@ dmvSS <- function(y, mu, Sigma, lambda, nu){
   }
 
   d.mixedmvSNC <- function(y, pi1, mu, Sigma, lambda, nu){
-    # y: È a matriz de dados
-    #pi1: deve ser do tipo vetor de dimens„o g
-    #mu: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimens„o p
+    # y: eh a matriz de dados
+    #pi1: deve ser do tipo vetor de dimensao g
+    #mu: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimensao p
     #Sigma: deve ser do tipo list com g entradas. Cada entrada do list deve ser uma matriz p x p
-    #lambda: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimens„o p
-    #nu: È um vetor de tamanho 2
+    #lambda: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimensao p
+    #nu: eh um vetor de tamanho 2
     g <- length(pi1)
     dens <- 0
     for (j in 1:g) dens <- dens + pi1[j]*dmvSNC(y, mu[[j]], Sigma[[j]], lambda[[j]], nu)
@@ -205,12 +205,12 @@ dmvSS <- function(y, mu, Sigma, lambda, nu){
 
 
   d.mixedmvSS <- function(y, pi1, mu, Sigma, lambda, nu){
-    # y: È a matriz de dados
-    #pi1: deve ser do tipo vetor de dimens„o g
-    #mu: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimens„o p
+    # y: eh a matriz de dados
+    #pi1: deve ser do tipo vetor de dimensao g
+    #mu: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimensao p
     #Sigma: deve ser do tipo list com g entradas. Cada entrada do list deve ser uma matriz p x p
-    #lambda: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimens„o p
-    #nu: È um vetor de tamanho 2
+    #lambda: deve ser do tipo list com g entradas. Cada entrada do list deve ser um vetor de dimensao p
+    #nu: eh um vetor de tamanho 2
     g <- length(pi1)
     dens <- 0
     for (j in 1:g) dens <- dens + pi1[j]*dmvSS(y, mu[[j]], Sigma[[j]], lambda[[j]], nu)

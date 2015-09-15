@@ -1,5 +1,5 @@
 #######################################################################
-######## Aplicação do Artigo MIX-SNI Classico - dados BMI  ############
+######## Aplicacao do Artigo MIX-SNI Classico - dados BMI  ############
 #######################################################################
 ##library(mvtnorm)
 matrix.sqrt <- function(A) {
@@ -39,7 +39,7 @@ im.smsn <- function(y, model){
     I.phi <- function(w=0, Ai=0, di=0, nu=0) as.numeric(((2^w*nu^(nu/2))/(sqrt(2*pi)*gamma(nu/2)))*(1/(di + Ai^2 + nu))^((nu + 2*w)/2)*gamma((nu + 2*w)/2))
 
     for (i in 1:n){
-      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      S <- c() # vetor com todas as derivadas em relacao a cada parametro desconhecido do modelo
       dPsi.dnu <- 0
       for (j in 1:g){
         yi <- matrix(y[i,], 1,1)
@@ -90,7 +90,7 @@ im.smsn <- function(y, model){
     I.phi <- function(w=0, Ai=0, di=0, nu=0) as.numeric(((2^w*nu^(nu/2))/(sqrt(2*pi)*gamma(nu/2)))*(1/(di + Ai^2 + nu))^((nu + 2*w)/2)*gamma((nu + 2*w)/2))
 
     for (i in 1:n){
-      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      S <- c() #vetor com todas as derivadas em relacao a cada parametro desconhecido do modelo
       dPsi.dnu <- 0
       for (j in 1:g){
         yi <- matrix(y[i,], 1,1)
@@ -144,7 +144,7 @@ im.smsn <- function(y, model){
     I.phi <- function(w=0, Ai=0, di=0, nu=0) as.numeric( nu[1]*nu[2]^(w - 0.5)*dnorm(sqrt(di + Ai^2), 0, sqrt(1/nu[2])) + (1 - nu[1])*dnorm(sqrt(di + Ai^2))   )
 
     for (i in 1:n){
-      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      S <- c() # vetor com todas as derivadas em relacao a cada parametro desconhecido do modelo
       dPsi.dnu1 <- dPsi.dnu2 <- 0
       for (j in 1:g){
         yi <- matrix(y[i,], 1,1)
@@ -206,7 +206,7 @@ im.smsn <- function(y, model){
     }
 
     for (i in 1:n){
-      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      S <- c() # vetor com todas as derivadas em relacao a cada parametro desconhecido do modelo
       dPsi.dnu <- 0
       for (j in 1:g){
         yi <- matrix(y[i,], 1,1)
@@ -258,7 +258,7 @@ im.smsn <- function(y, model){
     I.phi <- function(w=0, Ai=0, di=0, nu=0) as.numeric( exp(-di/2)*dnorm(Ai) )
     
     for (i in 1:n){
-      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      S <- c() # vetor com todas as derivadas em relacao a cada parametro desconhecido do modelo
       for (j in 1:g){
         yi <- matrix(y[i,], 1,1)
         Ai <- as.numeric(t(lambda[j])%*%solve(matrix.sqrt(Sigma[j]))%*%(y[i,] - mu[j]))
@@ -309,7 +309,7 @@ im.smsn <- function(y, model){
 
 
     for (i in 1:n){
-      S <- c() # vetor com todas as derivadas em relação a cada parâmetro desconhecido do modelo
+      S <- c() # vetor com todas as derivadas em relacao a cada parametro desconhecido do modelo
       for (j in 1:g){
         yi <- matrix(y[i,], 1,1)
         Ai <- as.numeric(t(lambda[j])%*%solve(matrix.sqrt(as.matrix(Sigma[j])))%*%(y[i,] - mu[j]))

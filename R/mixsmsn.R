@@ -1,21 +1,21 @@
 #####################################################################
-##########       Algorítmo EM para mistura            ###############
+##########       Algoritmo EM para mistura            ###############
 #                   alterado em 26/08/08                            #
 
 smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, g = NULL, get.init = TRUE, criteria = TRUE, group = FALSE, 
                      family = "Skew.normal", error = 0.00001, iter.max = 100, calc.im = TRUE, obs.prob= FALSE, kmeans.param = NULL){
-  #y: é o vetor de dados (amostra) de tamanho n
-  #mu, sigma2, shape, pii: são os valores iniciais para o algorítmo EM. Cada um deles deve ser um vetor de tamanho g
-  #                       (o algorítmo entende o número de componentes a ajustar baseado no tamanho desses vetores)
+  #y: eh o vetor de dados (amostra) de tamanho n
+  #mu, sigma2, shape, pii: sao os valores iniciais para o algoritmo EM. Cada um deles deve ser um vetor de tamanho g
+  #                       (o algoritmo entende o numero de componentes a ajustar baseado no tamanho desses vetores)
   #nu: valor inicial para o nu (no caso da SNC deve ser um vetor bidimensional com valores entre 0 e 1)
-  #loglik: TRUE ou FALSE - Caso queira que seja calculada a log-verossimilhança do modelo ajustado
-  #cluster: TRUE ou FALSE - Caso queira um vetor de tamanho n indicando a qual componente a í-esima observação pertence
+  #loglik: TRUE ou FALSE - Caso queira que seja calculada a log-verossimilhanca do modelo ajustado
+  #cluster: TRUE ou FALSE - Caso queira um vetor de tamanho n indicando a qual componente a i-esima observacao pertence
   #type: c("ST","SNC","SS","SN","Normal") - ST: Ajusta por misturas de Skew-T
   #                                       - SNC: Ajusta por misturas de Skew Normal Contaminada
-  #                                       - SS: Ajusta por misturas de Skew-Slash (ATENÇÃO: AINDA COM PROBLEMAS)
+  #                                       - SS: Ajusta por misturas de Skew-Slash (ATENCAO: AINDA COM PROBLEMAS)
   #                                       - SN: Ajusta por misturas de Skew Normal
   #                                       - Normal: Misturas de Normais
-  #error: define o critério de parada do algorítmo.
+  #error: define o criterio de parada do algoritmo.
   if(ncol(as.matrix(y)) > 1) stop("This function is only for univariate response y!") 
   if((family != "t") && (family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.\n",sep=" "))
   if((length(g) == 0) && ((length(mu)==0) || (length(sigma2)==0) || (length(shape)==0) || (length(pii)==0)))  stop("The model is not specified correctly.\n")
@@ -116,7 +116,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           shape[j] <- 0
 
         }
-        #aqui começam as alterações para estimar o valor de nu
+        #aqui comecam as alteracoes para estimar o valor de nu
         logvero.ST <- function(nu) sum(log(d.mixedST(y, pii, mu, sigma2, shape, nu)))
         nu <- optimize(logvero.ST, c(0,100), tol = 0.000001, maximum = TRUE)$maximum
         lk1 <- sum(log( d.mixedST(y, pii, mu, sigma2, shape, nu) ))
@@ -212,7 +212,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
 
         }
-        #aqui começam as alterações para estimar o valor de nu
+        #aqui comecam as alteracoes para estimar o valor de nu
         logvero.ST <- function(nu) sum(log(d.mixedST(y, pii, mu, sigma2, shape, nu)))
         nu <- optimize(logvero.ST, c(0,100), tol = 0.000001, maximum = TRUE)$maximum
         lk1 <- sum(log( d.mixedST(y, pii, mu, sigma2, shape, nu) ))
@@ -312,7 +312,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
         }
 
-        #aqui começam as alterações para estimar o valor de nu
+        #aqui comecam as alteracoes para estimar o valor de nu
         logvero.SNC <- function(nu) sum(log( d.mixedSNC(y, pii, mu, sigma2, shape, nu) ))
         nu <- optim(nu.old, logvero.SNC, control = list(fnscale = -1), method = "L-BFGS-B", lower = rep(0.01, 2), upper = rep(0.99,2))$par
 
@@ -421,7 +421,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           sigma2[j] <- Gama[j] + Delta[j]^2
           shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
         }
-        #aqui começam as alterações para estimar o valor de nu
+        #aqui comecam as alteracoes para estimar o valor de nu
         logvero.SS <- function(nu) sum(log( d.mixedSS(y, pii, mu, sigma2, shape, nu) ))
         nu <- optimize(logvero.SS, c(0,100), tol = 0.000001, maximum = TRUE)$maximum
         lk1 <- sum(log( d.mixedSS(y, pii, mu, sigma2, shape, nu) ))
@@ -686,6 +686,6 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
 }
 
 
-##########     FIM DO ALGORÍTMO EM PARA MISTURAS      ###############
+##########     FIM DO ALGORITMO EM PARA MISTURAS      ###############
 #####################################################################
 
