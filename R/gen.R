@@ -2,7 +2,7 @@
 ##########     Funcoes para gerar SNI e mistura       ############
 
 
-  rmix <- function(n, pii, family, arg) {
+  rmix <- function(n, pii, family, arg, cluster=FALSE) {
     #Funcao para gerar misturas de g populacoes
     #n: numero de amostras geradas
     #p: vetor de proporcoes das misturas (tamanho g)
@@ -29,15 +29,19 @@
                                 }
 
     x1 <- vector(mode = "numeric", length = n)
+    clu <- vector(mode = "numeric", length = n)
     g <- length(pii)
     interval <- c(0)
     for (j in 1:g-1) interval <- cbind(interval, interval[j] + pii[j])
     interval <- cbind(interval, 1)
     for(i in 1:n) {
       u <- runif(1)
-      x1[i] <- do.call("rF1", c(list(1), arg[[findInterval(u, interval)]]))
+      clu[i] <- findInterval(u, interval)
+      x1[i] <- do.call("rF1", c(list(1), arg[[clu[i]]]))
+      
     }
-    return(x1)
+    if(cluster) return(list(y=x1, cluster=clu))
+    else return(x1)
   }
 
 
@@ -84,7 +88,7 @@
 ################################################################
 ##########      Funcoes para numeros aleatorios     ############
 
-  rmmix <- function(n, pii, family, arg) {
+  rmmix <- function(n, pii, family, arg, cluster=FALSE) {
   ##require(mvtnorm)
     #Funcao para gerar misturas de g populacoes
     #n: numero de amostras geradas
@@ -118,15 +122,18 @@
                                 }
 
     x1 <- matrix(data = NA, ncol = length(arg[[1]]$mu),nrow = n)
+    clu <- vector(mode = "numeric", length = n)
     g <- length(pii)
     interval <- c(0)
     for (j in 1:g-1) interval <- cbind(interval, interval[j] + pii[j])
     interval <- cbind(interval, 1)
     for(i in 1:n) {
       u <- runif(1)
+      clu[i] <- findInterval(u, interval)
       x1[i,] <- do.call("rF1", c(list(1), arg[[findInterval(u, interval)]]))
     }
-    return(x1)
+    if(cluster) return(list(y=x1, cluster=clu))
+    else return(x1)
   }
 
   gen.SN.multi <- function(n, mu, Sigma, shape, nu=NULL){

@@ -1,8 +1,8 @@
-def78fb1199dff60a06e818952ec3abd *ChangeLog
-4deb49d0d070c340af7b8450ddc00a37 *DESCRIPTION
+1df8d24292c559e18bff784fcde5f750 *ChangeLog
+91218fba250c5f6437ad5a3ed7675a3c *DESCRIPTION
 6f679f13df426b596b7e6d32ac4424e7 *NAMESPACE
 16c8096add41d2e30b59075182566721 *R/dens.R
-93952383a8bdc0ca03c2aaeaa8d59a45 *R/gen.R
+f9743fa6056701eef3ec353bacc6d163 *R/gen.R
 bb4bd499ba6dab7229bc3f4b7bd8c094 *R/mix.dens.R
 0a0093b6b78b2b40dba564987bbc1066 *R/mix.hist.R
 5cd58f588fc98ff68fb3d220a0e9ff65 *R/mix.print.R
@@ -22,8 +22,8 @@ d5c5dbd12006ee7b13859b3d31876891 *man/faithful.Rd
 2eed00158e4ac7cb18965c9a967f2e7d *man/mix.hist.Rd
 730254f417da26757e90a73b8354f83f *man/mix.lines.Rd
 f20489b8fd8c50631dee1d1e6168606d *man/mix.print.Rd
-3e151014aa00251fe25a84324a94ccaa *man/rmix.Rd
-a87a5e08305724cbbf7c5db69355f65f *man/rmmix.Rd
+1663f165b2ff0ff0dda7fea288b39600 *man/rmix.Rd
+6cce3a298af9903f5925f2f5f7f34667 *man/rmmix.Rd
 34478835ac783e3b1805286c4181bd8d *man/smsn.mix.Rd
 3717fc061695ae71e2aa2e683e7f1d16 *man/smsn.mmix.Rd
 dd4c16fb62c563b132b9497812ed2b93 *man/smsn.search.Rd

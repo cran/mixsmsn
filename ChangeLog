@@ -1,3 +1,7 @@
+2015-14-11 (1.1-1) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+  *included cluster indentification in the rmix and rmmix functions
+
 2015-14-09 (1.1-0) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
   *fixed rmix for the "Skew.cn" family
