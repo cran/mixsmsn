@@ -1,5 +1,5 @@
-1df8d24292c559e18bff784fcde5f750 *ChangeLog
-91218fba250c5f6437ad5a3ed7675a3c *DESCRIPTION
+d1b6f3c9124ded4c6df087eda8a3aced *ChangeLog
+eefa14e811e46cf553b6dca20c8a82e0 *DESCRIPTION
 6f679f13df426b596b7e6d32ac4424e7 *NAMESPACE
 16c8096add41d2e30b59075182566721 *R/dens.R
 f9743fa6056701eef3ec353bacc6d163 *R/gen.R
@@ -9,7 +9,7 @@ bb4bd499ba6dab7229bc3f4b7bd8c094 *R/mix.dens.R
 3cde12054958ee90420b497d947865d2 *R/mixsmsn.R
 2f6c74447845f9cf14032bf7b8a5dac9 *R/smsn.mmix.R
 82eba58c8d84f95d6f5a2d160028afb1 *R/utils.R
-193de53df93e0c984d9b8f90e573209a *R/utils.multi.R
+a55abca688c0530c41e62aa60ce9f3cc *R/utils.multi.R
 32e0693a663a846acb32afa68dc57525 *data/bmi.txt.gz
 27a186d18394d53c8cdcb46f9a44a8b6 *data/faithful.txt.gz
 f54270bb092a9b095a967ae4353b7617 *inst/CITATION

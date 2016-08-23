@@ -267,12 +267,12 @@ imm.smsn <- function(y, model){
         }
        NAME <- c(NAME,muN,shapeN,SigmaN)
     }
-    
-    for(i in 1:(g-1)){
-       piiN <- c(piiN, paste("pii",i,sep=""))
+    if( g==1) NAME <- c(NAME,"nu")
+    else{    
+       for(i in 1:(g-1)) piiN <- c(piiN, paste("pii",i,sep=""))
        NAME <- c(NAME,piiN,"nu")
     }
-    if( g==1) NAME <- c(NAME,"nu")
+
     dimnames(soma)[[1]] <- NAME
     dimnames(soma)[[2]] <- NAME   
 
@@ -296,7 +296,6 @@ imm.smsn <- function(y, model){
         Ai <- as.numeric(t(lambda[[j]])%*%Dr.inv%*%(y[i,] - mu[[j]]))
         di <- as.numeric(mahalanobis(yi, mu[[j]], Sigma[[j]]))
         
-        #derivadinhas
         dir.dmu <- -2*(Dr.inv%*%Dr.inv)%*%(y[i,] - mu[[j]])
         dAir.dmu <- -Dr.inv%*%lambda[[j]]
         dAir.dlambda <- Dr.inv%*%(y[i,] - mu[[j]])
@@ -366,11 +365,11 @@ imm.smsn <- function(y, model){
        NAME <- c(NAME,muN,shapeN,SigmaN)
     }
     
-    for(i in 1:(g-1)){
-       piiN <- c(piiN, paste("pii",i,sep=""))
-       NAME <- c(NAME,piiN,"nu")
-    }
     if( g==1) NAME <- c(NAME,"nu")
+    else{
+       for(i in 1:(g-1)) piiN <- c(piiN, paste("pii",i,sep=""))
+       NAME <- c(NAME,piiN,"nu") 
+    }
     dimnames(soma)[[1]] <- NAME
     dimnames(soma)[[2]] <- NAME   
 
@@ -463,12 +462,13 @@ imm.smsn <- function(y, model){
         }
        NAME <- c(NAME,muN,shapeN,SigmaN)
     }
-    
-    if ( g>1){
-      for(i in 1:(g-1)) piiN <- c(piiN, paste("pii",i,sep=""))
-       NAME <- c(NAME,piiN,"nu1","nu2")
-    }
+
     if( g==1) NAME <- c(NAME,"nu1","nu2")
+    else{
+      for(i in 1:(g-1)) piiN <- c(piiN, paste("pii",i,sep=""))
+      NAME <- c(NAME,piiN,"nu1","nu2")
+    }
+
     dimnames(soma)[[1]] <- NAME
     dimnames(soma)[[2]] <- NAME   
 
@@ -577,12 +577,13 @@ imm.smsn <- function(y, model){
         }
        NAME <- c(NAME,muN,shapeN,SigmaN)
     }
-    
-    if( g > 1){
+
+    if( g==1) NAME <- c(NAME,"nu")    
+    else{
        for(i in 1:(g-1)) piiN <- c(piiN, paste("pii",i,sep=""))
        NAME <- c(NAME,piiN,"nu")
     }
-    if( g==1) NAME <- c(NAME,"nu")
+
     dimnames(soma)[[1]] <- NAME
     dimnames(soma)[[2]] <- NAME   
   }

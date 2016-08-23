@@ -1,3 +1,7 @@
+2016-20-08 (1.1-2) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+  *fixed bug with dimension on the matrix names
+
 2015-14-11 (1.1-1) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
   *included cluster indentification in the rmix and rmmix functions
