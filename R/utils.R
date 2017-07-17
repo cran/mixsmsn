@@ -341,7 +341,7 @@ im.smsn <- function(y, model){
       soma <- soma + S%*%t(S)
 ##      soma2 <- soma2 + S
       }
-      for (i in 1:g) nam.gr <- c(nam.gr,paste("mu",i,sep=""),paste("sigma",i,,sep=""),paste("p",i,sep=""))
+      for (i in 1:g) nam.gr <- c(nam.gr,paste("mu",i,sep=""),paste("sigma",i,sep=""),paste("p",i,sep=""))
       nam.gr <- nam.gr[-length(nam.gr)]
 
   }
@@ -357,7 +357,7 @@ im.smsn <- function(y, model){
 
 #####################################################################
 #########         Procura o melhor fitting         ###############
-smsn.search <- function(y, nu, g.min = 1, g.max = 3, family = "Skew.normal", criteria = "bic", error = 0.0001, iter.max = 100, calc.im = FALSE, uni.Gama = FALSE, kmeans.param = NULL)
+smsn.search <- function(y, nu, g.min = 1, g.max = 3, family = "Skew.normal", criteria = "bic", error = 0.0001, iter.max = 100, calc.im = FALSE, uni.Gama = FALSE, kmeans.param = NULL, ...)
 {
  y <- as.matrix(y)
  if( g.min > g.max) stop("The number g.min should be less than g.max.\n")
@@ -378,13 +378,13 @@ crit <- rep(0,length(g))
 
 if(ncol(y) == 1){
   for(i in 1:length(g)){
-     output[[g.size[i]]] <- smsn.mix(y=y, nu=nu, g = g[i], get.init = TRUE, criteria = TRUE, group = TRUE, family = family, error = error, iter.max = iter.max, calc.im = calc.im, kmeans.param)
+     output[[g.size[i]]] <- smsn.mix(y=y, nu=nu, g = g[i], get.init = TRUE, criteria = TRUE, group = TRUE, family = family, error = error, iter.max = iter.max, calc.im = calc.im, kmeans.param, ...)
      crit[i] <- output[[g.size[i]]][[criteria]]
   }
 }
 else{
     for(i in 1:length(g)){
-       output[[g.size[i]]] <- smsn.mmix(y=y, nu=nu, g = g[i], get.init = TRUE, criteria = TRUE, group = TRUE, family = family, error = error, iter.max = iter.max, uni.Gama = uni.Gama, calc.im = calc.im, kmeans.param)
+       output[[g.size[i]]] <- smsn.mmix(y=y, nu=nu, g = g[i], get.init = TRUE, criteria = TRUE, group = TRUE, family = family, error = error, iter.max = iter.max, uni.Gama = uni.Gama, calc.im = calc.im, kmeans.param, ...)
        crit[i] <- output[[g.size[i]]][[criteria]]
     }
 }
