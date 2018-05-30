@@ -28,8 +28,16 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
   if((length(g)!= 0) && (g < 1)) stop("g must be greater than 0.\n")
 
   if (get.init == TRUE){
+    key.mu <- key.sig <- key.shp <- TRUE
+     
     if(length(g) == 0) stop("g is not specified correctly.\n")
 
+    if(length(mu) > 0) key.mu <- FALSE
+    if(length(sigma2) > 0) key.sig <- FALSE
+    if(length(shape) > 0) key.shp <- FALSE
+    
+    if(((!key.mu) & (length(mu) != g)) | ((!key.sig) & (length(sigma2) != g)) | ((!key.shp) & (length(shape) != g))) stop("The size of the initial values are not compatibles.\n")
+    
     k.iter.max <- 50
     n.start <- 1
     algorithm <- "Hartigan-Wong"
@@ -40,22 +48,29 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
     }
 
     if(g > 1){
-      init <- kmeans(y,g,k.iter.max,n.start,algorithm)
+      
+      if(key.mu) init <- kmeans(y,g,k.iter.max,n.start,algorithm)
+      else init <- kmeans(y,mu,k.iter.max,n.start,algorithm)
+      
       pii <- init$size/length(y)
-      mu <- as.vector(init$centers)
-      sigma2 <- init$withinss/init$size
-      shape <- c()
-      for (j in 1:g){
-        m3 <- (1/init$size[j])*sum( (y[init$cluster == j] - mu[j])^3 )
-        shape[j] <- sign(m3/sigma2[j]^(3/2))
+      if(key.mu) mu <- as.vector(init$centers)
+      if(key.sig) sigma2 <- init$withinss/init$size
+      if(key.shp){
+        shape <- c()
+        for (j in 1:g){
+          m3 <- (1/init$size[j])*sum( (y[init$cluster == j] - mu[j])^3 )
+          shape[j] <- sign(m3/sigma2[j]^(3/2))
+        }
       }
     }
    else{
-     mu <- mean(y)
-     sigma2 <- var(y)
+     if(key.mu) mu <- mean(y)
+     if(key.sig)sigma2 <- var(y)
      pii <- 1
-     m3 <- (1/length(y))*sum( (y - mu)^3 )
-     shape <- sign(m3/sigma2^(3/2))
+     if(key.shp){
+       m3 <- (1/length(y))*sum( (y - mu)^3 )
+       shape <- sign(m3/sigma2^(3/2))
+     }
    }
   }
 

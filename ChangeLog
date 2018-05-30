@@ -1,3 +1,7 @@
+2018-30-05 (1.1-4) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+  *allow for partial inital values in the algorithm
+
 2017-17-07 (1.1-4) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
   *fix a bug in the im calculation for the normal distribution

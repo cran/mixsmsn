@@ -31,8 +31,16 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
   n <- nrow(y)
 
   if (get.init == TRUE){
+    key.mu <- key.sig <- key.shp <- TRUE
+    
     if(length(g) == 0) stop("g is not specified correctly.\n")
-
+    
+    if(length(mu) > 0) key.mu <- FALSE
+    if(length(Sigma) > 0) key.sig <- FALSE
+    if(length(shape) > 0) key.shp <- FALSE
+    
+    if(((!key.mu) & (length(mu) != g)) | ((!key.sig) & (length(Sigma) != g)) | ((!key.shp) & (length(shape) != g))) stop("The size of the initial values are not compatibles.\n")
+    
     k.iter.max <- 50
     n.start <- 1
     algorithm <- "Hartigan-Wong"
@@ -43,14 +51,16 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
     }
    
     if(g > 1){
-      init <- kmeans(y,g,k.iter.max,n.start,algorithm)
+      
+      if(key.mu) init <- kmeans(y,g,k.iter.max,n.start,algorithm)
+      else init <- kmeans(y,mu,k.iter.max,n.start,algorithm)
+      
       pii <- init$size/length(y)
       mu <- shape <- Sigma <- list()
       for (j in 1:g){
-        mu[[j]] <- init$centers[j,]
-        shape[[j]] <- sign( apply( (y[init$cluster == j, ] - matrix(rep(mu[[j]], nrow(y[init$cluster == j, ])), 
-                      nrow = nrow(y[init$cluster == j, ]), ncol=p, byrow = TRUE))^3, 2, sum))
-        Sigma[[j]] <- var(y[init$cluster == j,])
+        if(key.mu) mu[[j]] <- init$centers[j,]
+        if(key.shp) shape[[j]] <- sign( apply( (y[init$cluster == j, ] - matrix(rep(mu[[j]], nrow(y[init$cluster == j, ])), nrow = nrow(y[init$cluster == j, ]), ncol=p, byrow = TRUE))^3, 2, sum))
+        if(key.sig) Sigma[[j]] <- var(y[init$cluster == j,])
         dimnames(Sigma[[j]]) <- NULL
         names(mu[[j]]) <- NULL
         names(shape[[j]]) <- NULL
@@ -59,9 +69,9 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
     
     else{
       pii <- 1
-      mu[[1]] <- colMeans(y)
-      Sigma[[1]] <- var(y)
-      shape[[1]] <- sign( apply( (y - matrix(rep(mu[[1]], nrow(y)), nrow(y), p, byrow = TRUE) )^3, 2, sum ))
+      if(key.mu) mu[[1]] <- colMeans(y)
+      if(key.sig) Sigma[[1]] <- var(y)
+      if(key.shp) shape[[1]] <- sign( apply( (y - matrix(rep(mu[[1]], nrow(y)), nrow(y), p, byrow = TRUE) )^3, 2, sum ))
       dimnames(Sigma[[1]]) <- NULL
       names(mu[[1]]) <- NULL
       names(shape[[1]]) <- NULL
