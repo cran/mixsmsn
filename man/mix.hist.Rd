@@ -5,13 +5,16 @@
 Plot the histogram along with the estimated density (univariate case, p=1).
 }
 \usage{
-mix.hist(y, model, breaks, ...)
+mix.hist(y, model, breaks, main, col.hist, col.dens, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{y}{ the response vector }
   \item{model}{ a variable returned by \code{\link{smsn.mix}} }
   \item{breaks}{ the same option in \cite{\link{histogram}} }
+  \item{main}{ the same option in \cite{\link{histogram}} }
+  \item{col.hist}{ change the color of the histogram bars }
+  \item{col.dens}{ change the color of the density curve }
   \item{...}{further arguments to \code{\link{hist}}}
 }
 
