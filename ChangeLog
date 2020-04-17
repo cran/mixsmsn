@@ -1,4 +1,8 @@
-2019-20-10 (1.1-5) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+2020-17-14 (1.1-7) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+  * fix rmmix generation
+
+2019-20-10 (1.1-6) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
   *improved the hist.mix function
 

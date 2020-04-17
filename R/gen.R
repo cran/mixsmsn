@@ -138,7 +138,7 @@
 
   gen.SN.multi <- function(n, mu, Sigma, shape, nu=NULL){
     p <- length(mu)
-    delta <- shape / (sqrt(1 + t(shape)%*%shape))
+    delta <- shape / (sqrt(1 + c(t(shape)%*%shape)))
     y <- matrix(0,n,p)
     for (i in 1:n) y[i,] <- mu + matrix.sqrt(Sigma)%*%(delta*abs(rnorm(1)) + matrix.sqrt(diag(p) - delta%*%t(delta))%*%as.vector(rmvnorm(1, mean = rep(0,p), sigma = diag(p))))
     return(y)
