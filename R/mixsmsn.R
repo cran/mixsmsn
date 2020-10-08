@@ -17,7 +17,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
   #                                       - Normal: Misturas de Normais
   #error: define o criterio de parada do algoritmo.
   if(ncol(as.matrix(y)) > 1) stop("This function is only for univariate response y!") 
-  if((family != "t") && (family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.\n",sep=" "))
+  if((family != "t") && (family != "slash") && (family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.\n",sep=" "))
   if((length(g) == 0) && ((length(mu)==0) || (length(sigma2)==0) || (length(shape)==0) || (length(pii)==0)))  stop("The model is not specified correctly.\n")
   if(get.init == FALSE){
        g <- length(mu)
@@ -134,7 +134,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         #aqui comecam as alteracoes para estimar o valor de nu
         logvero.ST <- function(nu) sum(log(d.mixedST(y, pii, mu, sigma2, shape, nu)))
         nu <- optimize(logvero.ST, c(0,100), tol = 0.000001, maximum = TRUE)$maximum
-        lk1 <- sum(log( d.mixedST(y, pii, mu, sigma2, shape, nu) ))
+        
         pii[g] <- 1 - (sum(pii) - pii[g])
 
         zero.pos <- NULL
@@ -143,9 +143,10 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           pii[zero.pos] <- 1e-10
           pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
         }
-
+      
         param <- teta
         teta <- c(mu, Delta, Gama, pii, nu)
+        lk1 <- sum(log( d.mixedST(y, pii, mu, sigma2, shape, nu) ))
         #criterio <- sqrt((teta-param)%*%(teta-param))
         criterio <- abs(lk1/lk-1)
 
@@ -230,7 +231,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         #aqui comecam as alteracoes para estimar o valor de nu
         logvero.ST <- function(nu) sum(log(d.mixedST(y, pii, mu, sigma2, shape, nu)))
         nu <- optimize(logvero.ST, c(0,100), tol = 0.000001, maximum = TRUE)$maximum
-        lk1 <- sum(log( d.mixedST(y, pii, mu, sigma2, shape, nu) ))
+        
         pii[g] <- 1 - (sum(pii) - pii[g])
 
         zero.pos <- NULL
@@ -240,8 +241,9 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
         }
 
-        param <- teta
+	param <- teta
         teta <- c(mu, Delta, Gama, pii, nu)
+        lk1 <- sum(log( d.mixedST(y, pii, mu, sigma2, shape, nu) ))
         #criterio <- sqrt((teta-param)%*%(teta-param))
         criterio <- abs(lk1/lk-1)
 
@@ -439,7 +441,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
         #aqui comecam as alteracoes para estimar o valor de nu
         logvero.SS <- function(nu) sum(log( d.mixedSS(y, pii, mu, sigma2, shape, nu) ))
         nu <- optimize(logvero.SS, c(0,100), tol = 0.000001, maximum = TRUE)$maximum
-        lk1 <- sum(log( d.mixedSS(y, pii, mu, sigma2, shape, nu) ))
+
         pii[g] <- 1 - (sum(pii) - pii[g])
 
         zero.pos <- NULL
@@ -451,6 +453,119 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
 
         param <- teta
         teta <- c(mu, Delta, Gama, pii, nu)
+        lk1 <- sum(log( d.mixedSS(y, pii, mu, sigma2, shape, nu) ))        
+        #teta <- c(mu, Delta, Gama, pii)
+        #criterio <- sqrt((teta-param)%*%(teta-param))
+        criterio<-abs(lk1/lk-1)
+
+        mu.old <- mu
+        Delta.old <- Delta
+        Gama.old <- Gama
+        lk<-lk1
+        #print(criterio)
+      }
+
+    if (criteria == TRUE){
+       cl <- apply(tal, 1, which.max)
+       icl <- 0
+       for (j in 1:g) icl <- icl+sum(log(pii[j]*dSS(y[cl==j], mu[j], sigma2[j], shape[j], nu)))
+       #icl <- -2*icl+4*g*log(n)
+    }
+      
+      #### grafico ajuste
+      ##hist(y, breaks = 40,probability=T,col="grey")
+      ##xx=seq(min(y),max(y),(max(y)-min(y))/1000)
+      ##lines(xx,d.mixedSS(xx, pii, mu, sigma2, shape, nu),col="red")
+      ######################
+      
+  }
+
+  if (family == "slash"){
+      cat("\nThe Slash can take a long time to run.\n")
+      shape <- rep(0,g)
+      lk <- sum(log( d.mixedSS(y, pii, mu, sigma2, shape, nu) ))
+      n <- length(y)
+      delta <- Delta <- Gama <- rep(0,g)
+      for (k in 1:g){
+        delta[k] <- 0 #shape[k] / (sqrt(1 + shape[k]^2))
+        Delta[k] <- 0 #sqrt(sigma2[k])*delta[k]
+        Gama[k] <- sigma2[k] - Delta[k]^2
+      }
+
+      teta <- c(mu, Delta, Gama, pii, nu)
+      #teta <- c(mu, Delta, Gama, pii)
+      mu.old <- mu
+      Delta.old <- Delta
+      Gama.old <- Gama
+
+      criterio <- 1
+      count <- 0
+
+      while((criterio > error) && (count <= iter.max)){
+        count <- count + 1
+ ##       print(count)
+        tal <- matrix(0, n, g)
+        S1 <- matrix(0, n, g)
+        S2 <- matrix(0, n, g)
+        S3 <- matrix(0, n, g)
+        for (j in 1:g){
+          u <- vector(mode="numeric",length=n)
+          E <- vector(mode="numeric",length=n)
+
+          ### E-step: calculando ui, tui, tui2 ###
+          dj <- ((y - mu[j])/sqrt(sigma2[j]))^2
+          Mtij2 <- 1/(1 + (Delta[j]^2)*(Gama[j]^(-1)))
+          Mtij <- sqrt(Mtij2)
+          mutij <- Mtij2*Delta[j]*(Gama[j]^(-1))*(y - mu[j])
+          A <- mutij / Mtij
+
+          for(i in 1:n){
+            #U <- runif(2500)
+            #V <- pgamma(1,(2*nu + 3)/2, dj[i]/2)*U
+            #S <- qgamma(V,(2*nu + 3)/2, dj[i]/2)
+            #u[i] <- ( ((2^(nu + 2))*nu*gamma((2*nu + 3)/2)) / (dSS(y[i], mu[j], sigma2[j], shape[j], nu)*sqrt(pi)*sqrt(sigma2[j]))) * pgamma(1,(2*nu + 3)/2,dj[i]/2)*(dj[i]^(-(2*nu + 3)/2))*mean(pnorm(S^(1/2)*A[i]))
+            E[i] <- (((2^(nu + 1))*nu*gamma(nu + 1))/(dSS(y[i], mu[j], sigma2[j], shape[j], nu)*pi*sqrt(sigma2[j])))* ((dj[i]+A[i]^2)^(-nu-1))*pgamma(1,nu+1,(dj[i]+A[i]^2)/2)
+            faux <- function(u) u^(nu+0.5)*exp(-u*dj[i]/2)*pnorm(u^(1/2)*A[i])
+            aux22 <- integrate(faux,0,1)$value
+            u[i] <- ((sqrt(2)*nu) / (dSS(y[i], mu[j], sigma2[j], shape[j], nu)*sqrt(pi)*sqrt(sigma2[j])))*aux22  
+          }
+          #E <- (((2^(nu + 1))*nu*gamma(nu + 1))/(dSS(y, mu[j], sigma2[j], shape[j], nu)*pi*sqrt(sigma2[j])))*((dj+A^2)^(-nu-1))*pgamma(1,nu+1,(dj+A^2)/2)
+          d1 <- dSS(y, mu[j], sigma2[j], shape[j], nu)
+          if(length(which(d1 == 0)) > 0) d1[which(d1 == 0)] <- .Machine$double.xmin
+          d2 <- d.mixedSS(y, pii, mu, sigma2, shape, nu)
+          if(length(which(d2 == 0)) > 0) d2[which(d2 == 0)] <- .Machine$double.xmin
+
+          tal[,j] <- d1*pii[j] / d2
+
+          S1[,j] <- tal[,j]*u
+          S2[,j] <- tal[,j]*(mutij*u + Mtij*E)
+          S3[,j] <- tal[,j]*(mutij^2*u + Mtij2 + Mtij*mutij*E)
+
+
+          ### M-step: atualizar mu, Delta, Gama, sigma2 ###
+          pii[j] <- (1/n)*sum(tal[,j])
+          mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
+          Delta[j] <- 0
+          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])
+          sigma2[j] <- Gama[j] + Delta[j]^2
+          shape[j] <- 0
+        }
+        #aqui comecam as alteracoes para estimar o valor de nu
+        logvero.SS <- function(nu) sum(log( d.mixedSS(y, pii, mu, sigma2, shape, nu) ))
+        nu <- optimize(logvero.SS, c(0,100), tol = 0.000001, maximum = TRUE)$maximum
+
+        pii[g] <- 1 - (sum(pii) - pii[g])
+
+        zero.pos <- NULL
+        zero.pos <- which(pii == 0)
+        if(length(zero.pos) != 0){
+          pii[zero.pos] <- 1e-10
+          pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
+        }
+
+        param <- teta
+        teta <- c(mu, Delta, Gama, pii, nu)
+        lk1 <- sum(log( d.mixedSS(y, pii, mu, sigma2, shape, nu) ))        
         #teta <- c(mu, Delta, Gama, pii)
         #criterio <- sqrt((teta-param)%*%(teta-param))
         criterio<-abs(lk1/lk-1)
@@ -662,10 +777,15 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
 
   }
 
+if((family != "t") && (family != "slash") && (family != "Skew.t") && (family != "Skew.cn") && (family != "Skew.slash") && (family != "Skew.normal") && (family != "Normal")) stop(paste("Family",family,"not recognized.\n",sep=" "))
 
   if (criteria == TRUE){       
-    if((family == "t") | (family == "Normal")) d <- g*2 + (g-1) #mu + Sigma + pi
-    else d <- g*3 + (g-1) #mu + Sigma + pi
+    if((family == "t") | (family == "Normal") | (family == "slash")) d <- g*2 + (g-1) #mu + Sigma + pi
+    else d <- g*3 + (g-1) #mu + Sigma + shape + pi
+    
+    if((family == "t") | (family == "slash") | (family == "Skew.t") | (family == "Skew.slash")) d <- d+1 # add nu
+    if((family == "Skew.cn")) d <- d+2 # add nu
+    
     aic <- -2*lk + 2*d
     bic <- -2*lk + log(n)*d
     edc <- -2*lk + 0.2*sqrt(n)*d
