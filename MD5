@@ -1,12 +1,12 @@
-c05cb8b9b11b9cbd6a0451fbac4c65d3 *ChangeLog
-7c535ac62b175b23bc53429a5a9448c1 *DESCRIPTION
+fb1daf99a5e98e17036efe8f1bb9d5cc *ChangeLog
+26acdfa475621719234d24acb3318dd9 *DESCRIPTION
 6f679f13df426b596b7e6d32ac4424e7 *NAMESPACE
 16c8096add41d2e30b59075182566721 *R/dens.R
 faec946a7355e04ee9187000230a1b38 *R/gen.R
 bb4bd499ba6dab7229bc3f4b7bd8c094 *R/mix.dens.R
 07ef66d962e1c1e5e799ace16b187a22 *R/mix.hist.R
 5cd58f588fc98ff68fb3d220a0e9ff65 *R/mix.print.R
-49438d48069f69c7b276fb852f29bb13 *R/mixsmsn.R
+be17a9ab46f1bf3a5a919a7ef0ba01ca *R/mixsmsn.R
 59c8d7e00474809fc2fd196340600b1d *R/smsn.mmix.R
 fc42dd3870b6da6af6577b2a33256641 *R/utils.R
 a55abca688c0530c41e62aa60ce9f3cc *R/utils.multi.R

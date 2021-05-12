@@ -54,7 +54,10 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
       
       pii <- init$size/length(y)
       if(key.mu) mu <- as.vector(init$centers)
-      if(key.sig) sigma2 <- init$withinss/init$size
+      if(key.sig){
+       sigma2 <- init$withinss/init$size
+       sigma2[sigma2 == 0] <- 1e-10
+      }
       if(key.shp){
         shape <- c()
         for (j in 1:g){
@@ -95,7 +98,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
 
       while((criterio > error) && (count <= iter.max)){
         count <- count + 1
- ##       print(count)
+        ## print(count)
         tal <- matrix(0, n, g)
         S1 <- matrix(0, n, g)
         S2 <- matrix(0, n, g)
@@ -108,9 +111,14 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           mutij <- Mtij2*Delta[j]*(Gama[j]^(-1))*(y - mu[j])
           A <- mutij / Mtij
 
-          E=(2*(nu)^(nu/2)*gamma((2+nu)/2)*((dj + nu + A^2))^(-(2+nu)/2)) / (gamma(nu/2)*pi*sqrt(sigma2[j])*dt.ls(y, mu[j], sigma2[j],shape[j] ,nu))
-          u= ((4*(nu)^(nu/2)*gamma((3+nu)/2)*(dj + nu)^(-(nu+3)/2)) / (gamma(nu/2)*sqrt(pi)*sqrt(sigma2[j])*dt.ls(y, mu[j], sigma2[j],shape[j] ,nu)) )*pt(sqrt((3+nu)/(dj+nu))*A,3+nu)
-
+          d.vec <- dt.ls(y, mu[j], sigma2[j],shape[j] ,nu)
+          if(length(which(d.vec < 1e-10)) > 0) d.vec[which(d.vec < 1e-10)] <- 1e-10
+          
+          #E=(2*(nu)^(nu/2)*gamma((2+nu)/2)*((dj + nu + A^2))^(-(2+nu)/2)) / (gamma(nu/2)*pi*sqrt(sigma2[j])*d.vec)
+          #u= ((4*(nu)^(nu/2)*gamma((3+nu)/2)*(dj + nu)^(-(nu+3)/2)) / (gamma(nu/2)*sqrt(pi)*sqrt(sigma2[j])*d.vec))*pt(sqrt((3+nu)/(dj+nu))*A,3+nu)
+          E = exp(log(2) + nu/2*log(nu)+lgamma((2+nu)/2) - (2+nu)/2*log(dj + nu + A^2) - (lgamma(nu/2) + log(pi) + 0.5*log(sigma2[j]) + log(d.vec)))
+          u = exp(log(4)+(nu/2)*log(nu)+lgamma((3+nu)/2)-(nu+3)/2*log(dj + nu) -( lgamma(nu/2) +0.5*log(pi)+0.5*log(sigma2[j])+log(d.vec)) + pt(sqrt((3+nu)/(dj+nu))*A,3+nu,log.p=TRUE))
+          
           d1 <- dt.ls(y, mu[j], sigma2[j], shape[j], nu)
           if(length(which(d1 == 0)) > 0) d1[which(d1 == 0)] <- .Machine$double.xmin
           d2 <-d.mixedST(y, pii, mu, sigma2, shape, nu)
@@ -126,7 +134,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           pii[j] <- (1/n)*sum(tal[,j])
           mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
           Delta[j] <- 0
-          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])       
+          Gama[j] <- ifelse(sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]) == 0, .Machine$double.xmin^0.5, sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]))
           sigma2[j] <- Gama[j] + Delta[j]^2
           shape[j] <- 0
 
@@ -205,8 +213,14 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           mutij <- Mtij2*Delta[j]*(Gama[j]^(-1))*(y - mu[j])
           A <- mutij / Mtij
 
-          E=(2*(nu)^(nu/2)*gamma((2+nu)/2)*((dj + nu + A^2))^(-(2+nu)/2)) / (gamma(nu/2)*pi*sqrt(sigma2[j])*dt.ls(y, mu[j], sigma2[j],shape[j] ,nu))
-          u= ((4*(nu)^(nu/2)*gamma((3+nu)/2)*(dj + nu)^(-(nu+3)/2)) / (gamma(nu/2)*sqrt(pi)*sqrt(sigma2[j])*dt.ls(y, mu[j], sigma2[j],shape[j] ,nu)) )*pt(sqrt((3+nu)/(dj+nu))*A,3+nu)
+          d.vec <- dt.ls(y, mu[j], sigma2[j],shape[j] ,nu)
+          if(length(which(d.vec < 1e-10)) > 0) d.vec[which(d.vec < 1e-10)] <- 1e-10
+
+          #E=(2*(nu)^(nu/2)*gamma((2+nu)/2)*((dj + nu + A^2))^(-(2+nu)/2)) / (gamma(nu/2)*pi*sqrt(sigma2[j])*d.vec)
+          #u= ((4*(nu)^(nu/2)*gamma((3+nu)/2)*(dj + nu)^(-(nu+3)/2)) / (gamma(nu/2)*sqrt(pi)*sqrt(sigma2[j])*d.vec) )*pt(sqrt((3+nu)/(dj+nu))*A,3+nu)
+
+          E = exp(log(2) + nu/2*log(nu)+lgamma((2+nu)/2) - (2+nu)/2*log(dj + nu + A^2) - (lgamma(nu/2) + log(pi) + 0.5*log(sigma2[j]) + log(d.vec)))
+          u = exp(log(4)+(nu/2)*log(nu)+lgamma((3+nu)/2)-(nu+3)/2*log(dj + nu) -( lgamma(nu/2) +0.5*log(pi)+0.5*log(sigma2[j])+log(d.vec)) + pt(sqrt((3+nu)/(dj+nu))*A,3+nu,log.p=TRUE))
 
           d1 <- dt.ls(y, mu[j], sigma2[j], shape[j], nu)
           if(length(which(d1 == 0)) > 0) d1[which(d1 == 0)] <- .Machine$double.xmin
@@ -223,7 +237,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           pii[j] <- (1/n)*sum(tal[,j])
           mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
           Delta[j] <- sum(S2[,j]*(y - mu[j])) / sum(S3[,j])
-          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])       
+          Gama[j] <- ifelse(sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]) == 0, .Machine$double.xmin^0.5, sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]))
           sigma2[j] <- Gama[j] + Delta[j]^2
           shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
 
@@ -306,8 +320,11 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           mutij <- Mtij2*Delta[j]*(Gama[j]^(-1))*(y - mu[j])
           A <- mutij / Mtij
 
-          u=(2/dSNC(y,mu[j],sigma2[j],shape[j],nu))*(nu[1]*nu[2]*dnorm(y,mu[j],sqrt(sigma2[j]/nu[2]))*pnorm(sqrt(nu[2])*A,0,1)+(1-nu[1])*dnorm(y,mu[j],sqrt(sigma2[j]))*pnorm(A,0,1))
-          E=(2/dSNC(y,mu[j],sigma2[j],shape[j],nu))*(nu[1]*sqrt(nu[2])*dnorm(y,mu[j],sqrt(sigma2[j]/nu[2]))*dnorm(sqrt(nu[2])*A,0,1)+(1-nu[1])*dnorm(y,mu[j],sqrt(sigma2[j]))*dnorm(A,0,1))
+          d.vec <- dSNC(y,mu[j],sigma2[j],shape[j],nu)
+          if(length(which(d.vec < 1e-10)) > 0) d.vec[which(d.vec < 1e-10)] <- 1e-10
+
+          u=(2/d.vec)*(nu[1]*nu[2]*dnorm(y,mu[j],sqrt(sigma2[j]/nu[2]))*pnorm(sqrt(nu[2])*A,0,1)+(1-nu[1])*dnorm(y,mu[j],sqrt(sigma2[j]))*pnorm(A,0,1))
+          E=(2/d.vec)*(nu[1]*sqrt(nu[2])*dnorm(y,mu[j],sqrt(sigma2[j]/nu[2]))*dnorm(sqrt(nu[2])*A,0,1)+(1-nu[1])*dnorm(y,mu[j],sqrt(sigma2[j]))*dnorm(A,0,1))
 
           d1 <-dSNC(y, mu[j], sigma2[j], shape[j], nu)
           if(length(which(d1 == 0)) > 0) d1[which(d1 == 0)] <- .Machine$double.xmin
@@ -324,7 +341,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           pii[j] <- (1/n)*sum(tal[,j])
           mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
           Delta[j] <- sum(S2[,j]*(y - mu[j])) / sum(S3[,j])
-          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])
+          Gama[j] <- ifelse(sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]) == 0, .Machine$double.xmin^0.5, sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]))
           sigma2[j] <- Gama[j] + Delta[j]^2
           shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
         }
@@ -402,6 +419,8 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
 
           ### E-step: calculando ui, tui, tui2 ###
           dj <- ((y - mu[j])/sqrt(sigma2[j]))^2
+          if(length(which(dj < 1e-10)) > 0) dj[which(dj < 1e-10)] <- 1e-10          
+          
           Mtij2 <- 1/(1 + (Delta[j]^2)*(Gama[j]^(-1)))
           Mtij <- sqrt(Mtij2)
           mutij <- Mtij2*Delta[j]*(Gama[j]^(-1))*(y - mu[j])
@@ -412,10 +431,14 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
             #V <- pgamma(1,(2*nu + 3)/2, dj[i]/2)*U
             #S <- qgamma(V,(2*nu + 3)/2, dj[i]/2)
             #u[i] <- ( ((2^(nu + 2))*nu*gamma((2*nu + 3)/2)) / (dSS(y[i], mu[j], sigma2[j], shape[j], nu)*sqrt(pi)*sqrt(sigma2[j]))) * pgamma(1,(2*nu + 3)/2,dj[i]/2)*(dj[i]^(-(2*nu + 3)/2))*mean(pnorm(S^(1/2)*A[i]))
-            E[i] <- (((2^(nu + 1))*nu*gamma(nu + 1))/(dSS(y[i], mu[j], sigma2[j], shape[j], nu)*pi*sqrt(sigma2[j])))* ((dj[i]+A[i]^2)^(-nu-1))*pgamma(1,nu+1,(dj[i]+A[i]^2)/2)
-            faux <- function(u) u^(nu+0.5)*exp(-u*dj[i]/2)*pnorm(u^(1/2)*A[i])
+            d <- dSS(y[i], mu[j], sigma2[j], shape[j], nu)
+            if(d < 1e-10) d <- 1e-10
+            
+            #E[i] <- (((2^(nu + 1))*nu*gamma(nu + 1))/(d*pi*sqrt(sigma2[j])))* ((dj[i]+A[i]^2)^(-nu-1))*pgamma(1,nu+1,(dj[i]+A[i]^2)/2)
+            E[i] <- exp((nu+1)*log(2)+log(nu)+lgamma(nu+1)-(log(d)+log(pi)+0.5*log(sigma2[j])) -(nu+1)*log(dj[i]+A[i]^2) + pgamma(1,nu+1,(dj[i]+A[i]^2)/2,log.p=TRUE))
+            faux <- function(u) exp((nu+0.5)*log(u) -u*dj[i]/2 + pnorm(u^(1/2)*A[i], log.p=TRUE))
             aux22 <- integrate(faux,0,1)$value
-            u[i] <- ((sqrt(2)*nu) / (dSS(y[i], mu[j], sigma2[j], shape[j], nu)*sqrt(pi)*sqrt(sigma2[j])))*aux22  
+            u[i] <- ((sqrt(2)*nu) / (d*sqrt(pi)*sqrt(sigma2[j])))*aux22  
           }
           #E <- (((2^(nu + 1))*nu*gamma(nu + 1))/(dSS(y, mu[j], sigma2[j], shape[j], nu)*pi*sqrt(sigma2[j])))*((dj+A^2)^(-nu-1))*pgamma(1,nu+1,(dj+A^2)/2)
           d1 <- dSS(y, mu[j], sigma2[j], shape[j], nu)
@@ -424,7 +447,6 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           if(length(which(d2 == 0)) > 0) d2[which(d2 == 0)] <- .Machine$double.xmin
 
           tal[,j] <- d1*pii[j] / d2
-
           S1[,j] <- tal[,j]*u
           S2[,j] <- tal[,j]*(mutij*u + Mtij*E)
           S3[,j] <- tal[,j]*(mutij^2*u + Mtij2 + Mtij*mutij*E)
@@ -434,7 +456,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           pii[j] <- (1/n)*sum(tal[,j])
           mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
           Delta[j] <- sum(S2[,j]*(y - mu[j])) / sum(S3[,j])
-          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])
+          Gama[j] <- ifelse(sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]) == 0, .Machine$double.xmin^0.5, sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]))
           sigma2[j] <- Gama[j] + Delta[j]^2
           shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
         }
@@ -514,6 +536,8 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
 
           ### E-step: calculando ui, tui, tui2 ###
           dj <- ((y - mu[j])/sqrt(sigma2[j]))^2
+          if(length(which(dj < 1e-10)) > 0) dj[which(dj < 1e-10)] <- 1e-10          
+          
           Mtij2 <- 1/(1 + (Delta[j]^2)*(Gama[j]^(-1)))
           Mtij <- sqrt(Mtij2)
           mutij <- Mtij2*Delta[j]*(Gama[j]^(-1))*(y - mu[j])
@@ -524,10 +548,13 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
             #V <- pgamma(1,(2*nu + 3)/2, dj[i]/2)*U
             #S <- qgamma(V,(2*nu + 3)/2, dj[i]/2)
             #u[i] <- ( ((2^(nu + 2))*nu*gamma((2*nu + 3)/2)) / (dSS(y[i], mu[j], sigma2[j], shape[j], nu)*sqrt(pi)*sqrt(sigma2[j]))) * pgamma(1,(2*nu + 3)/2,dj[i]/2)*(dj[i]^(-(2*nu + 3)/2))*mean(pnorm(S^(1/2)*A[i]))
-            E[i] <- (((2^(nu + 1))*nu*gamma(nu + 1))/(dSS(y[i], mu[j], sigma2[j], shape[j], nu)*pi*sqrt(sigma2[j])))* ((dj[i]+A[i]^2)^(-nu-1))*pgamma(1,nu+1,(dj[i]+A[i]^2)/2)
-            faux <- function(u) u^(nu+0.5)*exp(-u*dj[i]/2)*pnorm(u^(1/2)*A[i])
+            d <- dSS(y[i], mu[j], sigma2[j], shape[j], nu)
+            if(d < 1e-10) d <- 1e-10
+
+            E[i] <- exp((nu+1)*log(2)+log(nu)+lgamma(nu+1)-(log(d)+log(pi)+0.5*log(sigma2[j])) -(nu+1)*log(dj[i]+A[i]^2) + pgamma(1,nu+1,(dj[i]+A[i]^2)/2,log.p=TRUE))
+            faux <- function(u) exp((nu+0.5)*log(u) -u*dj[i]/2 + pnorm(u^(1/2)*A[i], log.p=TRUE))
             aux22 <- integrate(faux,0,1)$value
-            u[i] <- ((sqrt(2)*nu) / (dSS(y[i], mu[j], sigma2[j], shape[j], nu)*sqrt(pi)*sqrt(sigma2[j])))*aux22  
+            u[i] <- ((sqrt(2)*nu) / (d*sqrt(pi)*sqrt(sigma2[j])))*aux22  
           }
           #E <- (((2^(nu + 1))*nu*gamma(nu + 1))/(dSS(y, mu[j], sigma2[j], shape[j], nu)*pi*sqrt(sigma2[j])))*((dj+A^2)^(-nu-1))*pgamma(1,nu+1,(dj+A^2)/2)
           d1 <- dSS(y, mu[j], sigma2[j], shape[j], nu)
@@ -546,7 +573,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           pii[j] <- (1/n)*sum(tal[,j])
           mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
           Delta[j] <- 0
-          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])
+          Gama[j] <- ifelse(sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]) == 0, .Machine$double.xmin^0.5, sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]))
           sigma2[j] <- Gama[j] + Delta[j]^2
           shape[j] <- 0
         }
@@ -645,7 +672,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           pii[j] <- (1/n)*sum(tal[,j])
           mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
           Delta[j] <- sum(S2[,j]*(y - mu[j])) / sum(S3[,j])
-          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])
+          Gama[j] <- ifelse(sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]) == 0, .Machine$double.xmin^0.5, sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]))
           sigma2[j] <- Gama[j] + Delta[j]^2
           shape[j] <- ((sigma2[j]^(-1/2))*Delta[j] )/(sqrt(1 - (Delta[j]^2)*(sigma2[j]^(-1))))
 
@@ -737,7 +764,7 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           pii[j] <- (1/n)*sum(tal[,j])
           mu[j] <- sum(S1[,j]*y - Delta.old[j]*S2[,j]) / sum(S1[,j])
           Delta[j] <- 0          
-          Gama[j] <- sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j])
+          Gama[j] <- ifelse(sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]) == 0, .Machine$double.xmin^0.5, sum(S1[,j]*(y - mu[j])^2 - 2*(y - mu[j])*Delta[j]*S2[,j] + Delta[j]^2*S3[,j]) / sum(tal[,j]))
           sigma2[j] <- Gama[j] + Delta[j]^2
           shape[j] <- 0
         }

@@ -1,8 +1,8 @@
 Package: mixsmsn
 Title: Fitting Finite Mixture of Scale Mixture of Skew-Normal
         Distributions
-Date: 2020-10-07
-Version: 1.1-8
+Date: 2021-05-11
+Version: 1.1-9
 Authors@R: c(person("Marcos", "Prates", role=c("aut","cre","trl"),
        	            email="marcosop@est.ufmg.br"),
              person("Victor", "Lachos", role="aut"),
@@ -14,7 +14,7 @@ Author: Marcos Prates [aut, cre, trl],
   Celso Cabral [aut]
 Maintainer: Marcos Prates <marcosop@est.ufmg.br>
 License: GPL (>= 2.0)
-Packaged: 2020-10-08 14:19:43 UTC; root
+Packaged: 2021-05-12 02:06:02 UTC; marcos
 Repository: CRAN
 NeedsCompilation: no
-Date/Publication: 2020-10-08 14:30:02 UTC
+Date/Publication: 2021-05-12 05:50:02 UTC
