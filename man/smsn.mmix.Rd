@@ -113,11 +113,9 @@ mix.contour(y,Sslash.analysis)
 }
 
 \references{
-  Cabral, C. R. B., Lachos, V. H. and Prates, M. O. (2012). "Multivariate Mixture Modeling Using Skew-Normal Independent 
-  Distributions". \emph{Computational Statistics & Data Analysis}, 56, 126-142, doi:10.1016/j.csda.2011.06.026.
+  Cabral, C. R. B., Lachos, V. H. and Prates, M. O. (2012). "Multivariate Mixture Modeling Using Skew-Normal Independent Distributions". \emph{Computational Statistics & Data Analysis}, 56, 126-142, doi:10.1016/j.csda.2011.06.026.
 
-  Marcos Oliveira Prates, Celso Romulo Barbosa Cabral, Victor Hugo Lachos (2013)."mixsmsn: Fitting Finite Mixture of Scale Mixture of 
-         Skew-Normal Distributions". Journal of Statistical Software, 54(12), 1-20., URL http://www.jstatsoft.org/v54/i12/.
+  Marcos Oliveira Prates, Celso Romulo Barbosa Cabral, Victor Hugo Lachos (2013)."mixsmsn: Fitting Finite Mixture of Scale Mixture of Skew-Normal Distributions". Journal of Statistical Software, 54(12), 1-20., URL https://doi.org/10.18637/jss.v054.i12.
 }
 
 

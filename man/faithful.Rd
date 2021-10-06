@@ -13,7 +13,7 @@ A data frame with 272 observations on 2 variables (p=2)
 \encoding{latin1}
 
 \source{
-Härdle, W. (1991) "Smoothing Techniques with Implementation in S". \emph{New York: Springer}. 
+H?rdle, W. (1991) "Smoothing Techniques with Implementation in S". \emph{New York: Springer}. 
 
 Azzalini, A. and Bowman, A. W. (1990). "A look at some data on the Old Faithful geyser". \emph{Applied Statistics} 39, 357--365. 
 }
@@ -82,8 +82,7 @@ mix.contour(faithful,faithful.analysis$best.model,x.min=1,x.max=1,
 }
 
 \references{
-  Marcos Oliveira Prates, Celso Romulo Barbosa Cabral, Victor Hugo Lachos (2013)."mixsmsn: Fitting Finite Mixture of Scale Mixture of 
-         Skew-Normal Distributions". Journal of Statistical Software, 54(12), 1-20., URL http://www.jstatsoft.org/v54/i12/.
+  Marcos Oliveira Prates, Celso Romulo Barbosa Cabral, Victor Hugo Lachos (2013)."mixsmsn: Fitting Finite Mixture of Scale Mixture of Skew-Normal Distributions". Journal of Statistical Software, 54(12), 1-20., URL https://doi.org/10.18637/jss.v054.i12.
 }
 
 \keyword{datasets}

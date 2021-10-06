@@ -1,4 +1,8 @@
-2021-11-05 (1.1-9) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+2021-10-06 (1.1-10) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+  * fix citation to JSS
+
+2021-05-11 (1.1-9) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
   * bug fix in numerical approximations.
 

@@ -1,5 +1,5 @@
-fb1daf99a5e98e17036efe8f1bb9d5cc *ChangeLog
-26acdfa475621719234d24acb3318dd9 *DESCRIPTION
+91b05bf7ff4b5a669738ba3f7d2c1a79 *ChangeLog
+9ebc6f55f80e60cb9415817a46355b17 *DESCRIPTION
 6f679f13df426b596b7e6d32ac4424e7 *NAMESPACE
 16c8096add41d2e30b59075182566721 *R/dens.R
 faec946a7355e04ee9187000230a1b38 *R/gen.R
@@ -12,9 +12,9 @@ fc42dd3870b6da6af6577b2a33256641 *R/utils.R
 a55abca688c0530c41e62aa60ce9f3cc *R/utils.multi.R
 32e0693a663a846acb32afa68dc57525 *data/bmi.txt.gz
 27a186d18394d53c8cdcb46f9a44a8b6 *data/faithful.txt.gz
-e7e2e23c6774c62b3e9ae585b98b6ab7 *inst/CITATION
-4544a8cdc866a029ead7cca074805096 *man/bmi.Rd
-d5c5dbd12006ee7b13859b3d31876891 *man/faithful.Rd
+9974aa2eee966ca28ee7d567a9f4dc17 *inst/CITATION
+79a540a34fd5ddb7f13753b8708f9afb *man/bmi.Rd
+59bd2a65ea1d0277aa9829fc65546501 *man/faithful.Rd
 8fef85ef15d73d60844d2cc7a059a5f1 *man/im.smsn.Rd
 5918318aceb4f4f4d0c13e0d51c5b50d *man/imm.smsn.Rd
 3fdefbe27e328a5379cee05a0f00ad7b *man/mix.contour.Rd
@@ -24,6 +24,6 @@ d5c5dbd12006ee7b13859b3d31876891 *man/faithful.Rd
 f20489b8fd8c50631dee1d1e6168606d *man/mix.print.Rd
 1663f165b2ff0ff0dda7fea288b39600 *man/rmix.Rd
 6cce3a298af9903f5925f2f5f7f34667 *man/rmmix.Rd
-2e114454d0beae26004b910756496254 *man/smsn.mix.Rd
-511914f2bb85c8dd8e1430c9ef97a74c *man/smsn.mmix.Rd
+42c97ee91c478a9cb4d7f8b8ba5633f6 *man/smsn.mix.Rd
+83d3d85ca4bab50328bfd264d3b165be *man/smsn.mmix.Rd
 85dd795ef11bcdb2785e1adee24b129b *man/smsn.search.Rd
