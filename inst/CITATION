@@ -1,10 +1,11 @@
 citHeader("To cite mixsmsn in publications use:")
 
-citEntry(entry = "Article",
+bibentry(
+  bibtype = "Article",
   title        = "{mixsmsn}: Fitting Finite Mixture of Scale Mixture of Skew-Normal Distributions",
-  author       = personList(as.person("Marcos Oliveira Prates"),
-                   as.person("Celso R{\\^o}mulo Barbosa Cabral"),
-                   as.person("V{\\'i}ctor Hugo Lachos")),
+  author       = c(person("Marcos Oliveira Prates"),
+                   person("Celso R{\\^o}mulo Barbosa Cabral"),
+                   person("V{\\'i}ctor Hugo Lachos")),
   journal      = "Journal of Statistical Software",
   year         = "2013",
   volume       = "54",

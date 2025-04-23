@@ -13,11 +13,13 @@ mix.contour <- function(y, model, slice = 100, ncontour = 10, x.min=1, x.max=1, 
    p <- ncol(dat)
 
    if(p != 2) stop("The mix.contour function is only appropriate for the bivariate analysis.\n")
-   if((class(model) != "t") && (class(model) != "Skew.t") && (class(model) != "Skew.cn") && (class(model) != "Skew.slash") && (class(model) != "Skew.normal") && (class(model) != "Normal")) stop(paste("Family",class(model),"not recognized.",sep=" "))
+   if(!inherits(model, 't') && !inherits(model, 'Skew.t') && !inherits(model, 'Skew.cn') &&
+      !inherits(model, 'Skew.slash') && !inherits(model, 'Skew.normal') &&
+      !inherits(model, 'Normal')) stop(paste("Class of family",class(model),"not recognized.",sep=" "))
    if(length(model$group) == 0) stop("The groups were not save in the model.\n")
    if ((x.min < 0) || (x.max < 0) || (y.min < 0) || (y.max < 0)) stop("All limits must be non negative.\n")
    g <- length(model$pii)
-   if (class(model) == "Normal"){
+   if(inherits(model, 'Normal')){
       mixed.Normal <- function(x, y, pii, mu, Sigma) {
         dens <- 0
         for (j in 1:g) dens <- dens + pii[j]*dmvnorm(cbind(x, y), mu[[j]], Sigma[[j]])
@@ -36,7 +38,7 @@ mix.contour <- function(y, model, slice = 100, ncontour = 10, x.min=1, x.max=1, 
       points(dat[,1], dat[,2], col = (model$group+1))
    }
 
-   if (class(model) == "Skew.normal"){
+   if(inherits(model, 'Skew.normal')){
       mixed.SN <- function(x, y, pii, mu, Sigma, lambda) {
         dens <- 0
         for (j in 1:g) dens <- dens + pii[j]*2*dmvnorm(cbind(x, y), mu[[j]], Sigma[[j]])*pnorm(t(lambda[[j]])%*%solve(matrix.sqrt(Sigma[[j]]))%*%t(cbind(x, y) - mu[[j]]))
@@ -56,7 +58,7 @@ mix.contour <- function(y, model, slice = 100, ncontour = 10, x.min=1, x.max=1, 
       points(dat[,1], dat[,2], col = (model$group+1))
    }
 
-   if (class(model) == "t"){
+   if(inherits(model, 't')){
       mixed.ST <- function(x, y, pii, mu, Sigma, lambda, nu) {
 #        n <- nrow(dat)
 #        p <- ncol(dat)
@@ -82,7 +84,7 @@ mix.contour <- function(y, model, slice = 100, ncontour = 10, x.min=1, x.max=1, 
       points(dat[,1], dat[,2], col = (model$group+1))
    }
 
-   if (class(model) == "Skew.t"){
+   if(inherits(model, 'Skew.t')){
       mixed.ST <- function(x, y, pii, mu, Sigma, lambda, nu) {
 #        n <- nrow(dat)
 #        p <- ncol(dat)
@@ -107,7 +109,7 @@ mix.contour <- function(y, model, slice = 100, ncontour = 10, x.min=1, x.max=1, 
       points(dat[,1], dat[,2], col = (model$group+1))
    }
 
-   if (class(model) == "Skew.cn"){
+   if(inherits(model, 'Skew.cn')){
       mixed.SNC <- function(x, y, pii, mu, Sigma, lambda, nu) {
 #        n <- nrow(y)
 #        p <- ncol(y)
@@ -133,7 +135,7 @@ mix.contour <- function(y, model, slice = 100, ncontour = 10, x.min=1, x.max=1, 
       points(dat[,1], dat[,2], col = (model$group+1))
    }
 
-   if (class(model) == "Skew.slash"){
+   if(inherits(model, 'Skew.slash')){
       #x <- seq(min(dat[,1])-1,max(dat[,1])+1, length = slice)
       #y <- seq(min(dat[,2])-15,max(dat[,2])+10, length = slice)
       #x <- seq(min(dat[,1])-1,max(dat[,1])+1, length = slice)     # Swiss
@@ -158,7 +160,9 @@ adjoint <- function(A) det(A)*solve(A)
 deriv.der <- function(A,B,C) det(A)*sum(B * t(C))
 
 imm.smsn <- function(y, model){
-  if((class(model) != "t") && (class(model) != "Skew.t") && (class(model) != "Skew.cn") && (class(model) != "Skew.slash") && (class(model) != "Skew.normal") && (class(model) != "Normal")) stop(paste("Family",class(model),"not recognized.",sep=" "))
+  if(!inherits(model, 't') && !inherits(model, 'Skew.t') && !inherits(model, 'Skew.cn') &&
+     !inherits(model, 'Skew.slash') && !inherits(model, 'Skew.normal') &&
+     !inherits(model, 'Normal')) stop(paste("Class of family",class(model),"not recognized.",sep=" "))
   if (ncol(y) <= 1) stop(paste("The dimension of y (p) is: ", ncol(y),". We need p >= 2.",sep=" "))
   if (model$uni.Gama) stop("Sorry. The information matrix cannot be calculated when the uni.Gama was used!")
   y <- as.matrix(y)
@@ -177,7 +181,7 @@ imm.smsn <- function(y, model){
   pii <- model$pii
   nu <- model$nu
 
-  if (class(model) == "t"){
+  if(inherits(model, 't')){
     soma <- soma2 <- 0
     
     I.Phi <- function(w=0,Ai=NULL,di,nu=0) as.numeric((( 2^w*nu^(nu/2)*gamma(w + nu/2))/(gamma(nu/2)*(nu + di)^(nu/2 + w)))*pt( ((Ai)/(di + nu)^(0.5))*sqrt(2*w + nu), 2*w + nu))
@@ -278,7 +282,7 @@ imm.smsn <- function(y, model){
 
   }
   
-  if (class(model) == "Skew.t"){
+  if(inherits(model, 'Skew.t')){
     soma <- soma2 <- 0
     
     I.Phi <- function(w=0,Ai=NULL,di,nu=0) as.numeric((( 2^w*nu^(nu/2)*gamma(w + nu/2))/(gamma(nu/2)*(nu + di)^(nu/2 + w)))*pt( ((Ai)/(di + nu)^(0.5))*sqrt(2*w + nu), 2*w + nu))
@@ -375,7 +379,7 @@ imm.smsn <- function(y, model){
 
   }
 
-  if (class(model) == "Skew.cn"){
+  if(inherits(model, 'Skew.cn')){
     soma <- soma2 <- 0
 
     I.Phi <- function(w=0,Ai=NULL,di,nu=0) as.numeric( sqrt(2*pi)*(nu[1]*nu[2]^(w -0.5)*dnorm(sqrt(di), 0, sqrt(1/nu[2]))*pnorm(nu[2]^(1/2)*Ai) + (1 - nu[1])*(dnorm(sqrt(di), 0,1)*pnorm(Ai)) )   )
@@ -474,7 +478,7 @@ imm.smsn <- function(y, model){
 
   }
   
-    if (class(model) == "Skew.slash"){
+  if(inherits(model, 'Skew.slash')){
     soma <- soma2 <- 0
 
     I.Phi <- function(w=0,Ai=NULL,di,nu=0) {
@@ -588,7 +592,7 @@ imm.smsn <- function(y, model){
     dimnames(soma)[[2]] <- NAME   
   }
 
-  if (class(model) == "Skew.normal"){
+  if(inherits(model, 'Skew.normal')){
     soma <- soma2 <- 0
 
     I.Phi <- function(w=0,Ai=NULL,di,nu=0) as.numeric( exp(-di/2)*pnorm(Ai) )
@@ -680,7 +684,7 @@ imm.smsn <- function(y, model){
 
   }
   
-  if (class(model) == "Normal"){
+  if(inherits(model, 'Normal')){
     soma <- soma2 <- 0
 
     I.Phi <- function(w=0,Ai=NULL,di,nu=0) as.numeric( exp(-di/2)*1/2 )

@@ -1,6 +1,5 @@
 ################################################################
 ##########          Densidades das SNI              ############
-
 ## Densidade/CDF da SN com locacao escala #######
 dSN <- function(y, mu = 0, sigma2 = 1, shape=1){
   dens <- 2*dnorm(y, mu, sqrt(sigma2))*pnorm(shape*((y - mu)/sqrt(sigma2)))

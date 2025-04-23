@@ -154,7 +154,10 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
       
         param <- teta
         teta <- c(mu, Delta, Gama, pii, nu)
-        lk1 <- sum(log( d.mixedST(y, pii, mu, sigma2, shape, nu) ))
+        aux <- d.mixedST(y, pii, mu, sigma2, shape, nu)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk1 <- sum(log(aux))
+        
         #criterio <- sqrt((teta-param)%*%(teta-param))
         criterio <- abs(lk1/lk-1)
 
@@ -255,9 +258,11 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
           pii[which(pii == max(pii))] <- max(pii) - sum(pii[zero.pos])
         }
 
-	param <- teta
+	      param <- teta
         teta <- c(mu, Delta, Gama, pii, nu)
-        lk1 <- sum(log( d.mixedST(y, pii, mu, sigma2, shape, nu) ))
+        aux <- d.mixedST(y, pii, mu, sigma2, shape, nu)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk1 <- sum(log(aux))
         #criterio <- sqrt((teta-param)%*%(teta-param))
         criterio <- abs(lk1/lk-1)
 
@@ -361,7 +366,9 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
 
         param <- teta
         teta <- c(mu, Delta, Gama, pii, nu)
-        lk1 <- sum(log( d.mixedSNC(y, pii, mu, sigma2, shape, nu) ))
+        aux <- d.mixedSNC(y, pii, mu, sigma2, shape, nu)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk1 <- sum(log(aux))
         #criterio <- sqrt((teta-param)%*%(teta-param))
         criterio <- abs(lk1/lk-1)
         mu.old <- mu
@@ -475,7 +482,9 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
 
         param <- teta
         teta <- c(mu, Delta, Gama, pii, nu)
-        lk1 <- sum(log( d.mixedSS(y, pii, mu, sigma2, shape, nu) ))        
+        aux <- d.mixedSS(y, pii, mu, sigma2, shape, nu)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk1 <- sum(log(aux))
         #teta <- c(mu, Delta, Gama, pii)
         #criterio <- sqrt((teta-param)%*%(teta-param))
         criterio<-abs(lk1/lk-1)
@@ -592,7 +601,9 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
 
         param <- teta
         teta <- c(mu, Delta, Gama, pii, nu)
-        lk1 <- sum(log( d.mixedSS(y, pii, mu, sigma2, shape, nu) ))        
+        aux <- d.mixedSS(y, pii, mu, sigma2, shape, nu)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk1 <- sum(log(aux))
         #teta <- c(mu, Delta, Gama, pii)
         #criterio <- sqrt((teta-param)%*%(teta-param))
         criterio<-abs(lk1/lk-1)
@@ -688,7 +699,9 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
 
         param <- teta
         teta <- c(mu, Delta, Gama, pii)
-        lk1 <- sum(log( d.mixedSN(y, pii, mu, sigma2, shape) ))
+        aux <- d.mixedSN(y, pii, mu, sigma2, shape)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk1 <- sum(log(aux))
        # criterio <- sqrt((teta-param)%*%(teta-param))
         criterio <- abs(lk1/lk-1)
 
@@ -780,7 +793,9 @@ smsn.mix <- function(y, nu, mu = NULL, sigma2 = NULL, shape = NULL, pii = NULL, 
              
         param <- teta
         teta <- c(mu, Delta, Gama, pii)
-        lk1 <- sum(log(d.mixedSN(y, pii, mu, sigma2, shape)))
+        aux <- d.mixedSN(y, pii, mu, sigma2, shape)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk1 <- sum(log(aux))
         #criterio <- sqrt((teta-param)%*%(teta-param))
         criterio <- abs(lk1/lk-1)
         mu.old <- mu

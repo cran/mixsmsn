@@ -1,20 +1,19 @@
 Package: mixsmsn
 Title: Fitting Finite Mixture of Scale Mixture of Skew-Normal
         Distributions
-Date: 2021-10-06
-Version: 1.1-10
-Authors@R: c(person("Marcos", "Prates", role=c("aut","cre","trl"),
-       	            email="marcosop@est.ufmg.br"),
-             person("Victor", "Lachos", role="aut"),
-             person("Celso", "Cabral", role="aut"))
+Version: 1.1-11
+Authors@R: c(person(given = "Marcos",family = "Prates", role=c("aut","cre","trl"),
+       	            email="marcosop@est.ufmg.br", comment = c(ORCID = "0000-0001-8077-4898")),
+             person(given = "Victor",family="Lachos", role="aut", comment = c(ORCID = "0000-0002-7239-2459")),
+             person(given = "Celso",family="Cabral", role="aut"))
 Description: Functions to fit finite mixture of scale mixture of skew-normal (FM-SMSN) distributions, details in Prates, Lachos and Cabral (2013) <doi: 10.18637/jss.v054.i12>, Cabral, Lachos and Prates (2012) <doi:10.1016/j.csda.2011.06.026> and Basso, Lachos, Cabral and Ghosh (2010) <doi:10.1016/j.csda.2009.09.031>.
 Depends: R (>= 1.9.0), mvtnorm (>= 0.9-9)
-Author: Marcos Prates [aut, cre, trl],
-  Victor Lachos [aut],
+Author: Marcos Prates [aut, cre, trl] (<https://orcid.org/0000-0001-8077-4898>),
+  Victor Lachos [aut] (<https://orcid.org/0000-0002-7239-2459>),
   Celso Cabral [aut]
 Maintainer: Marcos Prates <marcosop@est.ufmg.br>
 License: GPL (>= 2.0)
-Packaged: 2021-10-06 12:26:40 UTC; marcos
+Packaged: 2025-04-23 18:00:56 UTC; marcos
 Repository: CRAN
 NeedsCompilation: no
-Date/Publication: 2021-10-06 12:40:02 UTC
+Date/Publication: 2025-04-23 18:30:01 UTC

@@ -1,3 +1,7 @@
+2025-04-23 (1.1-11) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
+
+  * fix CRAN requirments
+
 2021-10-06 (1.1-10) Marcos Prates <marcosop@est.ufmg.br>, Victor Lachos <hlachos@ime.unicamp.br> and Celso Cabral <celsoromulo@gmail.com>
 
   * fix citation to JSS

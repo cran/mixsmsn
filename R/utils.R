@@ -14,7 +14,10 @@ matrix.sqrt <- function(A) {
 #########         Matriz de Info - Univariado         ###############
 
 im.smsn <- function(y, model){
-  if((class(model) != "t") && (class(model) != "Skew.t") && (class(model) != "Skew.cn") && (class(model) != "Skew.slash") && (class(model) != "Skew.normal") && (class(model) != "Normal")) stop(paste("Family",class(model),"not recognized.\n",sep=" "))
+  if(!inherits(model, 't') && !inherits(model, 'Skew.t') && !inherits(model, 'Skew.cn') &&
+     !inherits(model, 'Skew.slash') && !inherits(model, 'Skew.normal') &&
+     !inherits(model, 'Normal')) stop(paste("Class of family",class(model),"not recognized.",sep=" "))
+  
   y <- as.matrix(y)
   n <- nrow(y)
   p <- ncol(y)
@@ -32,7 +35,7 @@ im.smsn <- function(y, model){
   pii <- model$pii
   nu <- model$nu
 
-  if (class(model) == "t"){
+  if(inherits(model, 't')){
     soma <- soma2 <- 0
 
     I.Phi <- function(w=0, Ai=0, di=0, nu=0) as.numeric((( 2^w*nu^(nu/2)*gamma(w + nu/2))/(gamma(nu/2)*(nu + di)^(nu/2 + w)))*pt( ((Ai)/(di + nu)^(0.5))*sqrt(2*w + nu), 2*w + nu))
@@ -83,7 +86,7 @@ im.smsn <- function(y, model){
       nam.nu <- c("nu")
   }
 
-  if (class(model) == "Skew.t"){
+  if(inherits(model, 'Skew.t')){
     soma <- soma2 <- 0
 
     I.Phi <- function(w=0, Ai=0, di=0, nu=0) as.numeric((( 2^w*nu^(nu/2)*gamma(w + nu/2))/(gamma(nu/2)*(nu + di)^(nu/2 + w)))*pt( ((Ai)/(di + nu)^(0.5))*sqrt(2*w + nu), 2*w + nu))
@@ -137,7 +140,7 @@ im.smsn <- function(y, model){
       nam.nu <- c("nu")
   }
 
-  if (class(model) == "Skew.cn"){
+  if(inherits(model, 'Skew.cn')){
     soma <- soma2 <- 0
 
     I.Phi <- function(w=0, Ai=0, di=0, nu=0) as.numeric( sqrt(2*pi)*(nu[1]*nu[2]^(w -0.5)*dnorm(sqrt(di), 0, sqrt(1/nu[2]))*pnorm(nu[2]^(1/2)*Ai) + (1 - nu[1])*(dnorm(sqrt(di), 0,1)*pnorm(Ai)) )   )
@@ -190,7 +193,7 @@ im.smsn <- function(y, model){
 
   }
 
-    if (class(model) == "Skew.slash"){
+  if(inherits(model, 'Skew.slash')){
     soma <- soma2 <- 0
 
     I.Phi <- function(w=0, Ai=0, di=0, nu=0) {
@@ -251,7 +254,7 @@ im.smsn <- function(y, model){
       nam.nu <- c("nu") 
   }
 
-  if (class(model) == "Skew.normal"){
+  if(inherits(model, 'Skew.normal')){
     soma <- soma2 <- 0
 
     I.Phi <- function(w=0, Ai=0, di=0, nu=0) as.numeric( exp(-di/2)*pnorm(Ai) )
@@ -301,7 +304,7 @@ im.smsn <- function(y, model){
       nam.gr <- nam.gr[-length(nam.gr)]
   }
 
-  if (class(model) == "Normal"){
+  if(inherits(model, 'Normal')){
     soma <- soma2 <- 0
 
     I.Phi <- function(w=0, Ai=0, di=0, nu=0) as.numeric( exp(-di/2)*1/2 )
@@ -348,9 +351,6 @@ im.smsn <- function(y, model){
 
   dimnames(soma)[[1]] <- c(nam.gr,nam.nu)
   dimnames(soma)[[2]] <- c(nam.gr,nam.nu)
-  if(class(model) == "t"){
-     
-  }
   ##return(list(soma, soma2))
   return(list(IM=soma))
 }

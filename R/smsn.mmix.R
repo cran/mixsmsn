@@ -175,7 +175,9 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
 #        teta <- c()
 #        for (k in 1:g) teta <- c(teta, mu[[k]], Gama[[k]][upper.tri(Gama[[k]], diag = TRUE)], Delta[[k]])
 #        teta <- c(teta, pii, nu) #teta para nu desconhecido
-        lk <- sum(log( d.mixedmvST(y, pii, mu, Sigma, shape, nu) ))
+        aux <- d.mixedmvST(y, pii, mu, Sigma, shape, nu)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk <- sum(log(aux))
         criterio <- abs((lk/lkante)-1)
 
         lkante <- lk
@@ -290,9 +292,10 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
 #        teta <- c()
 #        for (k in 1:g) teta <- c(teta, mu[[k]], Gama[[k]][upper.tri(Gama[[k]], diag = TRUE)], Delta[[k]])
 #        teta <- c(teta, pii, nu) #teta para nu desconhecido
-        lk <- sum(log( d.mixedmvST(y, pii, mu, Sigma, shape, nu) ))
+        aux <- d.mixedmvST(y, pii, mu, Sigma, shape, nu)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk <- sum(log(aux))
         criterio <- abs((lk/lkante)-1)
-
         lkante <- lk
         mu.old <- mu
         Delta.old <- Delta
@@ -405,7 +408,9 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
 ##        teta <- c()
 ##        for (k in 1:g) teta <- c(teta, mu[[k]], Gama[[k]][upper.tri(Gama[[k]], diag = TRUE)], Delta[[k]])
 ##        teta <- c(teta, pii, nu) #teta para nu desconhecido
-        lk <- sum(log( d.mixedmvSNC(y, pii, mu, Sigma, shape, nu) ))
+        aux <- d.mixedmvSNC(y, pii, mu, Sigma, shape, nu)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk <- sum(log(aux))
         criterio <- abs((lk/lkante)-1)
 
         lkante <- lk
@@ -567,7 +572,9 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
         #teta <- c(teta, pii, nu) #teta para nu desconhecido
 #        teta <- c(teta, pii)
 #        criterio <- sqrt((teta-param)%*%(teta-param))
-        lk <- sum(log( d.mixedmvSS(y, pii, mu, Sigma, shape, nu) ))
+        aux <- d.mixedmvSS(y, pii, mu, Sigma, shape, nu)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk <- sum(log(aux))
         criterio <- abs((lk/lkante)-1)
 
         lkante <- lk
@@ -728,9 +735,10 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
         #teta <- c(teta, pii, nu) #teta para nu desconhecido
 #        teta <- c(teta, pii)
 #        criterio <- sqrt((teta-param)%*%(teta-param))
-        lk <- sum(log( d.mixedmvSS(y, pii, mu, Sigma, shape, nu) ))
+        aux <- d.mixedmvSS(y, pii, mu, Sigma, shape, nu)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk <- sum(log(aux))
         criterio <- abs((lk/lkante)-1)
-
         lkante <- lk
         mu.old <- mu
         Delta.old <- Delta
@@ -846,9 +854,10 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
 #        teta <- c()
 #        for (k in 1:g) teta <- c(teta, mu[[k]], Gama[[k]][upper.tri(Gama[[k]], diag = TRUE)], Delta[[k]])
 #        teta <- c(teta, pii) #teta para nu conhecido
-        lk <- sum(log( d.mixedmvSN(y, pii, mu, Sigma, shape) ))
+        aux <- d.mixedmvSN(y, pii, mu, Sigma, shape)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk <- sum(log(aux))
         criterio <- abs((lk/lkante)-1)
-
         lkante <- lk
         mu.old <- mu
         Delta.old <- Delta
@@ -959,9 +968,10 @@ smsn.mmix <- function(y, nu=1, mu = NULL, Sigma = NULL, shape = NULL, pii = NULL
 #        teta <- c()
 #        for (k in 1:g) teta <- c(teta, mu[[k]], Gama[[k]][upper.tri(Gama[[k]], diag = TRUE)])
 #        teta <- c(teta, pii) #teta para nu conhecido
-        lk <- sum(log( d.mixedmvSN(y, pii, mu, Sigma, shape) ))
+        aux <- d.mixedmvSN(y, pii, mu, Sigma, shape)
+        if(length(which(aux == 0)) > 0) aux[which(aux == 0)] <- .Machine$double.xmin
+        lk <- sum(log(aux))
         criterio <- abs((lk/lkante)-1)
-
         lkante <- lk
         mu.old <- mu
         Delta.old <- Delta
